@@ -87,7 +87,7 @@ endif
 
 # Set DockerHub Account Name
 ifndef DOCKERHUB_ACCOUNT
-	override DOCKERHUB_ACCOUNT=zarr12steven
+	override DOCKERHUB_ACCOUNT=demo
 endif
 
 define running_platform
