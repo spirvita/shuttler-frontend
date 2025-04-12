@@ -92,6 +92,7 @@
     | GOLANG_VERSION | 1.24.2 | GOLANG 版本 |
     | GUM_VERSION | 0.14.5 | GUM 版本 |
     | DOCKERHUB_ACCOUNT | demo | Docker Hub 上的使用者名稱 |
+    | PNPM_HOME | /pnpm | pnpm 套件的全局目錄 |
 
     請按照 `uname -m` 輸出結果，來修改 `PLATFORMS` & `MAP_PLATFORMS` 的預設值
 
@@ -151,6 +152,38 @@
       ```bash
       make clean
       ```
+
 </details>
 
+## 3. pnpm 套件使用說明
 
+
+<details>
+
+<summary>pnpm 常用指令</summary>
+
+1. 安裝套件
+
+    ```bash
+    pnpm install nodemon
+    ```
+
+2. 確認目前 pnpm store 路徑
+
+    ```bash
+    pnpm store path
+    ```
+
+3. 確認 pnpm global store 路徑
+
+    ```bash
+    pnpm config get store-dir
+    ```
+
+4. 修改 pnpm global store 路徑
+
+    ```bash
+    pnpm config set store-dir "${PNPM_HOME}"
+    ```
+
+</details>

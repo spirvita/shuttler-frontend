@@ -21,6 +21,7 @@ ZSHRC                  := ${HOME}/.zshrc
 
 LOWER_ARCH             := $(shell uname -m)
 
+PNPM_HOME						   := /pnpm
 LOCAL_PORT             := 3000
 CONTAINER_PORT         := 3000
 
@@ -150,6 +151,7 @@ build: ## Build container images from Dockerfile
 			--build-arg buildtime_YARN_VERSION=$(YARN_VERSION) \
 			--build-arg buildtime_GOLANG_VERSION=$(GOLANG_VERSION) \
 			--build-arg buildtime_GUM_VERSION=$(GUM_VERSION) \
+			--build-arg buildtime_PNPM_HOME=$(PNPM_HOME) \
 			--build-arg buildtime_CONTAINER_PORT=$(CONTAINER_PORT) \
 			-t $(DOCKERHUB_ACCOUNT)/${CONTAINER_NAME}-$${map_platform} -f Dockerfile .; \
 	done

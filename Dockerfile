@@ -142,6 +142,9 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/instal
 # Install pnpm
 ##############################
 
+ARG buildtime_PNPM_HOME='/pnpm'
+ENV PNPM_HOME=${buildtime_PNPM_HOME}
+
 ARG buildtime_PNPM_VERSION='10.7.1'
 ENV PNPM_VERSION=${buildtime_PNPM_VERSION}
 RUN set -eux; \
@@ -151,7 +154,12 @@ RUN set -eux; \
       arm64) curl -sL "https://github.com/pnpm/pnpm/releases/download/v${buildtime_PNPM_VERSION}/pnpm-linux-arm64" -o "/usr/local/bin/pnpm" ;; \
       *) echo >&2 "Unsupported architecture: $LOWER_ARCH"; exit 1; \
     esac; \
-    chmod +x /usr/local/bin/pnpm
+    chmod +x /usr/local/bin/pnpm \
+    && mkdir -p ${PNPM_HOME} \
+    && pnpm config set store-dir ${PNPM_HOME} \
+    && echo "# Setup pnpm global store path" >> /root/.bashrc \
+    && echo "export PATH=$PATH:${PNPM_HOME}" >> /root/.bashrc \
+    && echo ""  >> /root/.bashrc
 
 ##############################
 # Install Yarn
