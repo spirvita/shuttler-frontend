@@ -1,5 +1,11 @@
-@import "tailwindcss";
+@import "tailwindcss" important;
 
 @theme {
-  --color-primary: #efe40e;
+  --color-black: var(--el-color-black);
+  --color-white: var(--el-color-white);
+  --color-primary: var(--el-color-primary);
+  --color-success: var(--el-color-success);
+  --color-warning: var(--el-color-warning);
+  --color-info: var(--el-color-info);
+  --color-danger: var(--el-color-danger);
 }
