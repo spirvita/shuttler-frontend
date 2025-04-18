@@ -4,22 +4,32 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@pinia/nuxt", "@element-plus/nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "@pinia/nuxt",
+    "@element-plus/nuxt",
+    "nuxt-auth-utils"
+  ],
   typescript: {
-    typeCheck: true,
+    typeCheck: true
   },
   css: ["~/assets/css/main.css"],
   elementPlus: {
-    importStyle: "scss",
+    importStyle: "scss"
   },
   vite: {
     plugins: [tailwindcss()],
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@use "~/assets/css/styles/element/index.scss";`,
-        },
-      },
-    },
+          additionalData: `@use "~/assets/css/styles/element/index.scss";`
+        }
+      }
+    }
   },
+  runtimeConfig: {
+    public: {
+      SHUTTLER_TW_API_BASE_URL: process.env.NUXT_SHUTTLER_TW_API_URL
+    }
+  }
 });

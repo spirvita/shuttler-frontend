@@ -5,7 +5,7 @@ import prettierPlugin from "eslint-plugin-prettier";
 export default withNuxt([
   {
     plugins: {
-      prettier: prettierPlugin,
+      prettier: prettierPlugin
     },
     rules: {
       "prettier/prettier": [
@@ -17,10 +17,23 @@ export default withNuxt([
           vueIndentScriptAndStyle: true, // 縮排 <script> 和 <style>
           singleAttributePerLine: true, // 每個屬性換行
           htmlWhitespaceSensitivity: "ignore", // 忽略 HTML 空白敏感度
-        },
+          trailingComma: "none"
+        }
       ],
       "no-console": "warn",
       "vue/multi-word-component-names": "off",
-    },
-  },
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "always",
+            normal: "always",
+            component: "always"
+          },
+          svg: "always",
+          math: "always"
+        }
+      ]
+    }
+  }
 ]);
