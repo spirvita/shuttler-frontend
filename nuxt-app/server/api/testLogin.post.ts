@@ -12,6 +12,6 @@ export default defineEventHandler(async (event) => {
   }
   throw createError({
     statusCode: 401,
-    message: "email or password is incorrect"
+    message: "帳號或密碼錯誤"
   });
 });

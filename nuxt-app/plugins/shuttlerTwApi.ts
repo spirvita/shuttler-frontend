@@ -1,4 +1,6 @@
-export default defineNuxtPlugin((nuxtApp) => {
+import { ElMessage } from "element-plus";
+
+export default defineNuxtPlugin((_nuxtApp) => {
   const { session } = useUserSession();
   const runtimeConfig = useRuntimeConfig();
   const shuttlerTwAPI = $fetch.create({
@@ -10,7 +12,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     async onResponseError({ response }) {
       if (response.status === 401) {
-        await nuxtApp.runWithContext(() => navigateTo("/login"));
+        // await nuxtApp.runWithContext(() => navigateTo("/login"));
+        ElMessage({
+          message: response._data?.message || "Unauthorized",
+          type: "error"
+        });
       }
     }
   });

@@ -1,13 +1,10 @@
-export const testGetData = () => {
+export const getTestData = () => {
   return useShuttlerTwAPI.get<{
     message: string;
     success: string;
-  }>("/testGetData");
+  }>("/getTestData");
 };
 
-export const testLogin = async (loginData: {
-  email: string;
-  password: string;
-}) => {
-  return useShuttlerTwAPI.post("/testLogin", loginData);
+export const testLogin = (loginData: { email: string; password: string }) => {
+  return useShuttlerTwAPI.post("/testLogin", loginData, { watch: false });
 };
