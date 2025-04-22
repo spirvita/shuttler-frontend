@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt build --dotenv .env.production",
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "nuxt generate --dotenv .env.production",
-    "preview": "nuxt preview",
+    "preview": "nuxt preview --dotenv .env.production",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.vue .",
     "lint:fix": "eslint --ext .ts,.vue . --fix"

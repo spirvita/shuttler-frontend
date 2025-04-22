@@ -25,6 +25,15 @@ export default defineNuxtConfig({
           additionalData: `@use "~/assets/css/styles/element/index.scss";`
         }
       }
+    },
+    $server: {
+      build: {
+        rollupOptions: {
+          output: {
+            preserveModules: false
+          }
+        }
+      }
     }
   },
   runtimeConfig: {
