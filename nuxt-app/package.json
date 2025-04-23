@@ -9,7 +9,8 @@
     "preview": "nuxt preview --dotenv .env.production",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.vue .",
-    "lint:fix": "eslint --ext .ts,.vue . --fix"
+    "lint:fix": "eslint --ext .ts,.vue . --fix",
+    "start": "pnpm run build && node ./.output/server/index.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": ">=0.2.6",
