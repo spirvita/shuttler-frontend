@@ -47,13 +47,15 @@
     cd shuttler-frontend
     ```
 
-2. 先把 `Makefile.origin` 重新命名為 `Makefile`
+2. 先把 `.env.example` 重新命名為 `.env`
 
     ```bash
-    cp Makefile.origin Makefile
+    cp .env.example .env
     ```
 
 3. 確認當前 CPU 架構
+
+    請按照 `uname -m` 輸出結果，來修改 `.env` 中的 `PLATFORM` 的預設值
 
     ```bash
     uname -m
@@ -72,36 +74,24 @@
       - [ARM架構](https://zh.wikipedia.org/zh-tw/ARM%E6%9E%B6%E6%A7%8B)
       - [ARM64 ABI 慣例概觀](https://learn.microsoft.com/zh-tw/cpp/build/arm64-windows-abi-conventions?view=msvc-170)
 
-4. 請依據輸出結果，修改 `Makefile`
+4. 請依據輸出結果，修改 `.env`
 
-    Makefile 請按照自已所需要的做修改即可
+    `.env` 請按照自已所需要的做修改即可
 
     | 變數名稱 | 預設值 | 說明 |
     | --- | --- | --- |
-    | LOCAL_PORT | 3000 | 使用本機的 3000 埠號 |
-    | CONTAINER_PORT | 3000 | 使用容器內的 3000 埠號 |
-    | PLATFORMS | linux/amd64 linux/arm64/v8 | 確定容器可使用平台 |
-    | MAP_PLATFORMS | amd64 arm64v8 | 確定容器可使用平台 |
-    | DOCKER_VERSION | 28.0.4 | Docker 版本 |
-    | DOCKER_COMPOSE_VERSION | 2.34.0 | Docker Compose 版本 |
-    | BUILDX_VERSION | 0.22.0 | Docker Buildx 版本 |
+    | PROJECT_NAME | demo | 專案名稱 |
+    | DOCKERHUB_ACCOUNT | demo | Docker Hub 上的使用者名稱 |
+    | PLATFORM | arm64 | 當前電腦的 CPU 架構 | 
     | NVM_VERSION | 0.40.2 | NVM 版本 |
     | NODE_VERSION | 22.14.0 | NODE 版本 |
-    | PNPM_VERSION | 10.7.1 | PNPM 版本 |
+    | PNPM_HOME | /pnpm | pnpm 套件的全局目錄 |
+    | PNPM_VERSION | 10.8.1 | PNPM 版本 |
     | YARN_VERSION | 1.22.22 | YARN 版本 |
     | GOLANG_VERSION | 1.24.2 | GOLANG 版本 |
-    | GUM_VERSION | 0.14.5 | GUM 版本 |
-    | DOCKERHUB_ACCOUNT | demo | Docker Hub 上的使用者名稱 |
-    | PNPM_HOME | /pnpm | pnpm 套件的全局目錄 |
-
-    請按照 `uname -m` 輸出結果，來修改 `PLATFORMS` & `MAP_PLATFORMS` 的預設值
-
-    - 輸出結果為 $\textcolor{Orange}{x86\\_64}$
-      - 請修改為 PLATFORMS=`linux/amd64`
-      - 請修改為 MAP_PLATFORMS=`amd64`
-    - 輸出結果為 $\textcolor{Orange}{arm64}$
-      - 請修改為 PLATFORMS=`linux/arm64/v8`
-      - 請修改為 MAP_PLATFORMS=`arm64v8`
+    | GUM_VERSION | 0.16.0 | GUM 版本 |
+    | LOCAL_PORT | 3000 | 使用本機的 3000 埠號 |
+    | CONTAINER_PORT | 3000 | 使用容器內的 3000 埠號 |
 
 5. make 指令使用說明
 

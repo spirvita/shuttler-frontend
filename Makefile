@@ -1,4 +1,4 @@
-# Update: 2025-04-05
+# Update: 2025-04-27
 
 SHELL := /bin/bash
 
@@ -21,18 +21,19 @@ ZSHRC                  := ${HOME}/.zshrc
 
 LOWER_ARCH             := $(shell uname -m)
 
-PNPM_HOME						   := /pnpm
-LOCAL_PORT             := 3000
-CONTAINER_PORT         := 3000
-
 # 設定平台
-PLATFORMS := linux/amd64 linux/arm64/v8
-MAP_PLATFORMS := amd64 arm64v8
+# PLATFORMS := linux/amd64 linux/arm64
+# MAP_PLATFORMS := amd64 arm64
+PLATFORMS := linux/arm64
+MAP_PLATFORMS := arm64
 
-CONTAINER_IMAGES_PURGE := $(shell docker images -q -f dangling=true)
-CONTAINER_CLEAN        := $(shell docker ps -qa -f status=exited)
-CONTAINER_NAME         := shuttler-frontend
+# Set variable for user customization, if variable have be setting, will be replaced.
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
 
+CONTAINER_NAME         := $(PROJECT_NAME)-frontend
 
 # Set defaults DOCKER_VERSION, if variable have be setting, will be replaced.
 # https://download.docker.com/linux/static/stable/x86_64/
@@ -83,12 +84,12 @@ endif
 
 # Set defaults NEOVIM_VERSION, if variable have be setting, will be replaced.
 ifndef GUM_VERSION
-	override GUM_VERSION=0.14.5
+	override GUM_VERSION=0.16.0
 endif
 
 # Set DockerHub Account Name
 ifndef DOCKERHUB_ACCOUNT
-	override DOCKERHUB_ACCOUNT=demo
+	override DOCKERHUB_ACCOUNT=${DOCKERHUB_ACCOUNT}
 endif
 
 define running_platform
@@ -96,15 +97,14 @@ define running_platform
 	printf "${YELLOW}%-2sBuilding Platform${RESET} ${CYAN}$${PLATFORM}${RESET}\n"; \
 	printf "${YELLOW}%-2sMap Platform${RESET} ${CYAN}$${MAP_PLATFORM}${RESET}\n"; \
 	printf "${YELLOW}%-2sStart running ${RESET} ${CYAN}$(DOCKERHUB_ACCOUNT)/${CONTAINER_NAME}-$${MAP_PLATFORM}${RESET} ${YELLOW}Container Images${RESET}\n"; \
-	printf "${YELLOW}%-4sDOCKER_VERSION=${RESET}${MAGENTA}${DOCKER_VERSION}${RESET}\n"; \
-	printf "${YELLOW}%-4sDOCKER_COMPOSE_VERSION=${RESET}${MAGENTA}${DOCKER_COMPOSE_VERSION}${RESET}\n"; \
-	printf "${YELLOW}%-4sBUILDX_VERSION=${RESET}${MAGENTA}${BUILDX_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sNVM_VERSION=${RESET}${MAGENTA}${NVM_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sNODE_VERSION=${RESET}${MAGENTA}${NODE_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sPNPM_VERSION=${RESET}${MAGENTA}${PNPM_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sYARN_VERSION=${RESET}${MAGENTA}${YARN_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sGOLANG_VERSION=${RESET}${MAGENTA}${GOLANG_VERSION}${RESET}\n"; \
 	printf "${YELLOW}%-4sGUM_VERSION=${RESET}${MAGENTA}${GUM_VERSION}${RESET}\n"; \
+	printf "${YELLOW}%-4sPNPM_HOME=${RESET}${MAGENTA}${PNPM_HOME}${RESET}\n"; \
+	printf "${YELLOW}%-4sCONTAINER_PORT=${RESET}${MAGENTA}${CONTAINER_PORT}${RESET}\n"; \
 	printf "${YELLOW}########################################################################################################################${RESET}\n"; \
 	docker run --name ${CONTAINER_NAME}-$${MAP_PLATFORM} \
 		--volume "$${HOME}/.ssh:/root/.ssh" \
@@ -133,15 +133,14 @@ build: ## Build container images from Dockerfile
 		printf "${YELLOW}%-2sBuilding Platform${RESET} ${CYAN}$${platform}${RESET}\n"; \
 		printf "${YELLOW}%-2sMap Platform${RESET} ${CYAN}$${map_platform}${RESET}\n"; \
 		printf "${YELLOW}%-2sStart building ${RESET} ${CYAN}$(DOCKERHUB_ACCOUNT)/${CONTAINER_NAME}-$${map_platform}${RESET} ${YELLOW}Container Images${RESET}\n"; \
-		printf "${YELLOW}%-4sDOCKER_VERSION=${RESET}${MAGENTA}${DOCKER_VERSION}${RESET}\n"; \
-		printf "${YELLOW}%-4sDOCKER_COMPOSE_VERSION=${RESET}${MAGENTA}${DOCKER_COMPOSE_VERSION}${RESET}\n"; \
-		printf "${YELLOW}%-4sBUILDX_VERSION=${RESET}${MAGENTA}${BUILDX_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sNVM_VERSION=${RESET}${MAGENTA}${NVM_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sNODE_VERSION=${RESET}${MAGENTA}${NODE_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sPNPM_VERSION=${RESET}${MAGENTA}${PNPM_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sYARN_VERSION=${RESET}${MAGENTA}${YARN_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sGOLANG_VERSION=${RESET}${MAGENTA}${GOLANG_VERSION}${RESET}\n"; \
 		printf "${YELLOW}%-4sGUM_VERSION=${RESET}${MAGENTA}${GUM_VERSION}${RESET}\n"; \
+		printf "${YELLOW}%-4sPNPM_HOME=${RESET}${MAGENTA}${PNPM_HOME}${RESET}\n"; \
+		printf "${YELLOW}%-4sCONTAINER_PORT=${RESET}${MAGENTA}${CONTAINER_PORT}${RESET}\n"; \
 		printf "${YELLOW}########################################################################################################################${RESET}\n"; \
 		docker buildx build --platform=$${platform} \
 			--build-arg TARGETPLATFORM=$${platform} \
@@ -171,9 +170,9 @@ run: ## Start running container, when you exit container, container will be stop
 				$(call running_platform,$$PLATFORM,$$MAP_PLATFORM); \
 				break; \
 				;; \
-			linux/arm64/v8) \
-				PLATFORM="linux/arm64/v8"; \
-				MAP_PLATFORM="arm64v8"; \
+			linux/arm64) \
+				PLATFORM="linux/arm64"; \
+				MAP_PLATFORM="arm64"; \
 				$(call running_platform,$$PLATFORM,$$MAP_PLATFORM); \
 				break; \
 				;; \
@@ -193,11 +192,11 @@ ifeq ($(LOWER_ARCH), x86_64)
 	fi;
 	@docker exec -it $(CONTAINER_NAME)-amd64 bash
 else ifeq ($(LOWER_ARCH), arm64)
-	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64v8" --format "{{.State}}"); \
+	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64" --format "{{.State}}"); \
 	if [ "$${CONTAINER_STATUS}" = "running" ]; then \
-		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64v8${RESET} is ${GREEN}running${RESET}.\n"; \
+		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64${RESET} is ${GREEN}running${RESET}.\n"; \
 	fi;
-	@docker exec -it $(CONTAINER_NAME)-arm64v8 bash
+	@docker exec -it $(CONTAINER_NAME)-arm64 bash
 else
 	@printf "${RED}[ERROR]${RESET}:%-2sUnknown architecture: ${MAGENTA}$(LOWER_ARCH)${RESET}\n";
 endif
@@ -213,13 +212,13 @@ ifeq ($(LOWER_ARCH), x86_64)
 		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-amd64${RESET} is ${GREEN}running${RESET}.\n";
 	@docker exec -it $(CONTAINER_NAME)-amd64 bash
 else ifeq ($(LOWER_ARCH), arm64)
-	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64v8" --format "{{.State}}"); \
+	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64" --format "{{.State}}"); \
 	if [ "$${CONTAINER_STATUS}" = "exited" ]; then \
-		printf "${MAGENTA}[WARNING]${RESET}%-1sContainer ${CYAN}$(CONTAINER_NAME)-arm64v8${RESET} is ${MAGENTA}exited${RESET}. ${YELLOW}Restarting...${RESET}\n"; \
+		printf "${MAGENTA}[WARNING]${RESET}%-1sContainer ${CYAN}$(CONTAINER_NAME)-arm64${RESET} is ${MAGENTA}exited${RESET}. ${YELLOW}Restarting...${RESET}\n"; \
 	fi;
-	@docker start $(CONTAINER_NAME)-arm64v8 >> /dev/null; \
-		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64v8${RESET} is ${GREEN}running${RESET}.\n";
-	@docker exec -it $(CONTAINER_NAME)-arm64v8 bash
+	@docker start $(CONTAINER_NAME)-arm64 >> /dev/null; \
+		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64${RESET} is ${GREEN}running${RESET}.\n";
+	@docker exec -it $(CONTAINER_NAME)-arm64 bash
 else
 	@printf "${RED}[ERROR]${RESET}:%-2sUnknown architecture: ${MAGENTA}$(LOWER_ARCH)${RESET}\n";
 endif
@@ -234,23 +233,27 @@ ifeq ($(LOWER_ARCH), x86_64)
 	@docker stop $(CONTAINER_NAME)-amd64 >> /dev/null; \
 		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-amd64${RESET} is ${GREEN}exited${RESET}.\n";
 else ifeq ($(LOWER_ARCH), arm64)
-	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64v8" --format "{{.State}}"); \
+	@CONTAINER_STATUS=$(shell docker ps -a --filter "name=$(CONTAINER_NAME)-arm64" --format "{{.State}}"); \
 	if [ "$${CONTAINER_STATUS}" = "running" ]; then \
-		printf "[INFO]%-4sStop Container ${CYAN}$(CONTAINER_NAME)-arm64v8${RESET}.\n"; \
+		printf "[INFO]%-4sStop Container ${CYAN}$(CONTAINER_NAME)-arm64${RESET}.\n"; \
 	fi;
-	@docker stop $(CONTAINER_NAME)-arm64v8 >> /dev/null; \
-		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64v8${RESET} is ${GREEN}exited${RESET}.\n";
+	@docker stop $(CONTAINER_NAME)-arm64 >> /dev/null; \
+		printf "[INFO]%-4sContainer ${CYAN}$(CONTAINER_NAME)-arm64${RESET} is ${GREEN}exited${RESET}.\n";
 else
 	@printf "${RED}[ERROR]${RESET}:%-2sUnknown architecture: ${MAGENTA}$(LOWER_ARCH)${RESET}\n";
 endif
 
 .PHONY: clean
 clean: ## Garbage disposal
-	@if [ ! -z $(CONTAINER_IMAGES_PURGE) ]; then \
-		docker rmi -f $(CONTAINER_IMAGES_PURGE); \
+	@CONTAINER_IMAGES_PURGE=$$(docker images -q -f dangling=true); \
+	if [ ! -z "$${CONTAINER_IMAGES_PURGE}" ]; then \
+		docker rmi -f $${CONTAINER_IMAGES_PURGE}; \
+	else \
+		echo "No dangling images to remove."; \
 	fi
-	@if [ ! -z $(CONTAINER_CLEAN) ]; then \
-		docker rm -f $(CONTAINER_CLEAN); \
+	@CONTAINER_CLEAN=$$(docker ps -a -q -f status=exited -f status=created); \
+	if [ ! -z "$${CONTAINER_CLEAN}" ]; then \
+		docker rm -f $${CONTAINER_CLEAN}; \
 	fi
 
 .PHONY: help

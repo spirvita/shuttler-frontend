@@ -69,57 +69,6 @@ RUN apt-get update -y  \
     zip
 
 ##############################
-# Install Docker
-##############################
-
-ARG buildtime_DOCKER_VERSION='24.0.7' \
-    buildtime_DOCKER_COMPOSE_VERSION='2.24.0' \
-    buildtime_BUILDX_VERSION='0.11.2'
-ENV DOCKER_CHANNEL=stable \
-    DOCKER_VERSION=${buildtime_DOCKER_VERSION} \
-    DOCKER_COMPOSE_VERSION=${buildtime_DOCKER_COMPOSE_VERSION} \
-    BUILDX_VERSION=${buildtime_BUILDX_VERSION}
-RUN set -eux; \
-    arch="$(uname -m)"; \
-    case "$arch" in \
-        x86_64) dockerArch='x86_64' ; buildx_arch='linux-amd64' ;; \
-        armhf) dockerArch='armel' ; buildx_arch='linux-arm-v6' ;; \
-        armv7) dockerArch='armhf' ; buildx_arch='linux-arm-v7' ;; \
-        aarch64) dockerArch='aarch64' ; buildx_arch='linux-arm64' ;; \
-        *) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;; \
-    esac && \
-    wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz" && \
-    tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin/ && \
-    rm docker.tgz && \
-    wget -O docker-buildx "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.${buildx_arch}" && \
-    mkdir -p /usr/local/lib/docker/cli-plugins && \
-    chmod +x docker-buildx && \
-    mv docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx && \
-    dockerd --version && \
-    docker --version && \
-    docker buildx version
-
-COPY container-utility/modprobe \
-      container-utility/start-docker.sh \
-      container-utility/entrypoint.sh \
-      /usr/local/bin/
-COPY container-utility/supervisor/ /etc/supervisor/conf.d/
-COPY container-utility/logger.sh /opt/bash-utils/logger.sh
-
-RUN chmod +x /usr/local/bin/start-docker.sh \
-    /usr/local/bin/entrypoint.sh \
-    /usr/local/bin/modprobe
-
-VOLUME /var/lib/docker
-
-# Install Docker Compose
-RUN set -eux; \
-    curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose && \
-    docker-compose version && \
-    ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
-
-##############################
 # Install nvm and install Node.js LTS version
 ##############################
 
@@ -246,5 +195,4 @@ WORKDIR /work
 ARG buildtime_CONTAINER_PORT=3000
 EXPOSE ${buildtime_CONTAINER_PORT}
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["bash"]
