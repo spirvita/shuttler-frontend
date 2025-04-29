@@ -3,14 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build --dotenv .env.production",
-    "dev": "nuxt dev --dotenv .env.local",
-    "generate": "nuxt generate --dotenv .env.production",
-    "preview": "nuxt preview --dotenv .env.production",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": " nuxt preview --dotenv ../.env",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.vue .",
     "lint:fix": "eslint --ext .ts,.vue . --fix",
-    "start": "pnpm run build && node ./.output/server/index.mjs"
+    "start": "pnpm run build && node --env-file=../.env ./.output/server/index.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": ">=0.2.6",

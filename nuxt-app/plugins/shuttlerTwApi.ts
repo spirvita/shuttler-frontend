@@ -4,7 +4,7 @@ export default defineNuxtPlugin((_nuxtApp) => {
   const { session } = useUserSession();
   const runtimeConfig = useRuntimeConfig();
   const shuttlerTwAPI = $fetch.create({
-    baseURL: runtimeConfig.public.SHUTTLER_TW_API_BASE_URL,
+    baseURL: runtimeConfig.public.API_BASE_URL,
     onRequest({ request: _request, options }) {
       if (session?.value?.token) {
         options.headers.set("Authorization", `Bearer ${session.value?.token}`);

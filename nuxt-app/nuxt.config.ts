@@ -1,11 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import tailwindcss from "@tailwindcss/vite";
+import * as dotenv from "dotenv";
+import { resolve } from "path";
+
+dotenv.config({ path: resolve(__dirname, "../.env") });
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devServer: {
-    port: process.env.NUXT_SERVER_PORT
-      ? parseInt(process.env.NUXT_SERVER_PORT, 10)
-      : 3000
+  app: {
+    baseURL: process.env.NUXT_BASE_URL
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
@@ -61,7 +65,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      SHUTTLER_TW_API_BASE_URL: process.env.NUXT_SHUTTLER_TW_API_URL
+      API_BASE_URL: process.env.NUXT_API_BASE_URL
     }
   }
 });
