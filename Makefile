@@ -21,19 +21,21 @@ ZSHRC                  := ${HOME}/.zshrc
 
 LOWER_ARCH             := $(shell uname -m)
 
-# 設定平台
-# PLATFORMS := linux/amd64 linux/arm64
-# MAP_PLATFORMS := amd64 arm64
-PLATFORMS := linux/arm64
-MAP_PLATFORMS := arm64
-
 # Set variable for user customization, if variable have be setting, will be replaced.
 ifneq (,$(wildcard ./.env))
 	include .env
 	export
 endif
 
+# 設定平台
+PLATFORMS              := linux/${PLATFORM}
+MAP_PLATFORMS          := ${PLATFORM}
+
+# 設定容器名稱
 CONTAINER_NAME         := $(PROJECT_NAME)-frontend
+
+# Mapping container port to Nuxt devServer of NUXT_CONTAINER_PORT
+CONTAINER_PORT         := $(NUXT_CONTAINER_PORT)
 
 # Set defaults DOCKER_VERSION, if variable have be setting, will be replaced.
 # https://download.docker.com/linux/static/stable/x86_64/
