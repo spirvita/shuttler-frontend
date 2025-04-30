@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
-
 <template>
-  <div class="text-center">Page Login</div>
+  <div>
+    <div class="text-center">Page Buy Point</div>
+  </div>
 </template>
-
 <style scoped></style>
