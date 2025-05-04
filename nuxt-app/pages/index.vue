@@ -2,7 +2,7 @@
   import { ElMessage } from "element-plus";
 
   ElMessage({
-    message: "歡迎！",
+    message: "歡迎 Welcom !!!",
     type: "success"
   });
 </script>
