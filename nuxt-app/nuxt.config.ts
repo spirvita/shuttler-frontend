@@ -17,7 +17,16 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@pinia/nuxt",
     "@element-plus/nuxt",
-    "nuxt-auth-utils"
+    "nuxt-auth-utils",
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          Roboto: true,
+          "Noto Sans": true
+        }
+      }
+    ]
   ],
   typescript: {
     typeCheck: true
