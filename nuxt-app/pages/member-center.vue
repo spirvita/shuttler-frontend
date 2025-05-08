@@ -2,12 +2,12 @@
   import ElMenuForUser from "~/components/memberCenter/ElMenuForUser.vue";
   import { Money } from "@element-plus/icons-vue";
 
-  const defaultAvator = ref(
+  const defaultAvatar = ref(
     "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
   );
   const memberInfo = ref({
     name: "Vic",
-    avator: "",
+    avatar: "",
     points: 4000
   });
 </script>
@@ -21,7 +21,8 @@
         >
           <el-avatar
             :size="80"
-            :src="memberInfo.avator || defaultAvator"
+            :src="memberInfo.avatar || defaultAvatar"
+
           />
           <p class="font-bold py-3">{{ memberInfo.name }}</p>
           <p class="flex justify-center items-center">
