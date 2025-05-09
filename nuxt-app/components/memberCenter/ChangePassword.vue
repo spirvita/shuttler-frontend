@@ -13,7 +13,7 @@
       { required: true, message: "請輸入新密碼", trigger: "blur" },
       {
         pattern: /^(?=.*[A-Za-z])(?=.*\d).{10,}$/,
-        message: "密碼必須至少 10 個字元，且至少包含 1 個數字和 1 個英文字母",
+        message: "密碼至少 10 個字元，且包含 1 個數字和 1 個英文字母",
         trigger: "blur"
       }
     ],

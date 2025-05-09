@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import ChangeMemberInfo from "~/components/memberCenter/ChangeMemberInfo.vue";
-  import ChangePassword from "~/components/memberCenter/ChangePassword.vue";
+  import ChangeMemberInfo from "@/components/memberCenter/ChangeMemberInfo.vue";
+  import ChangePassword from "@/components/memberCenter/ChangePassword.vue";
 
   const activeName = ref("memberInfo");
+</script>
 <template>
   <div>
     <h2 class="mb-3">帳號設定</h2>

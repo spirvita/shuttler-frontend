@@ -27,8 +27,8 @@ function createTwDistrictsOptions(cityName: string) {
 export function useTwLocationState() {
   const isInitLocationByZip = ref(false);
   const twCitiesOptions = createTwCitiesOptions();
-  const twCity = ref(twCitiesOptions[0].value);
-  const twDistrict = ref(createTwDistrictsOptions(twCity.value)[0].value);
+  const twCity = ref("");
+  const twDistrict = ref("");
   const twDistrictsOptions = computed(() =>
     createTwDistrictsOptions(twCity.value)
   );
@@ -50,9 +50,9 @@ export function useTwLocationState() {
     (newVal) => {
       if (isInitLocationByZip.value) {
         isInitLocationByZip.value = false;
-      } else {
-        twDistrict.value = createTwDistrictsOptions(newVal)[0].value;
+        return;
       }
+      twDistrict.value = createTwDistrictsOptions(newVal)[0].value;
     }
   );
 

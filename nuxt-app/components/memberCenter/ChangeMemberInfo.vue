@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { FormInstance, FormRules } from "element-plus";
-  import type { MemberInfo } from "~/types/memberCenter";
+  import type { MemberInfo } from "@/types/memberCenter";
   import { ElMessage } from "element-plus";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
@@ -25,7 +25,7 @@
     attendCount: 12
   });
   initLocationByZip(memberInfo.value.preferredLocation[0]);
-  
+
   const memberInfoFormRules = ref<FormRules<MemberInfo>>({
     name: [
       { required: true, message: "請輸入名稱", trigger: "blur" },
@@ -70,6 +70,7 @@
       label-position="top"
       label-width="auto"
       class="w-full xl:w-1/3"
+      :model="memberInfo"
       :rules="memberInfoFormRules"
     >
       <el-form-item
@@ -87,7 +88,7 @@
       </el-form-item>
       <el-form-item
         label="羽球程度"
-        prop="level"
+        prop=""
         required
       >
         <el-select
