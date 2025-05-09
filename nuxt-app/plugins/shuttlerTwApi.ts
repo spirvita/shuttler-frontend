@@ -1,13 +1,15 @@
 import { ElMessage } from "element-plus";
+import { useAuthStore } from "~/stores/auth";
 
 export default defineNuxtPlugin((_nuxtApp) => {
-  const { session } = useUserSession();
+  // const { session } = useUserSession();
+  const authStore = useAuthStore();
   const runtimeConfig = useRuntimeConfig();
   const shuttlerTwAPI = $fetch.create({
     baseURL: runtimeConfig.public.API_BASE_URL,
     onRequest({ request: _request, options }) {
-      if (session?.value?.token) {
-        options.headers.set("Authorization", `Bearer ${session.value?.token}`);
+      if (authStore.token) {
+        options.headers.set("Authorization", `Bearer ${authStore.token}`);
       }
     },
     async onResponseError({ response }) {

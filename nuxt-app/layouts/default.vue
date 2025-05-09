@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+
   const loginDialogVisible = ref(false);
-  const isSignUp = ref(false);
+  const authStore = useAuthStore();
 </script>
 
 <template>
@@ -14,26 +16,16 @@
         <ElButton
           type="primary"
           class="text-black rounded-2xl"
-          @click="loginDialogVisible = true"
+          @click="authStore.isAuthenticated ? authStore.clearToken() : loginDialogVisible = true"
         >
-          登入 / 註冊
+          {{ authStore.isAuthenticated ? "登出" : "登入 / 註冊" }}
         </ElButton>
       </div>
     </header>
     <slot />
 
-    <div class="flex justify-center items-center mt-5">
-      <el-switch
-        v-model="isSignUp"
-        size="large"
-        active-text="註冊"
-        inactive-text="登入"
-      />
-    </div>
-
     <LoginSignUpDialog
       v-model:visible="loginDialogVisible"
-      :is-sign-up="isSignUp"
     />
   </div>
 </template>
