@@ -1,15 +1,17 @@
 <script setup lang="ts">
-  import ElMenuForUser from "~/components/memberCenter/ElMenuForUser.vue";
-  import { Money } from "@element-plus/icons-vue";
+  import ElMenuForUser from "@/components/memberCenter/ElMenuForUser.vue";
+  import { useUserStore } from "@/stores/user";
+
+  definePageMeta({
+    middleware: ["auth"]
+  })
 
   const defaultAvatar = ref(
     "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
   );
-  const memberInfo = ref({
-    name: "Vic",
-    avatar: "",
-    points: 4000
-  });
+  const userStore = useUserStore();
+  await userStore.fetchUserInfo()
+  const memberInfo = computed(() => userStore.userInfo);
 </script>
 <template>
   <div class="container flex py-10">
@@ -21,16 +23,10 @@
         >
           <el-avatar
             :size="80"
-            :src="memberInfo.avatar || defaultAvatar"
+            :src="memberInfo?.avatar || defaultAvatar"
 
           />
-          <p class="font-bold py-3">{{ memberInfo.name }}</p>
-          <p class="flex justify-center items-center">
-            <span class="pr-1">
-              {{ memberInfo.points }}
-            </span>
-            <el-icon><Money /></el-icon>
-          </p>
+          <p class="font-bold py-3">{{ memberInfo?.name }}</p>
         </section>
         <ElMenuForUser />
       </div>

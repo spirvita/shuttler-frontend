@@ -6,19 +6,25 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     setToken(token: string) {
+      const cookie = useCookie("token")
       this.token = token;
-      // 存储到 localStorage
-      localStorage.setItem("token", token);
+      cookie.value = token;
     },
 
-    clearToken() {
+    async clearToken() {
+      const { clear, fetch } = useUserSession();
       this.token = null;
       this.user = null;
-      localStorage.removeItem("token");
+      await clear();
+      await fetch();
+      const cookie = useCookie("token")
+      cookie.value = null;
+      navigateTo("/");
     },
 
     initializeToken() {
-      const token = localStorage.getItem("token");
+      const cookie = useCookie("token")
+      const token = cookie.value;
       if (token) {
         this.token = token;
       }

@@ -1,14 +1,3 @@
-export const getTestData = () => {
-  return useShuttlerTwAPI.get<{
-    message: string;
-    success: string;
-  }>("/getTestData");
-};
-
-export const testLogin = (loginData: { email: string; password: string }) => {
-  return useShuttlerTwAPI.post("/testLogin", loginData, { watch: false });
-};
-
 export const emailLogin = (loginData: { email: string; password: string }) => {
   return useShuttlerTwAPI.post<{
     data: {
@@ -21,6 +10,13 @@ export const emailLogin = (loginData: { email: string; password: string }) => {
     };
     message: string;
   }>("/auth/login", loginData, { watch: false });
+};
+
+export const nuxtEmailLogin = (loginData: { email: string; password: string }) => {
+  return $fetch("/api/login", {
+    method: "POST",
+    body: loginData
+  })
 };
 
 export const emailSignUp = (signUpData: {
@@ -41,18 +37,4 @@ export const emailSignUp = (signUpData: {
   }>("/auth/signup", signUpData, { watch: false });
 };
 
-export const getUserInfo = () => {
-  return useShuttlerTwAPI.get<{
-    data: {
-      name: string;
-      email: string;
-      avatar: string | null;
-      preferredLocation: string[];
-      registerDate: string;
-      level: string[];
-      totalPoints: number;
-      attendCount: number;
-    };
-    message: string;
-  }>("/user/profile", { watch: false });
-};
+
