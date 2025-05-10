@@ -1,9 +1,18 @@
 import { ElMessage } from "element-plus";
 import { useAuthStore } from "~/stores/auth";
 
+const responseErrorMessage: { [key: number]: string } = {
+  401: "請先登入",
+  403: "您沒有權限",
+  404: "找不到該資源",
+  408: "請求逾時，請稍後再試",
+  409: "請求衝突，請稍後再試",
+  500: "伺服器錯誤，請稍後再試",
+}
+
 export default defineNuxtPlugin((_nuxtApp) => {
-  // const { session } = useUserSession();
   const authStore = useAuthStore();
+  authStore.initializeToken();
   const runtimeConfig = useRuntimeConfig();
   const shuttlerTwAPI = $fetch.create({
     baseURL: runtimeConfig.public.API_BASE_URL,
@@ -12,14 +21,12 @@ export default defineNuxtPlugin((_nuxtApp) => {
         options.headers.set("Authorization", `Bearer ${authStore.token}`);
       }
     },
-    async onResponseError({ response }) {
-      if (response.status === 401) {
-        // await nuxtApp.runWithContext(() => navigateTo("/login"));
-        ElMessage({
-          message: response._data?.message || "Unauthorized",
-          type: "error"
-        });
-      }
+    onResponseError({ response }) {
+      const message = response._data?.message || responseErrorMessage[response.status];
+      ElMessage({
+        message: message,
+        type: "error"
+      });
     }
   });
 

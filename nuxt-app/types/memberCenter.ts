@@ -3,7 +3,7 @@ export interface MemberInfo {
   avatar: string;
   email: string;
   registerDate: string;
-  level: number[];
-  points: number;
+  level: number;
   attendCount: number;
+  preferredLocation: string[];
 }

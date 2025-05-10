@@ -1,11 +1,4 @@
-<script setup lang="ts">
-  import { ElMessage } from "element-plus";
-
-  ElMessage({
-    message: "歡迎 Welcom !!!",
-    type: "success"
-  });
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>

@@ -4,6 +4,10 @@
   import { ElMessage } from "element-plus";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
+  import { useUserStore } from "@/stores/user";
+  import { updateUserInfo } from "@/apis/user";
+
+  const userStore = useUserStore();
 
   const shuttlerLevelOptions = useShuttlerLevelOptions();
   const {
@@ -13,18 +17,9 @@
     twDistrict,
     initLocationByZip
   } = useTwLocationState();
+  const memberInfo = ref<MemberInfo>(JSON.parse(JSON.stringify(userStore.userInfo)));
 
-  const memberInfo = ref({
-    name: "Vic",
-    avatar: "",
-    email: "abc123@gmail.com",
-    registerDate: "2025-05-01",
-    preferredLocation: ["100"],
-    level: 1,
-    points: 1000,
-    attendCount: 12
-  });
-  initLocationByZip(memberInfo.value.preferredLocation[0]);
+  initLocationByZip(memberInfo.value?.preferredLocation?.[0] ?? "100");
 
   const memberInfoFormRules = ref<FormRules<MemberInfo>>({
     name: [
@@ -41,8 +36,10 @@
 
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    await formEl.validate((valid, _fields) => {
+    await formEl.validate( async (valid, _fields) => {
       if (valid) {
+        await updateUserInfo(memberInfo.value);
+        userStore.setUserInfo(memberInfo.value);
         ElMessage({
           message: "修改成功",
           type: "success"

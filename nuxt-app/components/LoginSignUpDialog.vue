@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { emailLogin, emailSignUp, getUserInfo } from "@/apis/auth";
+import { emailSignUp, nuxtEmailLogin } from "@/apis/auth";
 import { ElMessage } from "element-plus";
 import { useAuthStore } from "~/stores/auth";
+import { useUserStore } from "@/stores/user";
 
 const { visible } = defineProps({
   visible: {
@@ -23,47 +24,61 @@ const emit = defineEmits<{
 }>();
 
 const authStore = useAuthStore();
+const { user, fetch: refreshSession } = useUserSession();
 
 const handleSubmit = async () => {
+  if (!form.value.email || !form.value.password) {
+    ElMessage({
+      message: "請填寫帳號和密碼",
+      type: "warning",
+    });
+    return;
+  }
+  if (isSignUp.value && !form.value.name) {
+    ElMessage({
+      message: "請填寫暱稱",
+      type: "warning",
+    });
+    return;
+  }
   if (isSignUp.value) {
     await handleEmailSignUp();
   } else {
     await handleEmailLogin();
   }
-  const { data } = await getUserInfo();
-  console.log(data.value);
-  
+  form.value = {
+    email: "",
+    password: "",
+    name: "",
+  };
 };
 
 const handleEmailSignUp = async () => {
-  const { data } = await emailSignUp({
+  await emailSignUp({
     email: form.value.email,
     password: form.value.password,
     name: form.value.name,
   });
-
-  if (data.value?.data.token) {
-    ElMessage({
-      message: "註冊成功",
-      type: "success",
-    });
-    authStore.setToken(data.value?.data.token);
-    emit("update:visible", false);
-  }
+  ElMessage({
+    message: "您已成功註冊，請重新登入",
+    type: "success",
+  });
+  navigateTo("/");
+  emit("update:visible", false);
 };
 
 const handleEmailLogin = async () => {
-  const { data } = await emailLogin({
+  const { token } = await nuxtEmailLogin({
     email: form.value.email,
     password: form.value.password,
   });
-
-  if (data.value?.data.token) {
+  await refreshSession();
+  if (token) {
     ElMessage({
-      message: "登入成功",
+      message: `歡迎 ${user.value?.name}`,
       type: "success",
     });
-    authStore.setToken(data.value?.data.token);
+    authStore.setToken(token);
     emit("update:visible", false);
   }
 };

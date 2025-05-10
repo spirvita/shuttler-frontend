@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth';
+  import { useAuthStore } from '~/stores/auth';
 
   const loginDialogVisible = ref(false);
   const authStore = useAuthStore();
+  const { loggedIn } = useUserSession();
 </script>
 
 <template>
@@ -13,6 +14,7 @@ import { useAuthStore } from '~/stores/auth';
         <NuxtLink to="/create-activity">舉辦活動</NuxtLink>
         <NuxtLink to="/buy-point">購買點數</NuxtLink>
         <NuxtLink to="/about">關於我們</NuxtLink>
+        <NuxtLink v-if="loggedIn" to="/member-center">會員中心</NuxtLink>
         <ElButton
           type="primary"
           class="text-black rounded-2xl"
