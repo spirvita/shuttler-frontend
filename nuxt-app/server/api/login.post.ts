@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { data, message } = await $fetch<LoginResponse>(`${process.env.NUXT_API_BASE_URL}/auth/login`, {
+    const { data, message } = await $fetch<LoginResponse>("https://dev-api.shuttler.tw/api/v1/auth/login", {
       method: "POST",
       body: {
         email,
