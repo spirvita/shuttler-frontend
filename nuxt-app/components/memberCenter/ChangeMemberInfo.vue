@@ -20,6 +20,9 @@
   const memberInfo = ref<MemberInfo>(JSON.parse(JSON.stringify(userStore.userInfo)));
 
   initLocationByZip(memberInfo.value?.preferredLocation?.[0] ?? "100");
+  if (memberInfo.value.level === null) {
+    memberInfo.value.level = shuttlerLevelOptions[0].value;
+  }
 
   const memberInfoFormRules = ref<FormRules<MemberInfo>>({
     name: [
@@ -30,20 +33,26 @@
         message: "名稱長度應在 2 到 10 個字之間",
         trigger: "blur"
       }
-    ]
+    ],
   });
   const ruleFormRef = ref<FormInstance>();
+
+  const handleUpdateUserInfo = async () => {
+    const { error } = await updateUserInfo(memberInfo.value);
+    if (!error.value) {
+      userStore.setUserInfo(memberInfo.value);
+      ElMessage({
+        message: "修改成功",
+        type: "success"
+      });
+    }
+  }
 
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     await formEl.validate( async (valid, _fields) => {
       if (valid) {
-        await updateUserInfo(memberInfo.value);
-        userStore.setUserInfo(memberInfo.value);
-        ElMessage({
-          message: "修改成功",
-          type: "success"
-        });
+        await handleUpdateUserInfo();
       } else {
         ElMessage({
           message: "提交資料有錯誤喔! 請檢查後再送出",

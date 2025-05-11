@@ -13,7 +13,7 @@ export const emailLogin = (loginData: { email: string; password: string }) => {
 };
 
 export const nuxtEmailLogin = (loginData: { email: string; password: string }) => {
-  return $fetch("/api/login", {
+  return useFetch("/api/login", {
     method: "POST",
     body: loginData
   })

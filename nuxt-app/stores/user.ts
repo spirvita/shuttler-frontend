@@ -13,7 +13,6 @@ export const useUserStore = defineStore("user", () => {
   }
   async function setUserInfo(data: MemberInfo) {
     userInfo.value = data ? JSON.parse(JSON.stringify(data)) : {};
-    console.log(userInfo.value);
   }
 
   return { userInfo, setUserInfo, fetchUserInfo };

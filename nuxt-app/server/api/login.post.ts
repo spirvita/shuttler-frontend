@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       body: {
         email,
         password
-      }
+      },
     });
     const { token, user } = data;
       await setUserSession(event, {
@@ -27,10 +27,9 @@ export default defineEventHandler(async (event) => {
       token,
     }
   } catch (error) {
-    console.log(error);
     throw createError({
-      statusCode: 401,
-      message: error as string,
+      statusCode: 400,
+      message: "帳號或密碼輸入錯誤",
     });
   }
 });

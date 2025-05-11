@@ -2,7 +2,6 @@
 import { emailSignUp, nuxtEmailLogin } from "@/apis/auth";
 import { ElMessage } from "element-plus";
 import { useAuthStore } from "~/stores/auth";
-import { useUserStore } from "@/stores/user";
 
 const { visible } = defineProps({
   visible: {
@@ -54,31 +53,41 @@ const handleSubmit = async () => {
 };
 
 const handleEmailSignUp = async () => {
-  await emailSignUp({
+  const { error } = await emailSignUp({
     email: form.value.email,
     password: form.value.password,
     name: form.value.name,
   });
-  ElMessage({
-    message: "您已成功註冊，請重新登入",
-    type: "success",
-  });
-  navigateTo("/");
-  emit("update:visible", false);
+  if (!error.value) {
+    ElMessage({
+      message: "您已成功註冊，請重新登入",
+      type: "success",
+    });
+    navigateTo("/");
+    emit("update:visible", false);
+    isSignUp.value = false;
+  }
 };
 
 const handleEmailLogin = async () => {
-  const { token } = await nuxtEmailLogin({
+  const { data, error } = await nuxtEmailLogin({
     email: form.value.email,
     password: form.value.password,
   });
-  await refreshSession();
-  if (token) {
+  if (error.value) {
+    ElMessage({
+      message: error.value?.data.message,
+      type: "error",
+    });
+    return;
+  }
+  if (data.value?.token) {
+    await refreshSession();
     ElMessage({
       message: `歡迎 ${user.value?.name}`,
       type: "success",
     });
-    authStore.setToken(token);
+    authStore.setToken(data.value?.token);
     emit("update:visible", false);
   }
 };
