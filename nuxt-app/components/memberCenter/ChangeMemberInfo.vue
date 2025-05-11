@@ -17,7 +17,9 @@
     twDistrict,
     initLocationByZip
   } = useTwLocationState();
-  const memberInfo = ref<MemberInfo>(JSON.parse(JSON.stringify(userStore.userInfo)));
+  const memberInfo = ref<MemberInfo>(
+    JSON.parse(JSON.stringify(userStore.userInfo))
+  );
 
   initLocationByZip(memberInfo.value?.preferredLocation?.[0] ?? "100");
   if (memberInfo.value.level === null) {
@@ -33,7 +35,7 @@
         message: "名稱長度應在 2 到 10 個字之間",
         trigger: "blur"
       }
-    ],
+    ]
   });
   const ruleFormRef = ref<FormInstance>();
 
@@ -46,11 +48,11 @@
         type: "success"
       });
     }
-  }
+  };
 
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    await formEl.validate( async (valid, _fields) => {
+    await formEl.validate(async (valid, _fields) => {
       if (valid) {
         await handleUpdateUserInfo();
       } else {

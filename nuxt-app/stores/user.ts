@@ -2,8 +2,6 @@ import { defineStore } from "pinia";
 import type { MemberInfo } from "@/types/memberCenter";
 import { getUserInfo } from "@/apis/user";
 
-
-
 export const useUserStore = defineStore("user", () => {
   const userInfo = ref<MemberInfo>();
 

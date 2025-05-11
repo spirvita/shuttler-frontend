@@ -7,8 +7,8 @@ const responseErrorMessage: { [key: number]: string } = {
   404: "找不到該資源",
   408: "請求逾時，請稍後再試",
   409: "請求衝突，請稍後再試",
-  500: "伺服器錯誤，請稍後再試",
-}
+  500: "伺服器錯誤，請稍後再試"
+};
 
 export default defineNuxtPlugin((_nuxtApp) => {
   const authStore = useAuthStore();
@@ -22,7 +22,8 @@ export default defineNuxtPlugin((_nuxtApp) => {
       }
     },
     onResponseError({ response }) {
-      const message = response._data?.message || responseErrorMessage[response.status];
+      const message =
+        response._data?.message || responseErrorMessage[response.status];
       ElMessage({
         message: message,
         type: "error"

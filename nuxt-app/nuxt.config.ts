@@ -29,10 +29,10 @@ export default defineNuxtConfig({
     ]
   ],
   pinia: {
-    storesDirs: ["./stores/**"],
+    storesDirs: ["./stores/**"]
   },
   typescript: {
-    typeCheck: true,
+    typeCheck: true
   },
   css: ["~/assets/css/main.css"],
   elementPlus: {

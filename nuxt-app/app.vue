@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
+  import { useAuthStore } from "~/stores/auth";
 
-const authStore = useAuthStore();
+  const authStore = useAuthStore();
 
-onMounted(() => {
-  authStore.initializeToken();
-})
+  onMounted(() => {
+    authStore.initializeToken();
+  });
 </script>
 
 <template>
