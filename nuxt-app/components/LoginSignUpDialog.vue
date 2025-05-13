@@ -128,7 +128,7 @@
       </el-form>
 
       <div
-        class="mt-5 text-blue-500 cursor-pointer underline"
+        class="mt-5 text-info cursor-pointer underline"
         @click="isSignUp = true"
       >
         立即註冊
@@ -162,7 +162,7 @@
       </el-form>
 
       <div
-        class="mt-5 text-blue-500 cursor-pointer underline"
+        class="mt-5 text-info cursor-pointer underline"
         @click="isSignUp = false"
       >
         立即登入
@@ -173,7 +173,7 @@
       <div class="dialog-footer">
         <el-button
           type="primary"
-          class="text-black w-[150px]"
+          class="w-[150px]"
           @click="handleSubmit"
         >
           {{ isSignUp ? "註冊" : "登入" }}

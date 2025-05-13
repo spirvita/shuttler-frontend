@@ -1,20 +1,42 @@
 @import "tailwindcss" important;
 
 @theme {
+  --font-sans: var(--el-font-family);
+
+  --color-primary-light: #fdfde8;
+  --color-primary: var(--el-color-primary);
+  --color-primary-dark: #efe40e;
+
+  --color-primary-accent-lighter: #fbdddd;
+  --color-primary-accent-light: #f98770;
+  --color-primary-accent: #eb5756;
+
+  --color-success-lighter: #c8e6c9;
+  --color-success-light: #81c784;
+  --color-success: var(--el-color-success);
+  --color-success-dark: #388e3c;
+  --color-success-darker: #1b5e20;
+
+  --color-warning: var(--el-color-warning);
+
+  --color-info-lighter: #ebf6fa;
+  --color-info-light: #767999;
+  --color-info: var(--el-color-info);
+
+  --color-danger-lighter: #ffebee;
+  --color-danger-light: #ffcdd2;
+  --color-danger: var(--el-color-danger);
+  --color-danger-dark: #f44336;
+  --color-danger-darker: #d32f2f;
+
   --color-black: var(--el-color-black);
   --color-white: var(--el-color-white);
-  --color-primary: var(--el-color-primary);
-  --color-success: var(--el-color-success);
-  --color-warning: var(--el-color-warning);
-  --color-info: var(--el-color-info);
-  --color-danger: var(--el-color-danger);
-
-  --font-sans: var(--el-font-family);
 }
 
 @utility container {
   padding-inline: 10px;
   margin-inline: auto;
+
   @variant sm {
     padding-inline: 20px;
   }

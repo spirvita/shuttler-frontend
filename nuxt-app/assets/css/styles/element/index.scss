@@ -1,22 +1,22 @@
-@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
   $colors: (
-    'primary': (
-      'base': #efe40e,
+    "primary": (
+      "base": #f8f27d
     ),
-    'success': (
-      'base': #67C23A,
+    "success": (
+      "base": #4caf50
     ),
-    'warning': (
-      'base': #F7BA2A,
+    "warning": (
+      "base": #efe40e
     ),
-    'danger': (
-      'base': #B71C1C,
+    "danger": (
+      "base": #e57373
     ),
-    'info': (
-      'base':#273896,
-    ),
+    "info": (
+      "base": #273896
+    )
   ),
   $font-family: (
-    '': "'Roboto', 'Noto Sans', sans-serif"
+    "": "'Roboto', 'Noto Sans', sans-serif"
   )
 );
