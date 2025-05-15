@@ -46,36 +46,29 @@
 
   :deep(.el-button--primary) {
     --el-button-text-color: var(--el-color-black);
+    --el-button-bg-color: var(--color-primary-accent-dark);
+    --el-button-border-color: var(--color-primary-accent-dark);
     --el-button-hover-text-color: var(--el-color-white);
     --el-button-hover-link-text-color: var(--el-color-primary-light-5);
-    --el-button-hover-bg-color: var(--color-primary-accent);
-    --el-button-hover-border-color: var(--color-primary-accent);
+    --el-button-hover-bg-color: var(--color-primary);
+    --el-button-hover-border-color: var(--color-primary);
     --el-button-active-text-color: var(--el-color-black);
-    --el-button-active-bg-color: var(--color-primary-dark);
-    --el-button-active-border-color: var(--color-primary-dark);
+    --el-button-active-bg-color: var(--color-primary-accent-dark);
+    --el-button-active-border-color: var(--color-primary-accent-dark);
     --el-button-disabled-text-color: var(--el-color-black);
     --el-button-disabled-bg-color: var(--el-color-primary-light-5);
     --el-button-disabled-border-color: var(--el-color-primary-light-5);
   }
 
   :deep(.el-tabs__item) {
-    &:hover {
-      color: var(--color-primary-accent);
-    }
     &.is-active {
       color: var(--el-color-black);
       font-weight: 700;
     }
   }
 
-  :deep(.el-tabs__active-bar) {
-    background-color: var(--color-primary-accent);
-  }
-
   :deep(.el-menu-item) {
-    &:hover {
-      color: var(--color-primary-accent);
-    }
+
     &.is-active {
       color: var(--el-color-black);
       font-weight: 700;
