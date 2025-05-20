@@ -11,3 +11,19 @@ export interface Activity {
   bookedCount: number;
   points: number;
 }
+
+export interface ActivityDetail extends Activity {
+  organizer: string;
+  pictures: string[];
+  city: string;
+  district: string;
+  address: string;
+  venueFacilities: string[];
+  ballType: string;
+  rentalLot: number;
+  brief: string;
+  contactName: string;
+  contactPhone: string;
+  contactLine: string;
+  isFav: boolean;
+}

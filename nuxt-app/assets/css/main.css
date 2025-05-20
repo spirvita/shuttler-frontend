@@ -7,7 +7,7 @@
   --color-primary-light: #f98770;
   --color-primary: var(--el-color-primary);
 
-  --color-primary-accent-lighter: #fdfde8;
+  --color-primary-accent-light: #fdfde8;
   --color-primary-accent: #f8f27d;
   --color-primary-accent-dark: #efe40e;
 
@@ -36,8 +36,8 @@
 }
 
 @utility container {
-  padding-inline: 12px;
-  margin-inline: auto;
+  max-width: 81rem;
+  @apply px-3 xl:px-0 mx-auto;
 }
 
 @layer base {

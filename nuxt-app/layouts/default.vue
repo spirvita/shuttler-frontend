@@ -68,7 +68,6 @@
   }
 
   :deep(.el-menu-item) {
-
     &.is-active {
       color: var(--el-color-black);
       font-weight: 700;

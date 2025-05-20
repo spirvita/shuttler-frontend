@@ -3,7 +3,6 @@
   import ActivitiesNearDatePicker from "~/components/activities/ActivitiesNearDatePicker.vue";
   import { getActivities } from "@/apis/activities";
   import { Location, Clock, Money, TopRight } from "@element-plus/icons-vue";
-  import { getElementPlusTypeByLevel } from "@/constants/shuttlerLevels";
   import { useParticipantStatus } from "@/composables/useParticipantStatus";
 
   const { data: activities } = await getActivities();
@@ -71,30 +70,24 @@
                 <span class="text-lg font-bold">{{ activity.points }} 點</span>
               </p>
               <div class="flex items-center">
-                <ul class="flex items-center">
-                  <li
-                    v-for="level in activity.level"
-                    :key="level"
-                    class="mr-2"
-                  >
-                    <el-check-tag
-                      checked
-                      :type="getElementPlusTypeByLevel(level)"
-                    >
-                      {{ level }}
-                    </el-check-tag>
-                  </li>
-                </ul>
-                <el-check-tag
-                  checked
-                  class="text-black font-bold"
-                  :class="`${useParticipantStatus('bg', activity.bookedCount, activity.participantCount)}`"
+                <ActivityElTags :level="activity.level" />
+                <el-tag
+                  round
+                  effect="light"
+                  class="text-black py-4 border-0"
+                  :class="`${useParticipantStatus('bg', activity.bookedCount, activity.participantCount)} ${useParticipantStatus('border', activity.bookedCount, activity.participantCount)}`"
                 >
-                  {{ activity.bookedCount }}/{{ activity.participantCount }}
-                </el-check-tag>
+                  {{ activity.bookedCount }}/{{ activity.participantCount }} 人
+                </el-tag>
               </div>
-              <div class="absolute -top-0.25 -left-0.25 -bottom-0.25 -right-0.25 border border-gray-500 bg-gray-500 opacity-20 rounded-lg hidden group-hover:block group-hover:cursor-pointer"></div>
-              <el-button class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black hidden group-hover:block" :icon="TopRight" circle />
+              <div
+                class="absolute -top-0.25 -left-0.25 -bottom-0.25 -right-0.25 border border-gray-500 bg-gray-500 opacity-20 rounded-lg hidden group-hover:block group-hover:cursor-pointer"
+              />
+              <el-button
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black hidden group-hover:block"
+                :icon="TopRight"
+                circle
+              />
             </li>
           </ul>
         </div>
