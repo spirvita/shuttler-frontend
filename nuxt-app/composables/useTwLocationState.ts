@@ -29,6 +29,7 @@ export function useTwLocationState() {
   const twCitiesOptions = createTwCitiesOptions();
   const twCity = ref("");
   const twDistrict = ref("");
+  const twDistrictName = ref("");
   const twDistrictsOptions = computed(() =>
     createTwDistrictsOptions(twCity.value)
   );
@@ -56,11 +57,25 @@ export function useTwLocationState() {
     }
   );
 
+  watch(
+    () => twDistrict.value,
+    (newVal) => {
+      const city = twCities.find((city) => city.name === twCity.value);
+      if (city) {
+        const district = Object.values(city.districts).find(
+          (d) => d.zip === newVal
+        );
+        twDistrictName.value = district ? district.name : "";
+      }
+    }
+  );
+
   return {
     twCitiesOptions,
     twDistrictsOptions,
     twCity,
     twDistrict,
+    twDistrictName,
     initLocationByZip
   };
 }

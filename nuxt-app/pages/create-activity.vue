@@ -1,7 +1,22 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import ActivityForm from "~/components/activity/ActivityForm.vue";
+
+  definePageMeta({
+    middleware: ["auth"]
+  });
+</script>
 <template>
-  <div>
-    <div class="text-center">Page Create Activity</div>
+  <div class="py-20">
+    <div class="flex flex-col items-center mb-10">
+      <h2 class="mb-6">羽神辦活動</h2>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
+        <el-breadcrumb-item>舉辦活動</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="container flex justify-center">
+      <ActivityForm />
+    </div>
   </div>
 </template>
 <style scoped></style>

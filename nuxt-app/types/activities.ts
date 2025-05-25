@@ -27,3 +27,8 @@ export interface ActivityDetail extends Activity {
   contactLine: string;
   isFav: boolean;
 }
+
+export type CreateActivityPayload = Omit<
+  ActivityDetail,
+  "activityId" | "isFav" | "contactAvatar" | "bookedCount"
+>;

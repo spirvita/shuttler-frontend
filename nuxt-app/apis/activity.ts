@@ -1,4 +1,14 @@
-import type { ActivityDetail } from "@/types/activities";
+import type { ActivityDetail, CreateActivityPayload } from "@/types/activities";
+
+export const createActivity = (
+  activityPayload: CreateActivityPayload,
+  status: "draft" | "published"
+) => {
+  return useShuttlerTwAPI.post("/activity", {
+    ...activityPayload,
+    status
+  });
+};
 
 export const getActivity = (activityId: string) => {
   return useShuttlerTwAPI.get<{ message: string; data: ActivityDetail }>(
