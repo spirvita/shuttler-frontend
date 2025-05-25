@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { useAuthStore } from "~/stores/auth";
+  import Footer from '~/components/Footer.vue'
+
 
   const loginDialogVisible = ref(false);
   const authStore = useAuthStore();
@@ -34,6 +36,8 @@
       </div>
     </header>
     <slot />
+
+    <Footer />
 
     <LoginSignUpDialog v-model:visible="loginDialogVisible" />
   </div>

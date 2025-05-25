@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxt/eslint",
+    "@nuxt/icon",
     "@pinia/nuxt",
     "@element-plus/nuxt",
     "nuxt-auth-utils",
