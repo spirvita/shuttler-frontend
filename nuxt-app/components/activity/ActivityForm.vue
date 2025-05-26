@@ -596,7 +596,7 @@
         <div class="flex w-full">
           <el-button
             size="large"
-            class="w-full mr-3 border-2 border-gray-300 text-gray-400"
+            class="w-full text-md text-neutral-400 border border-neutral-400 mr-3 hover:bg-neutral-50"
             round
             @click="submitForm(activityInfoFormRef, 'draft')"
           >
@@ -605,7 +605,7 @@
           <el-button
             type="primary"
             size="large"
-            class="w-full"
+            class="w-full text-md"
             round
             @click="submitForm(activityInfoFormRef, 'published')"
           >

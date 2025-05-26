@@ -19,8 +19,8 @@
     >
       <el-tag
         round
-        effect="light"
-        class="py-4 border-0"
+        size="large"
+        class="p-4 border-0 text-base"
         :type="getElementPlusTypeByLevel(item)"
       >
         {{ item }}

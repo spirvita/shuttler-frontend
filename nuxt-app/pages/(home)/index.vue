@@ -5,9 +5,11 @@
 </script>
 
 <template>
-  <HeroSection />
-  <CurrentActivities />
-  <PopularActivities />
+  <div>
+    <HeroSection />
+    <CurrentActivities />
+    <PopularActivities />
+  </div>
 </template>
 
 <style scoped></style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import Footer from "~/components/Footer.vue";
+  import { useAuthStore } from "~/stores/auth";
+  import Footer from "~/components/Footer.vue";
 
-const loginDialogVisible = ref(false);
-const authStore = useAuthStore();
-const { loggedIn } = useUserSession();
+  const loginDialogVisible = ref(false);
+  const authStore = useAuthStore();
+  const { loggedIn } = useUserSession();
 </script>
 
 <template>
@@ -23,7 +23,12 @@ const { loggedIn } = useUserSession();
           <NuxtLink to="/create-activity">舉辦活動</NuxtLink>
           <NuxtLink to="/buy-point">購買點數</NuxtLink>
           <NuxtLink to="/about">關於我們</NuxtLink>
-          <NuxtLink v-if="loggedIn" to="/member-center"> 會員中心 </NuxtLink>
+          <NuxtLink
+            v-if="loggedIn"
+            to="/member-center"
+          >
+            會員中心
+          </NuxtLink>
           <ElButton
             type="primary"
             class="rounded-2xl"
@@ -47,39 +52,39 @@ const { loggedIn } = useUserSession();
 </template>
 
 <style scoped lang="scss">
-.nav-shadow {
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.75);
-}
-
-:deep(.el-button--primary) {
-  --el-button-text-color: var(--el-color-black);
-  --el-button-bg-color: var(--color-primary-accent-dark);
-  --el-button-border-color: var(--color-primary-accent-dark);
-  --el-button-hover-text-color: var(--el-color-white);
-  --el-button-hover-link-text-color: var(--el-color-primary-light-5);
-  --el-button-hover-bg-color: var(--color-primary);
-  --el-button-hover-border-color: var(--color-primary);
-  --el-button-active-text-color: var(--el-color-black);
-  --el-button-active-bg-color: var(--color-primary-accent-dark);
-  --el-button-active-border-color: var(--color-primary-accent-dark);
-  --el-button-disabled-text-color: var(--el-color-black);
-  --el-button-disabled-bg-color: var(--el-color-primary-light-5);
-  --el-button-disabled-border-color: var(--el-color-primary-light-5);
-}
-
-:deep(.el-tabs__item) {
-  &.is-active {
-    color: var(--el-color-black);
-    font-weight: 700;
+  .nav-shadow {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(5px);
+    background: rgba(255, 255, 255, 0.75);
   }
-}
 
-:deep(.el-menu-item) {
-  &.is-active {
-    color: var(--el-color-black);
-    font-weight: 700;
+  :deep(.el-button--primary) {
+    --el-button-text-color: var(--el-color-neutral-900);
+    --el-button-bg-color: var(--color-primary-accent-500);
+    --el-button-border-color: var(--color-primary-accent-500);
+    --el-button-hover-text-color: var(--el-color-white);
+    --el-button-hover-link-text-color: var(--el-color-primary-light-5);
+    --el-button-hover-bg-color: var(--color-primary-400);
+    --el-button-hover-border-color: var(--color-primary-400);
+    --el-button-active-text-color: var(--el-color-black);
+    --el-button-active-bg-color: var(--color-primary-accent-500);
+    --el-button-active-border-color: var(--color-primary-accent-500);
+    --el-button-disabled-text-color: var(--el-color-black);
+    --el-button-disabled-bg-color: var(--el-color-primary-light-5);
+    --el-button-disabled-border-color: var(--el-color-primary-light-5);
   }
-}
+
+  :deep(.el-tabs__item) {
+    &.is-active {
+      color: var(--el-color-black);
+      font-weight: 700;
+    }
+  }
+
+  :deep(.el-menu-item) {
+    &.is-active {
+      color: var(--el-color-black);
+      font-weight: 700;
+    }
+  }
 </style>

@@ -1,13 +1,13 @@
 const participantStatus = {
   border: {
-    danger: "border-danger-light",
+    danger: "border-danger-300",
     warning: "border-warning",
-    success: "border-success-light"
+    success: "border-success-300"
   },
   bg: {
-    success: "bg-success-light",
+    success: "bg-success-300",
     warning: "bg-warning",
-    danger: "bg-danger-light"
+    danger: "bg-danger-300"
   }
 };
 

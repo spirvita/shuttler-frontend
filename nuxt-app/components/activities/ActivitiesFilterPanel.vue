@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import {
-    Filter,
+    Search,
     Location,
     Place,
     UserFilled,
@@ -43,18 +43,20 @@
     <div class="flex items-center">
       <el-input
         v-model="activitiesFilter.venueName"
-        class="border border-gray-300 rounded"
+        class="border border-neutral-300 rounded"
         placeholder="搜尋活動/場地"
+        size="large"
         clearable
+        :suffix-icon="Search"
       />
-      <el-icon
+      <!-- <el-icon
         class="mx-2.5 cursor-pointer"
         size="20"
       >
         <Filter />
-      </el-icon>
+      </el-icon> -->
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Location /></el-icon>
       <el-select
         v-model="twCity"
@@ -68,7 +70,7 @@
         />
       </el-select>
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Place /></el-icon>
       <el-select
         v-model="twDistrict"
@@ -82,7 +84,7 @@
         />
       </el-select>
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><UserFilled /></el-icon>
       <el-select
         v-model="activitiesFilter.spotsLeft"
@@ -96,7 +98,7 @@
         />
       </el-select>
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Odometer /></el-icon>
       <el-select
         v-model="activitiesFilter.level"
@@ -110,7 +112,7 @@
         />
       </el-select>
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Calendar /></el-icon>
       <el-date-picker
         v-model="activitiesFilter.date"
@@ -119,7 +121,7 @@
         :prefix-icon="customDatePrefix"
       />
     </div>
-    <div class="flex items-center pb-4 border-b border-gray-300">
+    <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Clock /></el-icon>
       <el-time-select
         v-model="activitiesFilter.timeSlot"

@@ -14,8 +14,13 @@
 <template>
   <div class="py-20">
     <div class="flex flex-col items-center mb-10">
-      <h2 class="mb-6">羽神找活動</h2>
-      <el-breadcrumb separator="/">
+      <h2 class="mb-6">
+        <span class="text-5xl">羽神找活動</span>
+      </h2>
+      <el-breadcrumb
+        class="text-md"
+        separator="/"
+      >
         <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
         <el-breadcrumb-item>活動列表</el-breadcrumb-item>
       </el-breadcrumb>
@@ -39,20 +44,22 @@
                   :size="40"
                   :src="activity.contactAvatar"
                 />
-                <h3 class="text-xl">{{ activity.name }}</h3>
+                <h3>
+                  <span class="text-xl block">{{ activity.name }}</span>
+                </h3>
               </div>
-              <p class="flex items-center mb-2">
+              <p class="flex items-center text-md mb-2">
                 <el-icon
-                  class="mr-2"
+                  class="text-neutral-400 mr-2"
                   size="16"
                 >
                   <Location />
                 </el-icon>
                 {{ activity.venueName }}
               </p>
-              <p class="flex items-center mb-2">
+              <p class="flex items-center text-md mb-2">
                 <el-icon
-                  class="mr-2"
+                  class="text-neutral-400 mr-2"
                   size="16"
                 >
                   <Clock />
@@ -62,19 +69,20 @@
               </p>
               <p class="flex items-center mb-2">
                 <el-icon
-                  class="mr-2"
+                  class="text-neutral-400 mr-2"
                   size="16"
                 >
                   <Money />
                 </el-icon>
-                <span class="text-lg font-bold">{{ activity.points }} 點</span>
+                <span class="text-lg text-neutral-800 font-bold">
+                  {{ activity.points }} 點
+                </span>
               </p>
               <div class="flex items-center">
                 <ActivityElTags :level="activity.level" />
                 <el-tag
                   round
-                  effect="light"
-                  class="text-black py-4 border-0"
+                  class="text-neutral-800 p-4 border-0"
                   :class="`${useParticipantStatus('bg', activity.bookedCount, activity.participantCount)} ${useParticipantStatus('border', activity.bookedCount, activity.participantCount)}`"
                 >
                   {{ activity.bookedCount }}/{{ activity.participantCount }} 人

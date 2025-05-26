@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import bgImage from "@/assets/images/hero-section-bg.png";
-import { useTwLocationState } from "@/composables/useTwLocationState";
-import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
+  import bgImage from "@/assets/images/hero-section-bg.png";
+  import { useTwLocationState } from "@/composables/useTwLocationState";
+  import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
 
-const { twCitiesOptions, twCity } = useTwLocationState();
-const shuttlerLevelOptions = useShuttlerLevelOptions();
-const level = ref("");
-const spotsLeft = ref("");
+  const { twCitiesOptions, twCity } = useTwLocationState();
+  const shuttlerLevelOptions = useShuttlerLevelOptions();
+  const level = ref("");
+  const spotsLeft = ref("");
 </script>
 
 <template>
@@ -15,7 +15,9 @@ const spotsLeft = ref("");
     :style="{ backgroundImage: `url(${bgImage})` }"
   >
     <div class="flex flex-col items-center justify-center">
-      <h1 class="text-5xl mt-[18%] mb-[5%] text-neutral-800">尋找你想參與的活動</h1>
+      <h1 class="text-5xl mt-[18%] mb-[5%] text-neutral-800">
+        尋找你想參與的活動
+      </h1>
     </div>
 
     <div
@@ -65,7 +67,7 @@ const spotsLeft = ref("");
       </div>
       <el-button
         type="primary"
-        class="h-14 text-[16px] w-[104px] rounded-[40px]"
+        class="h-14 text-md w-[104px] rounded-[40px]"
       >
         搜尋
       </el-button>
@@ -74,38 +76,38 @@ const spotsLeft = ref("");
 </template>
 
 <style scoped>
-:deep(.el-select__wrapper) {
-  background-color: transparent;
-  height: 40px;
-  box-shadow: none;
-  &:hover {
+  :deep(.el-select__wrapper) {
+    background-color: transparent;
+    height: 40px;
     box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
   }
-}
 
-.hero-section-select {
-  width: 300px;
-  border: none;
-  box-shadow: none;
-  &:hover {
+  .hero-section-select {
+    width: 300px;
+    border: none;
     box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
   }
-}
 
-.filter-wrapper {
-  width: fit-content;
-  background-color: #fff;
-  border-radius: 32px;
+  .filter-wrapper {
+    width: fit-content;
+    background-color: #fff;
+    border-radius: 32px;
 
-  box-shadow:
-    0px 0px 1px 0px #b0b0b00d,
-    1px 1px 1px 0px #b0b0b00a,
-    2px 2px 2px 0px #b0b0b008,
-    4px 4px 2px 0px #b0b0b003;
-}
+    box-shadow:
+      0px 0px 1px 0px #b0b0b00d,
+      1px 1px 1px 0px #b0b0b00a,
+      2px 2px 2px 0px #b0b0b008,
+      4px 4px 2px 0px #b0b0b003;
+  }
 
-:deep(.hero-section-select:first-child .el-select__wrapper),
-:deep(.hero-section-select:nth-child(2) .el-select__wrapper) {
-  border-right: 1px solid var(--color-neutral-100);
-}
+  :deep(.hero-section-select:first-child .el-select__wrapper),
+  :deep(.hero-section-select:nth-child(2) .el-select__wrapper) {
+    border-right: 1px solid var(--color-neutral-100);
+  }
 </style>
