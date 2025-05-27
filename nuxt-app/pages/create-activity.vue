@@ -8,7 +8,9 @@
 <template>
   <div class="py-20">
     <div class="flex flex-col items-center mb-10">
-      <h2 class="mb-6">羽神辦活動</h2>
+      <h2 class="mb-6">
+        <span class="text-5xl">羽神辦活動</span>
+      </h2>
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
         <el-breadcrumb-item>舉辦活動</el-breadcrumb-item>

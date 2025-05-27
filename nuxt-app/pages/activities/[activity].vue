@@ -20,7 +20,6 @@
     Phone,
     UserFilled,
     ChatDotSquare,
-    // CollectionTag,
     Money
   } from "@element-plus/icons-vue";
 
@@ -218,11 +217,13 @@
           </ul>
         </section>
         <div class="lg:col-span-3">
-          <div class="flex flex-col border border-gray-300 p-6 rounded-xl">
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
             <p class="text-lg font-bold text-neutral-800 mb-3">
               {{ activity.name }}
             </p>
-            <div class="flex items-center pb-3 mb-3 border-b border-gray-200">
+            <div
+              class="flex items-center pb-3 mb-3 border-b border-neutral-200"
+            >
               <ActivityElTags :level="activity.level" />
               <el-tag
                 round

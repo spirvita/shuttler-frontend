@@ -21,7 +21,7 @@
         <div class="flex text-black gap-5 justify-end items-center">
           <NuxtLink to="/activities">活動列表</NuxtLink>
           <NuxtLink to="/create-activity">舉辦活動</NuxtLink>
-          <NuxtLink to="/buy-point">購買點數</NuxtLink>
+          <NuxtLink to="/buy-points">購買點數</NuxtLink>
           <NuxtLink to="/about">關於我們</NuxtLink>
           <NuxtLink
             v-if="loggedIn"
