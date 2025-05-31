@@ -27,3 +27,9 @@ export const removeActivityFromFavorites = (activityId: string) => {
     `/activity/favorites/${activityId}`
   );
 };
+
+export const suspendActivity = (activityId: string) => {
+  return useShuttlerTwAPI.post<{ message: string }>(
+    `/activity/${activityId}/suspend`
+  );
+};

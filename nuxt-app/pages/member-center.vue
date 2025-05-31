@@ -14,22 +14,24 @@
   const memberInfo = computed(() => userStore.userInfo);
 </script>
 <template>
-  <div class="container flex py-10">
-    <div class="hidden md:block">
-      <div class="flex flex-col items-center">
-        <section
-          class="mb-3 text-center"
-          aria-label="會員資訊"
-        >
-          <el-avatar
-            :size="80"
-            :src="memberInfo?.avatar || defaultAvatar"
-          />
-          <p class="font-bold py-3">{{ memberInfo?.name }}</p>
-        </section>
-        <ElMenuForUser />
+  <div class="container py-20">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+      <div class="hidden md:block col-span-2">
+        <div class="flex flex-col items-center">
+          <section
+            class="mb-3 text-center"
+            aria-label="會員資訊"
+          >
+            <el-avatar
+              :size="80"
+              :src="memberInfo?.avatar || defaultAvatar"
+            />
+            <p class="font-bold py-3">{{ memberInfo?.name }}</p>
+          </section>
+          <ElMenuForUser />
+        </div>
       </div>
+      <NuxtPage class="col-span-10" />
     </div>
-    <NuxtPage class="flex-1" />
   </div>
 </template>

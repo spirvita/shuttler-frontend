@@ -25,3 +25,12 @@ export const getElementPlusTypeByLevel = (levelString: string) => {
       return "danger";
   }
 };
+
+export const mapNamesToLevels = (names: string[]) => {
+  return names.map((name) => {
+    const level = Object.keys(shuttlerLevels).find(
+      (key) => shuttlerLevels[Number(key)] === name
+    );
+    return Number(level);
+  });
+};

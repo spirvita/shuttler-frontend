@@ -5,3 +5,9 @@ export const getActivities = () => {
     "/activities"
   );
 };
+
+export const getOrganizerActivities = () => {
+  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+    "/organizer/activities"
+  );
+};

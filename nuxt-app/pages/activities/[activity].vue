@@ -26,7 +26,7 @@
   const { loggedIn } = useUserSession();
   const router = useRoute();
   const activityId = router.params.activity as string;
-  const { data, refresh } = await getActivity(activityId);
+  const { data, refresh: refreshActivity } = await getActivity(activityId);
   const activity = ref(data.value?.data);
 
   const pictures = ref(defaultActivityPictures);
@@ -112,24 +112,17 @@
 
   const toggleFavorite = async () => {
     if (!activity.value) return;
-    if (activity.value.isFav) {
+    if (activity.value.isFavorite) {
       const { error } = await removeActivityFromFavorites(
         activity.value.activityId
       );
-      if (error.value) return;
-      ElMessage({
-        message: "已取消收藏",
-        type: "success"
-      });
+      if (!error.value) ElMessage.success("已取消收藏");
     } else {
       const { error } = await addActivityToFavorites(activity.value.activityId);
-      if (error.value) return;
-      ElMessage({
-        message: "已加入收藏",
-        type: "success"
-      });
+      if (!error.value) ElMessage.success("已收藏活動");
     }
-    await refresh();
+    await refreshActivity();
+    activity.value = data.value?.data;
   };
 </script>
 <template>
@@ -173,7 +166,7 @@
               circle
               class="el-favorite ml-auto"
               :class="
-                !activity?.isFav
+                activity?.isFavorite
                   ? 'text-primary-accent-500 bg-primary-accent-50 border-primary-accent-500 hover:text-primary-300 hover:bg-primary-50 hover:border-primary-300 active:text-neutral-300 active:bg-neutral-50 active:border-neutral-300'
                   : ''
               "
@@ -181,7 +174,7 @@
             >
               <Icon
                 :name="
-                  !activity?.isFav
+                  activity?.isFavorite
                     ? 'ic:baseline-bookmark'
                     : 'ic:baseline-bookmark-border'
                 "

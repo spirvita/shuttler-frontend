@@ -25,10 +25,11 @@ export interface ActivityDetail extends Activity {
   contactName: string;
   contactPhone: string;
   contactLine: string;
-  isFav: boolean;
+  isFavorite: boolean;
+  status?: string;
 }
 
 export type CreateActivityPayload = Omit<
   ActivityDetail,
-  "activityId" | "isFav" | "contactAvatar" | "bookedCount"
+  "activityId" | "isFavorite" | "contactAvatar" | "bookedCount"
 >;

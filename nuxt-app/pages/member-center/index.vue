@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import ChangeMemberInfo from "@/components/memberCenter/ChangeMemberInfo.vue";
-  import ChangePassword from "@/components/memberCenter/ChangePassword.vue";
+  import EditMemberInfo from "~/components/memberCenter/EditMemberInfo.vue";
+  import EditPassword from "@/components/memberCenter/EditPassword.vue";
 
   const activeName = ref("memberInfo");
 </script>
@@ -12,13 +12,13 @@
         label="會員資料"
         name="memberInfo"
       >
-        <ChangeMemberInfo />
+        <EditMemberInfo />
       </el-tab-pane>
       <el-tab-pane
         label="修改密碼"
-        name="changePassword"
+        name="EditPassword"
       >
-        <ChangePassword />
+        <EditPassword />
       </el-tab-pane>
     </el-tabs>
   </div>

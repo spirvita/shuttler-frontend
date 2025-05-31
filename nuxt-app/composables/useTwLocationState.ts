@@ -41,6 +41,7 @@ export function useTwLocationState() {
         if (district.zip === zip) {
           twCity.value = city.name;
           twDistrict.value = district.zip;
+          twDistrictName.value = district.name;
         }
       }
     });
@@ -54,6 +55,7 @@ export function useTwLocationState() {
         return;
       }
       twDistrict.value = createTwDistrictsOptions(newVal)[0].value;
+      twDistrictName.value = createTwDistrictsOptions(newVal)[0].label;
     }
   );
 

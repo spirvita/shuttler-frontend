@@ -6,10 +6,13 @@ export const uploadImages = async (
 ) => {
   const runtimeConfig = useRuntimeConfig();
   const formData = new FormData();
+  const existingUrls: string[] = [];
   formData.append("uploadType", uploadType);
   uploadFiles.forEach((file) => {
     if (file.raw) {
       formData.append("file", file.raw);
+    } else if (file.url) {
+      existingUrls.push(file.url);
     }
   });
   const { data, error } = await useFetch<{
@@ -26,5 +29,6 @@ export const uploadImages = async (
     ElMessage.error("圖片上傳失敗，請稍後再試");
     return;
   }
-  return data.value?.data.photo;
+  const uploadedUrls = data.value?.data.photo || [];
+  return [...existingUrls, ...uploadedUrls];
 };

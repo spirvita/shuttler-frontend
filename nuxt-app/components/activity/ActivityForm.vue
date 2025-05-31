@@ -28,7 +28,15 @@
   const activityEditInfo = computed(() => {
     return props.activityEditInfo;
   });
-  const activityInfo = ref<ActivityDetail | CreateActivityPayload>({
+  const {
+    twCitiesOptions,
+    twDistrictsOptions,
+    twCity,
+    twDistrict,
+    twDistrictName,
+    initLocationByZip
+  } = useTwLocationState();
+  const activityInfo = ref<Partial<ActivityDetail> & CreateActivityPayload>({
     name: "",
     pictures: [],
     date: new Date().toISOString().split("T")[0],
@@ -40,8 +48,8 @@
     points: 0,
     level: [],
     brief: "",
-    city: "臺北市",
-    district: "大安區",
+    city: twCity.value,
+    district: twDistrictName.value,
     venueName: "",
     address: "",
     venueFacilities: [],
@@ -49,7 +57,7 @@
     contactName: "",
     contactPhone: "",
     contactLine: ""
-  } as CreateActivityPayload);
+  });
   const validatePhone = (
     _rule: unknown,
     value: string,
@@ -86,6 +94,25 @@
       callback();
     }
   };
+  const isPastDate = (date: string): boolean => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    return selectedDate < today;
+  };
+  const validateParticipantCount = (
+    _rule: unknown,
+    value: number,
+    callback: (error?: Error) => void
+  ) => {
+    const bookedCount = activityEditInfo.value?.bookedCount || 0;
+    if (activityEditInfo.value?.activityId && value < bookedCount) {
+      callback(new Error("活動名額不能小於已報名人數"));
+    } else {
+      callback();
+    }
+  };
   const activityInfoFormRules = ref<FormRules>({
     name: [
       { required: true, message: "請輸入名稱", trigger: "blur" },
@@ -103,7 +130,8 @@
     endTime: [{ required: true, message: "請選擇結束時間", trigger: "change" }],
     participantCount: [
       { required: true, message: "請輸入活動名額", trigger: "blur" },
-      { validator: validateGreaterThanZero, trigger: "blur" }
+      { validator: validateGreaterThanZero, trigger: "change" },
+      { validator: validateParticipantCount, trigger: "change" }
     ],
     rentalLot: [
       { required: true, message: "請輸入租用場地", trigger: "blur" },
@@ -166,26 +194,18 @@
   const activityInfoFormRef = ref<FormInstance>();
   const uploadImageRef = ref<UploadInstance>();
   const shuttlerLevelOptions = useShuttlerLevelOptions();
-  const {
-    twCitiesOptions,
-    twDistrictsOptions,
-    twCity,
-    twDistrict,
-    twDistrictName,
-    initLocationByZip
-  } = useTwLocationState();
   const uploadImageFiles = ref<UploadFiles>([]);
 
   const processActivityStatus = async (status: ActivityStatus) => {
     if (status === "update") {
-      ElMessage.success("已成功修改");
+      ElMessage.success("修改成功");
     }
     const { error } = await createActivity(
       activityInfo.value,
       status as "draft" | "published"
     );
     if (error.value) return;
-    ElMessage.success("已成功儲存");
+    ElMessage.success("發佈成功");
     activityInfoFormRef.value?.resetFields();
     clearUploadedFiles();
   };
@@ -232,28 +252,54 @@
     uploadImageRef.value?.clearFiles();
   };
 
+  const canUseTimeSlot = computed(() => {
+    const now = new Date();
+    const currentDate = now.toISOString().split("T")[0];
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    if (activityInfo.value.date === currentDate) {
+      const nextHour = currentMinute > 0 ? currentHour + 1 : currentHour;
+      return `${String(nextHour).padStart(2, "0")}:00`;
+    } else {
+      return "00:00";
+    }
+  });
+
   onMounted(() => {
     initLocationByZip("100");
 
-    if (activityEditInfo.value) {
+    if (activityEditInfo.value?.activityId) {
       activityInfo.value = activityEditInfo.value;
     }
   });
 
   watch([twCity, twDistrict], () => {
-    activityInfo.value.city = twCity.value;
-    activityInfo.value.district = twDistrictName.value;
-    activityInfo.value.venueName = "";
-    activityInfo.value.address = "";
-    activityInfo.value.venueFacilities = [];
+    if (!activityInfo.value?.activityId) {
+      activityInfo.value.city = twCity.value;
+      activityInfo.value.district = twDistrictName.value;
+      activityInfo.value.venueName = "";
+      activityInfo.value.address = "";
+      activityInfo.value.venueFacilities = [];
+    }
   });
 
   watch(
     () => activityInfo.value.venueName,
     (newValue) => {
-      if (newValue === "") {
+      if (!activityInfo.value?.activityId && newValue === "") {
         activityInfo.value.address = "";
         activityInfo.value.venueFacilities = [];
+      }
+    }
+  );
+
+  watch(
+    () => activityInfo.value.date,
+    () => {
+      if (!activityInfo.value?.activityId) {
+        activityInfo.value.startTime = "";
+        activityInfo.value.endTime = "";
       }
     }
   );
@@ -278,6 +324,7 @@
         v-model="activityInfo.name"
         size="large"
         placeholder="請輸入活動名稱"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -286,6 +333,7 @@
       class="lg:col-span-6"
     >
       <ActivityElUploadImage
+        :pictures="activityInfo.pictures"
         @on-change="handleChange"
         @emit-el-upload-ref="handleElUploadRef"
       />
@@ -303,6 +351,8 @@
         type="date"
         placeholder="請選擇日期"
         value-format="YYYY-MM-DD"
+        :disabled-date="(date: string) => isPastDate(date)"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -314,12 +364,13 @@
       <el-time-select
         v-model="activityInfo.startTime"
         size="large"
-        start="00:00"
+        :start="canUseTimeSlot"
         step="01:00"
         end="23:00"
         placeholder="請選擇開始時間"
         prefix-icon=""
         :max-time="activityInfo.endTime"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -331,12 +382,13 @@
       <el-time-select
         v-model="activityInfo.endTime"
         size="large"
-        start="00:00"
+        :start="canUseTimeSlot"
         step="01:00"
         end="23:00"
         placeholder="請選擇結束時間"
         prefix-icon=""
         :min-time="activityInfo.startTime"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -351,6 +403,9 @@
         type="number"
         placeholder="請輸入活動名額"
         min="1"
+        @input="
+          activityInfo.participantCount = Number(activityInfo.participantCount)
+        "
       >
         <template #suffix>
           <span>人</span>
@@ -369,6 +424,7 @@
         type="number"
         placeholder="請輸入租用場地"
         min="1"
+        @input="activityInfo.rentalLot = Number(activityInfo.rentalLot)"
       >
         <template #suffix>
           <span>面</span>
@@ -400,6 +456,8 @@
         type="number"
         placeholder="請輸入活動點數"
         min="0"
+        :disabled="!!activityEditInfo?.activityId"
+        @input="activityInfo.points = Number(activityInfo.points)"
       >
         <template #suffix>
           <span>點/人</span>
@@ -450,6 +508,7 @@
         v-model="twCity"
         placeholder="請選擇縣市"
         size="large"
+        :disabled="!!activityEditInfo?.activityId"
       >
         <el-option
           v-for="item in twCitiesOptions"
@@ -469,6 +528,7 @@
         v-model="twDistrict"
         placeholder="請選擇區域"
         size="large"
+        :disabled="!!activityEditInfo?.activityId"
       >
         <el-option
           v-for="item in twDistrictsOptions"
@@ -493,6 +553,7 @@
         clearable
         size="large"
         placeholder="請輸入場館名稱"
+        :disabled="!!activityEditInfo?.activityId"
         @select="handleVenueSelect"
       >
         <template #default="{ item }">
@@ -512,6 +573,7 @@
         clearable
         size="large"
         placeholder="請輸入場館地址"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -523,12 +585,13 @@
       <el-checkbox-group
         v-model="activityInfo.venueFacilities"
         size="large"
+        :disabled="!!activityEditInfo?.activityId"
       >
         <el-checkbox
-          v-for="facilitity in availableVenueFacilities"
-          :key="facilitity"
-          :label="facilitity"
-          :value="facilitity"
+          v-for="facility in availableVenueFacilities"
+          :key="facility"
+          :label="facility"
+          :value="facility"
         />
       </el-checkbox-group>
     </el-form-item>
@@ -542,6 +605,7 @@
         v-model="activityInfo.organizer"
         size="large"
         placeholder="請輸入主辦單位名稱/個人名稱"
+        :disabled="!!activityEditInfo?.activityId"
       />
     </el-form-item>
     <el-form-item
@@ -582,15 +646,17 @@
     </el-form-item>
     <el-form-item class="lg:col-span-6">
       <template v-if="activityEditInfo?.activityId">
-        <el-button
-          type="primary"
-          size="large"
-          class="w-full"
-          round
-          @click="submitForm(activityInfoFormRef, 'update')"
-        >
-          更新
-        </el-button>
+        <div class="flex w-full">
+          <el-button
+            type="primary"
+            size="large"
+            class="px-10 mx-auto"
+            round
+            @click="submitForm(activityInfoFormRef, 'update')"
+          >
+            更新
+          </el-button>
+        </div>
       </template>
       <template v-else>
         <div class="flex w-full">

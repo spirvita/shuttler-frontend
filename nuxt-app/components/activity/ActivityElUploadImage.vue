@@ -4,7 +4,9 @@
     UploadUserFile,
     UploadInstance
   } from "element-plus";
-
+  const props = defineProps<{
+    pictures: string[];
+  }>();
   const emits = defineEmits(["onChange", "emitElUploadRef"]);
   const elementPlusPictureList = ref<UploadUserFile[]>([]);
   const uploadRef = ref<UploadInstance>();
@@ -29,7 +31,15 @@
     emits("onChange", uploadFiles);
   };
 
+  const pictureList = computed(() => {
+    return props.pictures.map((picture, index) => ({
+      name: `活動圖片 ${index + 1}`,
+      url: picture
+    }));
+  });
+
   onMounted(() => {
+    elementPlusPictureList.value = pictureList.value;
     emits("emitElUploadRef", uploadRef.value);
   });
 </script>
