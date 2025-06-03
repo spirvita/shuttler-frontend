@@ -26,7 +26,7 @@ export interface ActivityDetail extends Activity {
   contactPhone: string;
   contactLine: string;
   isFavorite: boolean;
-  status?: string;
+  status: string;
 }
 
 export type CreateActivityPayload = Omit<

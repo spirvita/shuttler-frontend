@@ -28,8 +28,27 @@ export const removeActivityFromFavorites = (activityId: string) => {
   );
 };
 
+export const registerActivity = ({
+  activityId,
+  participantCount
+}: {
+  activityId: string;
+  participantCount: number;
+}) => {
+  return useShuttlerTwAPI.post<{ message: string }>("/activity/registration", {
+    activityId,
+    participantCount
+  });
+};
+
+export const cancelActivity = (activityId: string) => {
+  return useShuttlerTwAPI.delete<{ message: string }>(
+    `/activity/registration/${activityId}`
+  );
+};
+
 export const suspendActivity = (activityId: string) => {
   return useShuttlerTwAPI.post<{ message: string }>(
-    `/activity/${activityId}/suspend`
+    `/organizer/activity/${activityId}/suspend`
   );
 };

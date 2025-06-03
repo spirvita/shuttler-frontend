@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
       user: {
         id: string;
         name: string;
+        points: number;
       };
     };
   }

@@ -1,11 +1,14 @@
 <script lang="ts" setup>
+  import type { ActivityDetail } from "@/types/activities";
   import {
     getActivity,
     addActivityToFavorites,
-    removeActivityFromFavorites
+    removeActivityFromFavorites,
+    registerActivity,
+    cancelActivity
   } from "@/apis/activity";
-  import { activityPictures as defaultActivityPictures } from "~/constants/activityPictures";
-  import ActivityPictures from "~/components/activity/ActivityPictures.vue";
+  import { activityPictures as defaultActivityPictures } from "@/constants/activityPictures";
+  import ActivityPictures from "@/components/activity/ActivityPictures.vue";
   import { useParticipantStatus } from "@/composables/useParticipantStatus";
   import {
     Postcard,
@@ -22,17 +25,30 @@
     ChatDotSquare,
     Money
   } from "@element-plus/icons-vue";
+  import { activityStatus } from "@/constants/activityStatus";
 
-  const { loggedIn } = useUserSession();
+  const { loggedIn, user } = useUserSession();
   const router = useRoute();
   const activityId = router.params.activity as string;
   const { data, refresh: refreshActivity } = await getActivity(activityId);
-  const activity = ref(data.value?.data);
+  const activity = computed(() => {
+    if (!data.value) return null;
+    return data.value.data as ActivityDetail;
+  });
+  const participantCount = ref(1);
+  const remainingSlots = computed(() => {
+    if (!activity.value) return 0;
+    return activity.value.participantCount - activity.value.bookedCount;
+  });
+  const userPoints = user.value?.points ? user.value.points : 0;
 
   const pictures = ref(defaultActivityPictures);
   if (activity.value?.pictures && activity.value?.pictures.length > 0) {
     pictures.value = activity.value?.pictures;
   }
+
+  const registrationDialogVisible = ref(false);
+  const cancelRegistrationDialogVisible = ref(false);
 
   const activityInfoList = computed(() => {
     if (!activity.value) return [];
@@ -110,6 +126,23 @@
     return activityInfoList;
   });
 
+  const canRegisterByPoints = computed(() => {
+    if (!activity.value) return false;
+    const pointsNeeded = activity.value.points * participantCount.value;
+    return pointsNeeded > userPoints;
+  });
+
+  const checkPointsBalance = computed(() => {
+    if (!activity.value) return "";
+    const pointsNeeded = activity.value.points * participantCount.value;
+    if (canRegisterByPoints.value) {
+      return `您的點數餘額不足`;
+    }
+    return `此活動將扣除 ${pointsNeeded} 點數，剩餘 ${
+      userPoints - pointsNeeded
+    } 點數`;
+  });
+
   const toggleFavorite = async () => {
     if (!activity.value) return;
     if (activity.value.isFavorite) {
@@ -122,8 +155,52 @@
       if (!error.value) ElMessage.success("已收藏活動");
     }
     await refreshActivity();
-    activity.value = data.value?.data;
   };
+
+  const handleDialog = (status: string) => {
+    if (!loggedIn.value) return;
+
+    if (status === "published") {
+      registrationDialogVisible.value = true;
+    } else if (status === "registered") {
+      cancelRegistrationDialogVisible.value = true;
+    }
+  };
+
+  const handleRegisterActivity = async (action: boolean) => {
+    if (!action) {
+      registrationDialogVisible.value = false;
+      participantCount.value = 1;
+      return;
+    }
+
+    if (!activity.value?.activityId) return;
+    const payload = {
+      activityId: activity.value.activityId,
+      participantCount: participantCount.value
+    };
+    const { error } = await registerActivity(payload);
+    if (!error.value) ElMessage.success("報名成功");
+    registrationDialogVisible.value = false;
+  };
+
+  const handleCancelActivity = async () => {
+    if (!activity.value?.activityId) return;
+    const { error } = await cancelActivity(activity.value.activityId);
+    if (!error.value) ElMessage.success("取消報名成功");
+    cancelRegistrationDialogVisible.value = false;
+  };
+
+  watch(
+    () => loggedIn.value,
+    (newValue) => {
+      if (newValue) {
+        setTimeout(async () => {
+          await refreshActivity();
+        }, 500);
+      }
+    }
+  );
 </script>
 <template>
   <div
@@ -166,7 +243,7 @@
               circle
               class="el-favorite ml-auto"
               :class="
-                activity?.isFavorite
+                activity.isFavorite
                   ? 'text-primary-accent-500 bg-primary-accent-50 border-primary-accent-500 hover:text-primary-300 hover:bg-primary-50 hover:border-primary-300 active:text-neutral-300 active:bg-neutral-50 active:border-neutral-300'
                   : ''
               "
@@ -174,7 +251,7 @@
             >
               <Icon
                 :name="
-                  activity?.isFavorite
+                  activity.isFavorite
                     ? 'ic:baseline-bookmark'
                     : 'ic:baseline-bookmark-border'
                 "
@@ -239,17 +316,120 @@
               </span>
             </p>
             <el-button
+              v-if="!loggedIn"
               type="primary"
               :disabled="!loggedIn"
               class="w-full py-5 text-md border-0"
               round
             >
-              {{ loggedIn ? "報名活動" : "登入報名" }}
+              {{
+                activity.status === "published"
+                  ? "報名請先登入"
+                  : activityStatus[activity.status]
+              }}
+            </el-button>
+            <el-button
+              v-else
+              :type="activity.status === 'published' ? 'primary' : 'danger'"
+              :disabled="
+                activity.status === 'full' || activity.status === 'ended'
+              "
+              class="w-full py-5 text-md border-0"
+              :class="
+                activity.status === 'full' || activity.status === 'ended'
+                  ? 'bg-neutral-300 text-neutral-600'
+                  : ''
+              "
+              round
+              @click="handleDialog(activity.status)"
+            >
+              {{ activityStatus[activity.status] }}
             </el-button>
           </div>
         </div>
       </div>
     </div>
+    <el-dialog
+      v-model="registrationDialogVisible"
+      title="報名確認"
+      width="350"
+      class="text-md"
+    >
+      <p class="mb-2">您是否要報名此活動?</p>
+      <p class="mb-2">
+        <span class="mr-2">時段 :</span>
+        {{ `${activity.date} ${activity.startTime} ${activity.endTime}` }}
+      </p>
+      <div class="flex items-center mb-2">
+        <label
+          for="participantCount"
+          class="text-nowrap mr-2"
+        >
+          人數 :
+        </label>
+        <el-select
+          id="participantCount"
+          v-model="participantCount"
+          placeholder="請選擇人數"
+          class="w-full"
+        >
+          <el-option
+            v-for="item in remainingSlots"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+      </div>
+      <p>{{ checkPointsBalance }}</p>
+      <template #footer>
+        <div class="flex">
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="handleRegisterActivity(false)"
+          >
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            class="w-full"
+            round
+            :disabled="canRegisterByPoints"
+            @click="handleRegisterActivity(true)"
+          >
+            報名
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-model="cancelRegistrationDialogVisible"
+      title="取消確認"
+      width="350"
+      class="text-md"
+    >
+      <p class="mb-2">您是否要取消此活動?</p>
+      <template #footer>
+        <div class="flex">
+          <el-button
+            type="primary"
+            class="w-full"
+            round
+            @click="cancelRegistrationDialogVisible = false"
+          >
+            不取消
+          </el-button>
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="handleCancelActivity"
+          >
+            取消報名
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style scoped lang="scss">

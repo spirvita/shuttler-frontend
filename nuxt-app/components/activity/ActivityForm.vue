@@ -56,7 +56,8 @@
     organizer: "",
     contactName: "",
     contactPhone: "",
-    contactLine: ""
+    contactLine: "",
+    status: ""
   });
   const validatePhone = (
     _rule: unknown,
