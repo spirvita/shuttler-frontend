@@ -1,15 +1,87 @@
 <script setup lang="ts">
   import ActivitiesFilterPanel from "~/components/activities/ActivitiesFilterPanel.vue";
   import ActivitiesNearDatePicker from "~/components/activities/ActivitiesNearDatePicker.vue";
-  import { getActivities } from "@/apis/activities";
   import { Location, Clock, Money, TopRight } from "@element-plus/icons-vue";
   import { useParticipantStatus } from "@/composables/useParticipantStatus";
+  import type { Activity, ActivityFilter } from "@/types/activities";
 
-  const { data: activities } = await getActivities();
+  const runtimeConfig = useRuntimeConfig();
+  const filter = ref<ActivityFilter>({
+    date: ""
+  } as ActivityFilter);
+  const queryString = computed(() => {
+    const newFilter = JSON.parse(JSON.stringify(filter.value));
+    if (filter.value?.zipCode) {
+      delete newFilter.city;
+    } else if (newFilter?.city) {
+      delete newFilter.zipCode;
+    }
+    newFilter.timeSlot = newFilter.timeSlot
+      ? newFilter.timeSlot.replace(":00", "")
+      : "";
+    if (newFilter.date === null) newFilter.date = "";
+    if (newFilter.spotsLeft === undefined) newFilter.spotsLeft = "";
+    const newQueryString = new URLSearchParams(
+      newFilter as unknown as Record<string, string>
+    ).toString();
+    return newQueryString;
+  });
+  const { data, refresh: refreshActivities } = await useFetch<{
+    message: string;
+    data: Activity[];
+  }>(
+    () => `${runtimeConfig.public.API_BASE_URL}/activities?${queryString.value}`
+  );
+  const activitiesData = computed(() => {
+    return data.value?.data || [];
+  });
+  const currentDate = ref("");
+  const currentPage = ref(1);
+  const paginationLimit = ref(9);
   const router = useRouter();
-  const pushTo = (activityId: string) => {
+
+  const pushToActivity = (activityId: string) => {
     router.push(`/activities/${activityId}`);
   };
+  const changePage = (page: number) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    currentPage.value = page;
+  };
+  const changeDate = (date: string) => {
+    currentDate.value = date;
+  };
+  const updateFilter = async (newFilter: ActivityFilter) => {
+    filter.value = JSON.parse(JSON.stringify(newFilter));
+    refreshActivities();
+  };
+  const activitiesDataFilteredByNearDate = computed(() => {
+    return currentDate.value
+      ? activitiesData.value.filter(
+          (activity) => activity.date === currentDate.value
+        )
+      : activitiesData.value;
+  });
+  const activitiesDataFilteredByName = computed(() => {
+    const searchKeyword = filter.value.venueName?.toLowerCase();
+    if (!searchKeyword) {
+      return activitiesDataFilteredByNearDate.value;
+    }
+    return activitiesDataFilteredByNearDate.value.filter((activity) => {
+      const venueName = activity.venueName.toLowerCase();
+      const activityName = activity.name.toLowerCase();
+      return (
+        venueName.includes(searchKeyword) ||
+        activityName.includes(searchKeyword)
+      );
+    });
+  });
+
+  const activitiesByPagination = computed(() => {
+    return activitiesDataFilteredByName.value.slice(
+      (currentPage.value - 1) * paginationLimit.value,
+      currentPage.value * paginationLimit.value
+    );
+  });
 </script>
 <template>
   <div class="py-20">
@@ -27,16 +99,23 @@
     </div>
     <div class="container">
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
-        <ActivitiesFilterPanel class="col-span-12 xl:col-span-3" />
+        <ActivitiesFilterPanel
+          class="col-span-12 xl:col-span-3"
+          @update-filter="updateFilter"
+        />
         <div class="col-span-12 xl:col-span-9">
-          <ActivitiesNearDatePicker class="mb-6" />
-          <ul class="grid grid-col-1 xl:grid-cols-3 gap-6">
+          <ActivitiesNearDatePicker
+            :disable-date="filter.date"
+            class="mb-6"
+            @change-date="changeDate"
+          />
+          <ul class="grid grid-col-1 xl:grid-cols-3 gap-6 mb-6">
             <li
-              v-for="activity in activities?.data"
+              v-for="activity in activitiesByPagination"
               :key="activity.activityId"
               class="relative group p-4 border rounded-lg"
               :class="`${useParticipantStatus('border', activity.bookedCount, activity.participantCount)}`"
-              @click="pushTo(activity.activityId)"
+              @click="pushToActivity(activity.activityId)"
             >
               <div class="flex items-center mb-2">
                 <el-avatar
@@ -98,8 +177,35 @@
               />
             </li>
           </ul>
+          <el-pagination
+            class="flex justify-center"
+            layout="prev, pager, next"
+            size="large"
+            :hide-on-single-page="true"
+            :page-size="paginationLimit"
+            :total="activitiesDataFilteredByName.length"
+            @current-change="changePage"
+          />
+          <p
+            v-if="activitiesDataFilteredByName.length === 0"
+            class="text-center text-lg text-neutral-500 mt-20"
+          >
+            暫無資料
+          </p>
         </div>
       </div>
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+  :deep(.el-pager li.is-active) {
+    background-color: var(--color-primary-accent-500);
+    border-color: var(--color-primary-accent-500);
+    border-radius: 50%;
+    color: var(--color-black);
+    font-weight: 400;
+  }
+  :deep(.el-select__wrapper.is-disabled) {
+    background: transparent;
+  }
+</style>

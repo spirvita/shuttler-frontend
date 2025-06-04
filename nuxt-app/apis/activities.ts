@@ -1,8 +1,8 @@
 import type { Activity } from "@/types/activities";
 
-export const getActivities = () => {
+export const getActivities = (queryString?: string) => {
   return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
-    "/activities"
+    `/activities?${queryString}`
   );
 };
 

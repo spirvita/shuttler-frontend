@@ -47,15 +47,19 @@ export function useTwLocationState() {
     });
   }
 
+  function manuallySetCity(cityName: string) {
+    twCity.value = cityName;
+  }
+
   watch(
     () => twCity.value,
-    (newVal) => {
+    () => {
       if (isInitLocationByZip.value) {
         isInitLocationByZip.value = false;
         return;
       }
-      twDistrict.value = createTwDistrictsOptions(newVal)[0].value;
-      twDistrictName.value = createTwDistrictsOptions(newVal)[0].label;
+      twDistrict.value = "";
+      twDistrictName.value = "";
     }
   );
 
@@ -78,6 +82,7 @@ export function useTwLocationState() {
     twCity,
     twDistrict,
     twDistrictName,
-    initLocationByZip
+    initLocationByZip,
+    manuallySetCity
   };
 }

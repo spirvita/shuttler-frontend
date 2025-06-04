@@ -33,3 +33,14 @@ export type CreateActivityPayload = Omit<
   ActivityDetail,
   "activityId" | "isFavorite" | "contactAvatar" | "bookedCount"
 >;
+
+export interface ActivityFilter {
+  venueName: string;
+  city?: string;
+  zipCode?: string;
+  spotsLeft: string;
+  level: string;
+  date: string;
+  timeSlot: string;
+  points: number;
+}
