@@ -2,29 +2,24 @@
   import bgImage from "@/assets/images/current-activities-bg.png";
   import { Money } from "@element-plus/icons-vue";
   import Payment from "@/components/buyPoints/Payment.vue";
+  import { getPointsPlan } from "@/apis/buyPoints";
+  import type { PointsPlan } from "@/types/points";
 
   const selectedPoints = ref<number>(0);
   const buyPoints = (points: number) => {
     selectedPoints.value = points;
   };
-  const pointsCard = ref([
-    {
-      points: 100,
-      onClick: buyPoints
-    },
-    {
-      points: 300,
-      onClick: buyPoints
-    },
-    {
-      points: 500,
-      onClick: buyPoints
-    },
-    {
-      points: 1000,
-      onClick: buyPoints
-    }
-  ]);
+  const { data } = await getPointsPlan();
+  const pointsCardList = computed(() => {
+    const pointsPlan = data.value?.data
+      ? data.value.data.map((item: PointsPlan) => ({
+          points: item.value,
+          onClick: buyPoints
+        }))
+      : [];
+    return pointsPlan;
+  });
+
   const resetPoints = () => {
     selectedPoints.value = 0;
   };
@@ -61,7 +56,7 @@
       class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
     >
       <li
-        v-for="card in pointsCard"
+        v-for="card in pointsCardList"
         :key="card.points"
         :style="{
           backgroundImage: `url(${bgImage})`,

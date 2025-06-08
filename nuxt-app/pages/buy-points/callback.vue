@@ -2,23 +2,13 @@
   import { Check, Close, Money } from "@element-plus/icons-vue";
 
   const router = useRouter();
-  const query = router.currentRoute.value.query;
-  const status = query.status;
-  const points = query.points || 0;
-  const statusMessage = {
-    success: "購買成功",
-    cancel: "交易取消",
-    error: "交易錯誤，請稍後再試"
-  };
-
-  const paymentMessage = ref("");
-  if (status === "success") {
-    paymentMessage.value = statusMessage.success;
-  } else if (status === "cancel") {
-    paymentMessage.value = statusMessage.cancel;
-  } else {
-    paymentMessage.value = statusMessage.error;
-  }
+  const query = useRoute().query;
+  const queryInfo = ref({
+    userPoints: query.userPoints || 0,
+    merchantOrderNo: query.merchantOrderNo || "",
+    status: query.status || "error",
+    pointsValue: query.pointsValue || 0
+  });
 </script>
 
 <template>
@@ -26,44 +16,46 @@
     <h2 class="mb-10">
       <span class="text-5xl">羽神交易結果</span>
     </h2>
-    <p class="text-3xl mb-10">{{ paymentMessage }}</p>
-    <template v-if="status !== 'success'">
-      <div class="flex flex-col items-center">
-        <el-icon
-          size="60"
-          class="text-danger-500 mb-10"
-        >
-          <Close />
-        </el-icon>
-        <el-button
-          type="primary"
-          class=""
-          @click="router.push('/buy-points')"
-        >
-          點此重新購買
-        </el-button>
-      </div>
-    </template>
-    <template v-else>
+    <div class="flex flex-col items-center">
       <el-icon
         size="60"
-        class="text-success-500 mb-10"
+        class="mb-10"
+        :class="
+          queryInfo.status === 'success'
+            ? 'text-success-500'
+            : 'text-danger-500'
+        "
       >
-        <Check />
+        <Check v-if="queryInfo.status === 'success'" />
+        <Close v-else />
       </el-icon>
-      <p class="mb-3">您已購買 {{ points }} 點數</p>
-      <p class="mb-10">
-        共
-        <el-icon><Money /></el-icon>
-        1580 點數可使用
-      </p>
+      <template v-if="queryInfo.status === 'success'">
+        <p class="mb-5">訂單編號：{{ queryInfo.merchantOrderNo }}</p>
+        <p class="mb-5">您已成功購買 {{ queryInfo.pointsValue }} 點數</p>
+        <p class="mb-10 flex items-center justify-center">
+          <el-icon
+            size="24"
+            class="mr-1"
+          >
+            <Money />
+          </el-icon>
+          {{ queryInfo.userPoints }} 可用
+        </p>
+      </template>
+      <template v-else>
+        <p class="mb-10">交易失敗，請重新購買</p>
+      </template>
       <el-button
         type="primary"
-        class="mb-3"
-        @click="router.push('/activities')"
+        class="mb-5"
+        @click="
+          router.push(
+            `${queryInfo.status === 'success' ? '/activities' : '/buy-points'}`
+          )
+        "
       >
-        點此回到活動列表
+        {{ queryInfo.status === "success" ? "查看活動" : "重新購買" }}
       </el-button>
-    </template>
+    </div>
   </div>
 </template>
