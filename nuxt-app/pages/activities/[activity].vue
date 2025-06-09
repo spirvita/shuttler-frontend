@@ -27,7 +27,7 @@
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
-  const { loggedIn, user } = useUserSession();
+  const { loggedIn } = useUserSession();
   const router = useRoute();
   const activityId = router.params.activity as string;
   const { data, refresh: refreshActivity } = await getActivity(activityId);
@@ -35,12 +35,15 @@
     if (!data.value) return null;
     return data.value.data as ActivityDetail;
   });
+  const userStore = useUserStore();
+  await userStore.fetchUserInfo();
+  const userPoints = computed(() => userStore.userInfo?.totalPoint || 0);
+
   const participantCount = ref(1);
   const remainingSlots = computed(() => {
     if (!activity.value) return 0;
     return activity.value.participantCount - activity.value.bookedCount;
   });
-  const userPoints = user.value?.points ? user.value.points : 0;
 
   const pictures = ref(defaultActivityPictures);
   if (activity.value?.pictures && activity.value?.pictures.length > 0) {
@@ -49,6 +52,7 @@
 
   const registrationDialogVisible = ref(false);
   const cancelRegistrationDialogVisible = ref(false);
+  const registeredDialogVisible = ref(false);
 
   const activityInfoList = computed(() => {
     if (!activity.value) return [];
@@ -129,7 +133,7 @@
   const canRegisterByPoints = computed(() => {
     if (!activity.value) return false;
     const pointsNeeded = activity.value.points * participantCount.value;
-    return pointsNeeded > userPoints;
+    return pointsNeeded > userPoints.value;
   });
 
   const checkPointsBalance = computed(() => {
@@ -139,7 +143,7 @@
       return `您的點數餘額不足`;
     }
     return `此活動將扣除 ${pointsNeeded} 點數，剩餘 ${
-      userPoints - pointsNeeded
+      userPoints.value - pointsNeeded
     } 點數`;
   });
 
@@ -163,8 +167,23 @@
     if (status === "published") {
       registrationDialogVisible.value = true;
     } else if (status === "registered") {
-      cancelRegistrationDialogVisible.value = true;
+      registeredDialogVisible.value = true;
     }
+  };
+  const handleRegisteredDialog = (action: string) => {
+    registeredDialogVisible.value = false;
+    setTimeout(() => {
+      if (action === "cancel") {
+        cancelRegistrationDialogVisible.value = true;
+      } else if (action === "register") {
+        registrationDialogVisible.value = true;
+      }
+    }, 300);
+  };
+
+  const updateUserAndActivity = async () => {
+    await userStore.fetchUserInfo();
+    await refreshActivity();
   };
 
   const handleRegisterActivity = async (action: boolean) => {
@@ -182,6 +201,7 @@
     const { error } = await registerActivity(payload);
     if (!error.value) ElMessage.success("報名成功");
     registrationDialogVisible.value = false;
+    await updateUserAndActivity();
   };
 
   const handleCancelActivity = async () => {
@@ -189,15 +209,14 @@
     const { error } = await cancelActivity(activity.value.activityId);
     if (!error.value) ElMessage.success("取消報名成功");
     cancelRegistrationDialogVisible.value = false;
+    await updateUserAndActivity();
   };
 
   watch(
     () => loggedIn.value,
-    (newValue) => {
+    async (newValue) => {
       if (newValue) {
-        setTimeout(async () => {
-          await refreshActivity();
-        }, 500);
+        await updateUserAndActivity();
       }
     }
   );
@@ -360,7 +379,7 @@
         <span class="mr-2">時段 :</span>
         {{ `${activity.date} ${activity.startTime} ${activity.endTime}` }}
       </p>
-      <div class="flex items-center mb-2">
+      <div class="flex items-center pb-5 border-b border-neutral-200 mb-5">
         <label
           for="participantCount"
           class="text-nowrap mr-2"
@@ -381,6 +400,7 @@
           />
         </el-select>
       </div>
+      <p class="mb-3">您有尚有 {{ userPoints }} 點數</p>
       <p>{{ checkPointsBalance }}</p>
       <template #footer>
         <div class="flex">
@@ -426,6 +446,33 @@
             @click="handleCancelActivity"
           >
             取消報名
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-model="registeredDialogVisible"
+      :model="false"
+      title="您已報名活動"
+      width="350"
+      class="text-md"
+    >
+      <p class="mb-2">您要取消報名或是再次報名?</p>
+      <template #footer>
+        <div class="flex">
+          <el-button
+            class="w-full"
+            round
+            @click="handleRegisteredDialog('cancel')"
+          >
+            取消報名
+          </el-button>
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="handleRegisteredDialog('register')"
+          >
+            再次報名
           </el-button>
         </div>
       </template>

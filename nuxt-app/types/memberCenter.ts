@@ -5,5 +5,6 @@ export interface MemberInfo {
   registerDate: string;
   level: number;
   attendCount: number;
+  totalPoint: number;
   preferredLocation: string[];
 }
