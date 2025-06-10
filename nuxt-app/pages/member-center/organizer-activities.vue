@@ -4,13 +4,14 @@
   import { getOrganizerActivities } from "@/apis/activities";
 
   const activeName = ref("published");
-  const organizerActivities = ref();
   const { data, refresh: refreshOrganizerActivities } =
     await getOrganizerActivities();
-  organizerActivities.value = data?.value?.data;
+  const organizerActivities = computed(() => {
+    return data.value?.data || [];
+  });
   const getActivitiesByStatus = (status: string) => {
     return computed(() =>
-      organizerActivities.value.filter(
+      (organizerActivities.value as ActivityDetail[]).filter(
         (activity: ActivityDetail) => activity.status === status
       )
     );

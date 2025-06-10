@@ -6,6 +6,7 @@
     WarnTriangleFilled
   } from "@element-plus/icons-vue";
   import { suspendActivity } from "@/apis/activity";
+  import type { ActivityDetail } from "@/types/activities";
 
   interface TableColumn {
     prop: string;
@@ -16,7 +17,7 @@
   }
 
   const props = defineProps<{
-    data: Array<{ date: string }>;
+    data: ActivityDetail[];
   }>();
   const emits = defineEmits(["reloadData"]);
   const noDateMessage = ref("目前無資料");
@@ -27,7 +28,7 @@
     { prop: "city", label: "縣市", width: "80" },
     { prop: "district", label: "區域", width: "80" },
     { prop: "level", label: "活動程度", width: "200" },
-    { prop: "contactName", label: "聯絡人姓名", width: "200" }
+    { prop: "contactName", label: "聯絡人", width: "100" }
   ]);
   const editActivityDialogVisible = ref(false);
   const suspendActivityDialogVisible = ref(false);
@@ -75,6 +76,18 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="報名者"
+        width=""
+      >
+        <template #default>
+          <el-button
+            type="info"
+            :icon="UserFilled"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="!(props.data[0].status === 'ended')"
         fixed="right"
         label="操作"
         width="160"
@@ -82,16 +95,11 @@
         <template #default="scope">
           <el-button-group>
             <el-button
-              type="info"
+              type="primary"
               :icon="Edit"
               @click="editActivityDialog(scope.row)"
             />
             <el-button
-              type="success"
-              :icon="UserFilled"
-            />
-            <el-button
-              type="danger"
               :icon="WarnTriangleFilled"
               @click="handleSuspendActivityDialog(scope.row)"
             />
@@ -129,7 +137,7 @@
       <span>確定要停辦此活動嗎?</span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleSuspendActivity(selectActivity.id)">
+          <el-button @click="handleSuspendActivity(selectActivity.activityId)">
             確定停辦
           </el-button>
           <el-button
