@@ -43,7 +43,9 @@
         </div>
       </div>
     </header>
-    <slot />
+    <div class="pt-[72px]">
+      <slot />
+    </div>
 
     <Footer />
 

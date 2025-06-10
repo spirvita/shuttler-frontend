@@ -11,3 +11,16 @@ export const getOrganizerActivities = () => {
     "/organizer/activities"
   );
 };
+
+export const getUpcomingActivities = () => {
+
+  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+    "/activity/upcoming"
+  );
+};
+
+export const getPopularActivities = () => {
+  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+    "/activity/popular"
+  );
+};

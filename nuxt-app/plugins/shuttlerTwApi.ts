@@ -7,13 +7,14 @@ const responseErrorMessage: { [key: number]: string } = {
   404: "找不到該資源",
   408: "請求逾時，請稍後再試",
   409: "請求衝突，請稍後再試",
-  500: "伺服器錯誤，請稍後再試"
+  500: "伺服器錯誤，請稍後再試",
 };
 
 export default defineNuxtPlugin((_nuxtApp) => {
   const authStore = useAuthStore();
-  authStore.initializeToken();
   const runtimeConfig = useRuntimeConfig();
+
+  authStore.initializeToken();
   const shuttlerTwAPI = $fetch.create({
     baseURL: runtimeConfig.public.API_BASE_URL,
     onRequest({ request: _request, options }) {
@@ -26,14 +27,14 @@ export default defineNuxtPlugin((_nuxtApp) => {
         response._data?.message || responseErrorMessage[response.status];
       ElMessage({
         message: message,
-        type: "error"
+        type: "error",
       });
-    }
+    },
   });
 
   return {
     provide: {
-      shuttlerTwAPI
-    }
+      shuttlerTwAPI,
+    },
   };
 });

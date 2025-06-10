@@ -2,7 +2,7 @@
   import bgImage from "@/assets/images/hero-section-bg.png";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
-
+  import { Location, Odometer, User } from "@element-plus/icons-vue";
   const { twCitiesOptions, twCity } = useTwLocationState();
   const shuttlerLevelOptions = useShuttlerLevelOptions();
   const level = ref("");
@@ -29,8 +29,13 @@
         <el-select
           v-model="twCity"
           class="hero-section-select"
-          placeholder="請選擇縣市"
+          placeholder="選擇縣市"
         >
+          <template #prefix>
+            <el-icon class="text-secondary-300 mr-2" size="24">
+              <Location />
+            </el-icon>
+          </template>
           <el-option
             v-for="item in twCitiesOptions"
             :key="item.value"
@@ -44,6 +49,11 @@
           class="hero-section-select"
           placeholder="請選擇程度"
         >
+          <template #prefix>
+            <el-icon class="text-secondary-300 mr-2" size="24">
+              <Odometer />
+            </el-icon>
+          </template>
           <el-option
             v-for="item in shuttlerLevelOptions"
             :key="item.value"
@@ -57,6 +67,11 @@
           class="hero-section-select"
           placeholder="請選擇人數"
         >
+          <template #prefix>
+            <el-icon class="text-secondary-300 mr-2" size="24">
+              <User />
+            </el-icon>
+          </template>
           <el-option
             v-for="item in 10"
             :key="item"
@@ -65,10 +80,7 @@
           />
         </el-select>
       </div>
-      <el-button
-        type="primary"
-        class="h-14 text-md w-[104px] rounded-[40px]"
-      >
+      <el-button type="primary" class="h-14 text-md w-[104px] rounded-[40px]">
         搜尋
       </el-button>
     </div>
