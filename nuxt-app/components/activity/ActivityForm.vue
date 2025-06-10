@@ -12,7 +12,7 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { venueFacilities as availableVenueFacilities } from "@/constants/venueFacilities";
-  import { createActivity } from "@/apis/activity";
+  import { createActivity, updateActivity } from "@/apis/activity";
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
@@ -199,7 +199,11 @@
 
   const processActivityStatus = async (status: ActivityStatus) => {
     if (status === "update") {
-      ElMessage.success("修改成功");
+      const { error } = await updateActivity(
+        activityInfo.value as ActivityDetail
+      );
+      if (!error.value) ElMessage.success("修改成功");
+      return;
     }
     const { error } = await createActivity(
       activityInfo.value,

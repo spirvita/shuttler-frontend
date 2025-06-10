@@ -2,8 +2,9 @@
   import type {
     UploadProps,
     UploadUserFile,
-    UploadInstance
+    UploadInstance,
   } from "element-plus";
+
   const props = defineProps<{
     pictures: string[];
   }>();
@@ -31,15 +32,14 @@
     emits("onChange", uploadFiles);
   };
 
-  const pictureList = computed(() => {
-    return props.pictures.map((picture, index) => ({
+  watch(() => props.pictures, () => {
+    elementPlusPictureList.value = props.pictures.map((picture, index) => ({
       name: `活動圖片 ${index + 1}`,
       url: picture
     }));
-  });
+  })
 
   onMounted(() => {
-    elementPlusPictureList.value = pictureList.value;
     emits("emitElUploadRef", uploadRef.value);
   });
 </script>

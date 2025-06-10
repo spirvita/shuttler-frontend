@@ -71,6 +71,7 @@
       v-if="props.data.length > 0"
       :data="props.data"
       :style="{ height: '320px' }"
+      :default-sort="{ prop: 'date', order: 'ascending' }"
     >
       <el-table-column
         v-for="column in displayedColumns"
@@ -134,6 +135,8 @@
     <el-dialog
       v-model="editActivityDialogVisible"
       fullscreen
+      destroy-on-close
+      :z-index="1000"
     >
       <div class="flex flex-col items-center">
         <p class="text-2xl mb-4">編輯活動</p>
