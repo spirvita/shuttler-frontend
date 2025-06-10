@@ -28,7 +28,7 @@
     <h2 class="mb-3">活動管理</h2>
     <el-tabs v-model="activeName">
       <el-tab-pane
-        label="已發佈"
+        :label="`已發佈 (${publishedList.length})`"
         name="published"
       >
         <ElTableForOrganizer
@@ -37,13 +37,13 @@
         />
       </el-tab-pane>
       <el-tab-pane
-        label="已結束"
+        :label="`已結束 (${endedList.length})`"
         name="ended"
       >
         <ElTableForOrganizer :data="endedList" />
       </el-tab-pane>
       <el-tab-pane
-        label="草稿"
+        :label="`草稿 (${draftList.length})`"
         name="draft"
       >
         <ElTableForOrganizer :data="draftList" />

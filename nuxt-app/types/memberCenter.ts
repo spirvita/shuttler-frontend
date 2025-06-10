@@ -8,3 +8,15 @@ export interface MemberInfo {
   totalPoint: number;
   preferredLocation: string[];
 }
+
+export interface ActivityParticipant {
+  memberId: string;
+  name: string;
+  email: string;
+  registrationDate: string;
+  cancellationDate?: string;
+  registrationCount: number;
+  registrationPoints: number;
+  refundPoints: number;
+  status: "已報名" | "已取消";
+}

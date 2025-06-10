@@ -1,4 +1,5 @@
 import type { ActivityDetail, CreateActivityPayload } from "@/types/activities";
+import type { ActivityParticipant } from "@/types/memberCenter";
 
 export const createActivity = (
   activityPayload: CreateActivityPayload,
@@ -45,6 +46,13 @@ export const cancelActivity = (activityId: string) => {
   return useShuttlerTwAPI.delete<{ message: string }>(
     `/activity/registration/${activityId}`
   );
+};
+
+export const getActivityParticipants = (activityId: string) => {
+  return useShuttlerTwAPI.get<{
+    message: string;
+    data: ActivityParticipant[];
+  }>(`/organizer/activities/${activityId}`);
 };
 
 export const suspendActivity = (activityId: string) => {
