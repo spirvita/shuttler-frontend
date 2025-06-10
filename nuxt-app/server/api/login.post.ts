@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { data, message } = await $fetch<LoginResponse>(
-      "https://dev-api.shuttler.tw/api/v1/auth/login",
+      "https://dev-api.spirvita.tw/api/v1/auth/login",
       {
         method: "POST",
         body: {
