@@ -7,6 +7,7 @@
   const { data, refresh: refreshOrganizerActivities } =
     await getOrganizerActivities();
   const organizerActivities = computed(() => {
+    console.log("organizerActivities", data.value);
     return data.value?.data || [];
   });
   const getActivitiesByStatus = (status: string) => {
@@ -19,8 +20,8 @@
   const publishedList = getActivitiesByStatus("published");
   const endedList = getActivitiesByStatus("ended");
   const draftList = getActivitiesByStatus("draft");
-  const reloadData = (isReload: boolean) => {
-    if (isReload) refreshOrganizerActivities();
+  const reloadData = () => {
+    refreshOrganizerActivities();
   };
 </script>
 <template>
@@ -46,7 +47,10 @@
         :label="`草稿 (${draftList.length})`"
         name="draft"
       >
-        <ElTableForOrganizer :data="draftList" />
+        <ElTableForOrganizer
+          :data="draftList"
+          @reload-data="reloadData"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>

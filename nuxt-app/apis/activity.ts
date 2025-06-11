@@ -11,10 +11,11 @@ export const createActivity = (
   });
 };
 
-export const updateActivity = (
-  activityPayload: ActivityDetail
-) => {
-  return useShuttlerTwAPI.put(`/organizer/activity/${activityPayload.activityId}`, activityPayload as unknown as Record<string, unknown>);
+export const updateActivity = (activityPayload: ActivityDetail) => {
+  return useShuttlerTwAPI.put(
+    `/organizer/activity/${activityPayload.activityId}`,
+    activityPayload as unknown as Record<string, unknown>
+  );
 };
 
 export const getActivity = (activityId: string) => {

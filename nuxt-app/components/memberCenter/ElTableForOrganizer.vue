@@ -20,12 +20,12 @@
   const noDateMessage = ref("目前無資料");
   const displayedColumns = ref<TableColumn[]>([
     { prop: "date", label: "日期", width: "100", fixed: "left" },
-    { prop: "startTime", label: "開始時間", width: "100" },
-    { prop: "endTime", label: "結束時間", width: "100" },
-    { prop: "city", label: "縣市", width: "80" },
-    { prop: "district", label: "區域", width: "80" },
-    { prop: "level", label: "活動程度", width: "200" },
-    { prop: "contactName", label: "聯絡人", width: "100" }
+    { prop: "name", label: "活動名稱", width: "140", fixed: "left" },
+    { prop: "startTime", label: "時間(起)", width: "80" },
+    { prop: "endTime", label: "時間(訖)", width: "80" },
+    { prop: "venueName", label: "場館名稱", width: "150" },
+    { prop: "contactName", label: "聯絡人", width: "100" },
+    { prop: "level", label: "活動程度", width: "200" }
   ]);
   const displayedParticipantsColumns = ref<TableColumn[]>([
     { prop: "status", label: "狀態" },
@@ -61,7 +61,10 @@
     if (!error.value) {
       ElMessage.success(data.value?.message);
     }
-    emits("reloadData", true);
+    reloadData();
+  };
+  const reloadData = () => {
+    emits("reloadData");
   };
 </script>
 
@@ -90,26 +93,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right"
-        label="報名者"
-        width=""
-      >
-        <template #default="scope">
-          <el-button
-            v-if="scope.row.bookedCount"
-            type="info"
-            :disabled="scope.row.bookedCount === 0"
-            @click="handleGetActivityParticipants(scope.row.activityId)"
-          >
-            {{ scope.row.bookedCount }} 人
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="!(props.data[0].status === 'ended')"
         fixed="right"
         label="操作"
-        width="160"
+        width="120"
       >
         <template #default="scope">
           <el-button-group>
@@ -123,6 +110,23 @@
               @click="handleSuspendActivityDialog(scope.row)"
             />
           </el-button-group>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="報名者"
+        width=""
+      >
+        <template #default="scope">
+          <el-button
+            v-if="scope.row.bookedCount"
+            type="info"
+            class="w-16"
+            :disabled="scope.row.bookedCount === 0"
+            @click="handleGetActivityParticipants(scope.row.activityId)"
+          >
+            {{ scope.row.bookedCount }} 人
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -140,7 +144,11 @@
     >
       <div class="flex flex-col items-center">
         <p class="text-2xl mb-4">編輯活動</p>
-        <ActivityForm :activity-edit-info="selectActivity" />
+        <ActivityForm
+          :activity-edit-info="selectActivity"
+          @close="editActivityDialogVisible = false"
+          @reload-data="reloadData"
+        />
       </div>
       <template #footer>
         <div class="dialog-footer">
