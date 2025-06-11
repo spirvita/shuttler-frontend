@@ -4,14 +4,7 @@
   import { getActivityParticipants, suspendActivity } from "@/apis/activity";
   import type { ActivityDetail } from "@/types/activities";
   import type { ActivityParticipant } from "@/types/memberCenter";
-
-  interface TableColumn {
-    prop: string;
-    label: string;
-    width?: string;
-    minWidth?: string;
-    fixed?: string;
-  }
+  import type { TableColumn } from "@/types/elTable";
 
   const props = defineProps<{
     data: ActivityDetail[];

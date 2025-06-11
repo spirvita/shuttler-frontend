@@ -10,3 +10,18 @@ export const getUserInfo = () => {
 export const updateUserInfo = (data: Partial<MemberInfo>) => {
   return useShuttlerTwAPI.put("/user/profile", data);
 };
+
+export const getUserPointsRecord = () => {
+  return useShuttlerTwAPI.get<{
+    message: string,
+    data: {
+      createdTime: string;
+      recordType: string;
+      points: string;
+      activity?: {
+        id: string;
+        name: string;
+      };
+    }[]
+  }>("/user/records");
+};

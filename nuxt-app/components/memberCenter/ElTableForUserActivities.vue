@@ -2,14 +2,8 @@
   import type { ActivityDetail } from "@/types/activities";
   import { WarnTriangleFilled, Link } from "@element-plus/icons-vue";
   import { cancelActivity } from "@/apis/activity";
+  import type { TableColumn } from "@/types/elTable";
 
-  interface TableColumn {
-    prop: string;
-    label: string;
-    width?: string;
-    minWidth?: string;
-    fixed?: string;
-  }
   const props = defineProps<{
     data: ActivityDetail[];
   }>();
