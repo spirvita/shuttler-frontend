@@ -6,6 +6,12 @@ export const getActivities = (queryString?: string) => {
   );
 };
 
+export const getUserActivities = () => {
+  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+    "/user/activities"
+  );
+};
+
 export const getOrganizerActivities = () => {
   return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
     "/organizer/activities"
@@ -13,7 +19,6 @@ export const getOrganizerActivities = () => {
 };
 
 export const getUpcomingActivities = () => {
-
   return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
     "/activity/upcoming"
   );

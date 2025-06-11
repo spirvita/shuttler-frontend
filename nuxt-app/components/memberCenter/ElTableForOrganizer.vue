@@ -17,7 +17,6 @@
     data: ActivityDetail[];
   }>();
   const emits = defineEmits(["reloadData"]);
-  const noDateMessage = ref("目前無資料");
   const displayedColumns = ref<TableColumn[]>([
     { prop: "date", label: "日期", width: "100", fixed: "left" },
     { prop: "name", label: "活動名稱", width: "140", fixed: "left" },
@@ -132,9 +131,9 @@
     </el-table>
     <p
       v-else
-      class="text-center mt-20"
+      class="text-center mt-20 text-neutral-500 text-lg"
     >
-      {{ noDateMessage }}
+      暫無資料
     </p>
     <el-dialog
       v-model="editActivityDialogVisible"

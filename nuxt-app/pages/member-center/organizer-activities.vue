@@ -7,7 +7,6 @@
   const { data, refresh: refreshOrganizerActivities } =
     await getOrganizerActivities();
   const organizerActivities = computed(() => {
-    console.log("organizerActivities", data.value);
     return data.value?.data || [];
   });
   const getActivitiesByStatus = (status: string) => {
