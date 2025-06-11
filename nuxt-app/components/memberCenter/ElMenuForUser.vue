@@ -27,7 +27,7 @@
       icon: StarFilled
     },
     {
-      path: "/member-center/recodes",
+      path: "/member-center/records",
       label: "點數紀錄",
       icon: Money
     }
