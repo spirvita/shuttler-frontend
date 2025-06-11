@@ -235,12 +235,12 @@
       activityInfo.value,
       status as "draft" | "published"
     );
-    if (!error.value) return;
-
-    handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
+    if (!error.value) {
+      handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
+      router.push("/activities");
+    }
     activityInfoFormRef.value?.resetFields();
     clearUploadedFiles();
-    router.push("/activities");
   };
 
   const handleElUploadRef = (elUploadRef: UploadInstance) => {
