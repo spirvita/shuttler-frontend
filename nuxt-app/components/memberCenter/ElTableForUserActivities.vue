@@ -71,7 +71,7 @@
       </el-table-column>
       <el-table-column
         fixed="right"
-        label="詳細"
+        label="詳情"
         width=""
       >
         <template #default="scope">
