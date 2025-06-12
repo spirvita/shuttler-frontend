@@ -43,7 +43,9 @@
     twCity,
     twDistrict,
     twDistrictName,
-    initLocationByZip
+    initLocationByZip,
+    manuallySetCity,
+    manuallySetDistrictNameByName
   } = useTwLocationState();
   const activityInfo = ref<Partial<ActivityDetail> & CreateActivityPayload>({
     name: "",
@@ -295,29 +297,37 @@
       return "00:00";
     }
   });
-
+  const isImporting = ref(true);
   onMounted(() => {
-    initLocationByZip("100");
-
     if (activityEditInfo.value?.activityId) {
       activityInfo.value = activityEditInfo.value;
+      manuallySetCity(activityEditInfo.value.city);
+      setTimeout(() => {
+        manuallySetDistrictNameByName(activityEditInfo.value?.district as string);
+      }, 100);
+
+    } else {
+      initLocationByZip("100");
     }
+    setTimeout(() => {
+      isImporting.value = false;
+    }, 500);
   });
 
   watch([twCity, twDistrict], () => {
-    if (!activityInfo.value?.activityId) {
-      activityInfo.value.city = twCity.value;
-      activityInfo.value.district = twDistrictName.value;
-      activityInfo.value.venueName = "";
-      activityInfo.value.address = "";
-      activityInfo.value.venueFacilities = [];
-    }
+    activityInfo.value.city = twCity.value;
+    if (isImporting.value) return;
+    activityInfo.value.district = twDistrictName.value;
+    activityInfo.value.venueName = "";
+    activityInfo.value.address = "";
+    activityInfo.value.venueFacilities = [];
   });
 
   watch(
     () => activityInfo.value.venueName,
-    (newValue) => {
-      if (!activityInfo.value?.activityId && newValue === "") {
+    () => {
+      if (isImporting.value) return;
+      if( activityInfo.value.venueName === "") {
         activityInfo.value.address = "";
         activityInfo.value.venueFacilities = [];
       }
@@ -327,10 +337,9 @@
   watch(
     () => activityInfo.value.date,
     () => {
-      if (!activityInfo.value?.activityId) {
-        activityInfo.value.startTime = "";
-        activityInfo.value.endTime = "";
-      }
+      if (isImporting.value) return;
+      activityInfo.value.startTime = "";
+      activityInfo.value.endTime = "";
     }
   );
 </script>

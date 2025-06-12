@@ -50,6 +50,21 @@ export function useTwLocationState() {
   function manuallySetCity(cityName: string) {
     twCity.value = cityName;
   }
+  function manuallySetDistrictNameByName(name: string) {
+    const city = twCities.find((city) => city.name === twCity.value);
+    if (city) {
+      const district = Object.values(city.districts).find(
+        (d) => d.name === name
+      );
+      if (district) {
+        twDistrict.value = district.zip;
+        twDistrictName.value = district.name;
+      } else {
+        twDistrict.value = "";
+        twDistrictName.value = "";
+      }
+    }
+  }
 
   watch(
     () => twCity.value,
@@ -83,6 +98,7 @@ export function useTwLocationState() {
     twDistrict,
     twDistrictName,
     initLocationByZip,
-    manuallySetCity
+    manuallySetCity,
+    manuallySetDistrictNameByName
   };
 }
