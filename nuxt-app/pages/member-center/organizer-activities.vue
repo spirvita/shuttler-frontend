@@ -4,13 +4,14 @@
   import { getOrganizerActivities } from "@/apis/activities";
 
   const activeName = ref("published");
-  const organizerActivities = ref();
   const { data, refresh: refreshOrganizerActivities } =
     await getOrganizerActivities();
-  organizerActivities.value = data?.value?.data;
+  const organizerActivities = computed(() => {
+    return data.value?.data || [];
+  });
   const getActivitiesByStatus = (status: string) => {
     return computed(() =>
-      organizerActivities.value.filter(
+      (organizerActivities.value as ActivityDetail[]).filter(
         (activity: ActivityDetail) => activity.status === status
       )
     );
@@ -18,8 +19,8 @@
   const publishedList = getActivitiesByStatus("published");
   const endedList = getActivitiesByStatus("ended");
   const draftList = getActivitiesByStatus("draft");
-  const reloadData = (isReload: boolean) => {
-    if (isReload) refreshOrganizerActivities();
+  const reloadData = () => {
+    refreshOrganizerActivities();
   };
 </script>
 <template>
@@ -27,7 +28,7 @@
     <h2 class="mb-3">活動管理</h2>
     <el-tabs v-model="activeName">
       <el-tab-pane
-        label="已發佈"
+        :label="`已發佈 (${publishedList.length})`"
         name="published"
       >
         <ElTableForOrganizer
@@ -36,16 +37,19 @@
         />
       </el-tab-pane>
       <el-tab-pane
-        label="已結束"
+        :label="`已結束 (${endedList.length})`"
         name="ended"
       >
         <ElTableForOrganizer :data="endedList" />
       </el-tab-pane>
       <el-tab-pane
-        label="草稿"
+        :label="`草稿 (${draftList.length})`"
         name="draft"
       >
-        <ElTableForOrganizer :data="draftList" />
+        <ElTableForOrganizer
+          :data="draftList"
+          @reload-data="reloadData"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>

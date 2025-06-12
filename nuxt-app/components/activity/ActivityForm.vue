@@ -12,7 +12,7 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { venueFacilities as availableVenueFacilities } from "@/constants/venueFacilities";
-  import { createActivity } from "@/apis/activity";
+  import { createActivity, updateActivity } from "@/apis/activity";
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
@@ -24,10 +24,19 @@
   type ActivityStatus = "draft" | "published" | "update";
 
   const props = defineProps<ActivityForm>();
+  const emits = defineEmits(["close", "reloadData"]);
 
   const activityEditInfo = computed(() => {
     return props.activityEditInfo;
   });
+  const isDisableEditColumn = computed(() => {
+    const isDraft = activityEditInfo.value?.status === "draft";
+    const isPublished = activityEditInfo.value?.status === "published";
+    if (isDraft) return false;
+    if (activityEditInfo.value?.activityId && isPublished) return true;
+    return false;
+  });
+  const router = useRouter();
   const {
     twCitiesOptions,
     twDistrictsOptions,
@@ -198,15 +207,38 @@
   const uploadImageFiles = ref<UploadFiles>([]);
 
   const processActivityStatus = async (status: ActivityStatus) => {
-    if (status === "update") {
-      ElMessage.success("修改成功");
+    const isOrganizerPage =
+      router.currentRoute.value.path === "/member-center/organizer-activities";
+
+    const handleSuccess = (message: string) => {
+      ElMessage.success(message);
+      emits("close");
+      emits("reloadData");
+    };
+
+    if (isOrganizerPage) {
+      if (status !== "update") activityInfo.value.status = status;
+      const { error } = await updateActivity(
+        activityInfo.value as ActivityDetail
+      );
+      if (!error.value) {
+        handleSuccess(
+          status === "update"
+            ? "修改成功"
+            : `活動已${status === "draft" ? "儲存" : "發佈"}成功`
+        );
+      }
+      return;
     }
+
     const { error } = await createActivity(
       activityInfo.value,
       status as "draft" | "published"
     );
-    if (error.value) return;
-    ElMessage.success("發佈成功");
+    if (!error.value) {
+      handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
+      router.push("/activities");
+    }
     activityInfoFormRef.value?.resetFields();
     clearUploadedFiles();
   };
@@ -325,7 +357,7 @@
         v-model="activityInfo.name"
         size="large"
         placeholder="請輸入活動名稱"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -353,7 +385,7 @@
         placeholder="請選擇日期"
         value-format="YYYY-MM-DD"
         :disabled-date="(date: string) => isPastDate(date)"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -371,7 +403,7 @@
         placeholder="請選擇開始時間"
         prefix-icon=""
         :max-time="activityInfo.endTime"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -389,7 +421,7 @@
         placeholder="請選擇結束時間"
         prefix-icon=""
         :min-time="activityInfo.startTime"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -457,7 +489,7 @@
         type="number"
         placeholder="請輸入活動點數"
         min="0"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
         @input="activityInfo.points = Number(activityInfo.points)"
       >
         <template #suffix>
@@ -509,7 +541,7 @@
         v-model="twCity"
         placeholder="請選擇縣市"
         size="large"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       >
         <el-option
           v-for="item in twCitiesOptions"
@@ -529,7 +561,7 @@
         v-model="twDistrict"
         placeholder="請選擇區域"
         size="large"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       >
         <el-option
           v-for="item in twDistrictsOptions"
@@ -554,7 +586,7 @@
         clearable
         size="large"
         placeholder="請輸入場館名稱"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
         @select="handleVenueSelect"
       >
         <template #default="{ item }">
@@ -574,7 +606,7 @@
         clearable
         size="large"
         placeholder="請輸入場館地址"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -586,7 +618,7 @@
       <el-checkbox-group
         v-model="activityInfo.venueFacilities"
         size="large"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       >
         <el-checkbox
           v-for="facility in availableVenueFacilities"
@@ -606,7 +638,7 @@
         v-model="activityInfo.organizer"
         size="large"
         placeholder="請輸入主辦單位名稱/個人名稱"
-        :disabled="!!activityEditInfo?.activityId"
+        :disabled="isDisableEditColumn"
       />
     </el-form-item>
     <el-form-item
@@ -646,7 +678,12 @@
       />
     </el-form-item>
     <el-form-item class="lg:col-span-6">
-      <template v-if="activityEditInfo?.activityId">
+      <template
+        v-if="
+          activityEditInfo?.activityId &&
+          activityEditInfo?.status === 'published'
+        "
+      >
         <div class="flex w-full">
           <el-button
             type="primary"
