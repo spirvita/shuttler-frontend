@@ -18,6 +18,13 @@ export const updateActivity = (activityPayload: ActivityDetail) => {
   );
 };
 
+export const draftActivityToPublished = (activityPayload: ActivityDetail) => {
+  return useShuttlerTwAPI.put(
+    `/organizer/draft/${activityPayload.activityId}`,
+    activityPayload as unknown as Record<string, unknown>
+  );
+}
+
 export const getActivity = (activityId: string) => {
   return useShuttlerTwAPI.get<{ message: string; data: ActivityDetail }>(
     `/activities/${activityId}`

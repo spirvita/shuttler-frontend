@@ -12,7 +12,7 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { venueFacilities as availableVenueFacilities } from "@/constants/venueFacilities";
-  import { createActivity, updateActivity } from "@/apis/activity";
+  import { createActivity, updateActivity, draftActivityToPublished } from "@/apis/activity";
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
@@ -216,18 +216,15 @@
       emits("reloadData");
     };
 
-    if (isOrganizerPage) {
-      if (status !== "update") activityInfo.value.status = status;
-      const { error } = await updateActivity(
-        activityInfo.value as ActivityDetail
-      );
-      if (!error.value) {
-        handleSuccess(
-          status === "update"
-            ? "修改成功"
-            : `活動已${status === "draft" ? "儲存" : "發佈"}成功`
-        );
-      }
+    if (isOrganizerPage && status === "update") {
+      const { error } = await updateActivity(activityInfo.value as ActivityDetail);
+      if (!error.value) handleSuccess("修改成功");
+      return;
+    }
+    if (isOrganizerPage && status !== "update") {
+      activityInfo.value.status = status;
+      const { error } = await draftActivityToPublished(activityInfo.value as ActivityDetail)
+      if (!error.value) handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
       return;
     }
 
