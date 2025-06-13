@@ -71,7 +71,7 @@
 
 @utility container {
   max-width: 81rem;
-  @apply px-3 xl:px-0 mx-auto;
+  @apply px-3 2xl:px-0 mx-auto;
 }
 
 @layer base {
