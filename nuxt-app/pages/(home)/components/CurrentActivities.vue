@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import bgImage from "@/assets/images/current-activities-bg.png";
   import ActivityCard from "./ActivityCard.vue";
-
   const activities = [
     {
       id: 1,
@@ -31,7 +30,7 @@
       bookedCount: 15,
       points: 200
     },
-      {
+    {
       id: 3,
       name: "週末羽球友誼賽",
       picture:

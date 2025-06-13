@@ -9,7 +9,7 @@
     dateTime,
     participants,
     bookedCount,
-    pointsRequired,
+    pointsRequired
   } = defineProps<{
     imageUrl: string;
     activityName: string;
@@ -43,24 +43,36 @@
         <ActivityElTags :level="level" />
       </div>
       <div class="text-sm text-gray-600 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <Clock />
         </el-icon>
         {{ dateTime }}
       </div>
       <div class="text-sm text-gray-600 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <User />
         </el-icon>
         {{ bookedCount }} / {{ participants }} 人
       </div>
       <div class="text-sm text-red-300 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <Money />
         </el-icon>
         {{ pointsRequired }} 點
       </div>
-      <el-button type="primary" class="w-full rounded-[20px]">
+      <el-button
+        type="primary"
+        class="w-full rounded-[20px]"
+      >
         立刻報名
       </el-button>
     </div>

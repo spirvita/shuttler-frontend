@@ -5,15 +5,15 @@
   const { data } = await getUserPointsRecord();
   const recordData = computed(() => {
     return data.value?.data || [];
-  })
+  });
   const recordType: Record<string, string> = {
     addPoint: "儲值點數",
     applyAct: "報名活動",
     cancelAct: "取消報名",
     suspendAct: "活動停辦"
-  }
+  };
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "createdTime", label: "建立時間", fixed: "left" },
+    { prop: "createdTime", label: "建立時間", fixed: "left" }
   ]);
 </script>
 <template>

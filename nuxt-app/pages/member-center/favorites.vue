@@ -10,17 +10,17 @@
     { prop: "date", label: "活動日期", fixed: "left", width: "100px" },
     { prop: "name", label: "活動名稱", width: "100px" },
     { prop: "startTime", label: "時間(起)", width: "80px" },
-    { prop: "endTime", label: "時間(訖)",  width: "80px" },
-    { prop: "venueName", label: "場館名稱",  width: "150px" },
+    { prop: "endTime", label: "時間(訖)", width: "80px" },
+    { prop: "venueName", label: "場館名稱", width: "150px" },
     { prop: "contactName", label: "聯絡人姓名" },
     { prop: "contactPhone", label: "聯絡人手機" },
-    { prop: "contactLine", label: "聯絡人 Line" },
+    { prop: "contactLine", label: "聯絡人 Line" }
   ]);
   const removeFavorite = async (activityId: string) => {
     const { error } = await removeActivityFromFavorites(activityId);
     if (!error.value) ElMessage.success("已取消收藏");
     refresh();
-  }
+  };
 </script>
 <template>
   <div>
@@ -57,9 +57,7 @@
             class="px-3"
             @click="removeFavorite(scope.row.activityId)"
           >
-            <Icon
-              name="ic:baseline-bookmark"
-            />
+            <Icon name="ic:baseline-bookmark" />
           </el-button>
         </template>
       </el-table-column>

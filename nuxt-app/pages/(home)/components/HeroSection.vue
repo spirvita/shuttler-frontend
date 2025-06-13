@@ -32,7 +32,10 @@
           placeholder="選擇縣市"
         >
           <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
+            <el-icon
+              class="text-secondary-300 mr-2"
+              size="24"
+            >
               <Location />
             </el-icon>
           </template>
@@ -50,7 +53,10 @@
           placeholder="請選擇程度"
         >
           <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
+            <el-icon
+              class="text-secondary-300 mr-2"
+              size="24"
+            >
               <Odometer />
             </el-icon>
           </template>
@@ -68,7 +74,10 @@
           placeholder="請選擇人數"
         >
           <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
+            <el-icon
+              class="text-secondary-300 mr-2"
+              size="24"
+            >
               <User />
             </el-icon>
           </template>
@@ -80,7 +89,10 @@
           />
         </el-select>
       </div>
-      <el-button type="primary" class="h-14 text-md w-[104px] rounded-[40px]">
+      <el-button
+        type="primary"
+        class="h-14 text-md w-[104px] rounded-[40px]"
+      >
         搜尋
       </el-button>
     </div>

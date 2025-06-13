@@ -14,7 +14,7 @@
       level: ["高階"],
       participantCount: 16,
       bookedCount: 15,
-      points: 200,
+      points: 200
     },
     {
       id: 2,
@@ -28,7 +28,7 @@
       level: ["高階"],
       participantCount: 16,
       bookedCount: 15,
-      points: 200,
+      points: 200
     },
     {
       id: 3,
@@ -42,7 +42,7 @@
       level: ["高階"],
       participantCount: 16,
       bookedCount: 15,
-      points: 200,
+      points: 200
     },
     {
       id: 4,
@@ -56,8 +56,8 @@
       level: ["高階"],
       participantCount: 16,
       bookedCount: 15,
-      points: 200,
-    },
+      points: 200
+    }
   ]);
 </script>
 
