@@ -26,7 +26,7 @@
 </script>
 <template>
   <section class="bg-cover bg-center bg-no-repeat" :style="{ backgroundImage: `url(${MatchWithYouBg})` }">
-    <div class="container py-10 lg:py-20 border">
+    <div class="container py-10 lg:py-20">
       <h2 class="text-center mb-10">
         羽你相遇
       </h2>
