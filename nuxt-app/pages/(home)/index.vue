@@ -3,6 +3,7 @@ import HeroSection from "./components/HeroSection.vue";
 import CurrentActivities from "./components/CurrentActivities.vue";
 import PopularActivities from "./components/PopularActivities.vue";
 import HoldActivity from "./components/HoldActivity.vue";
+import MatchWithYou from "./components/MatchWithYou.vue";
 import { getUpcomingActivities, getPopularActivities } from "@/apis/activities";
 
 const { data: upcomingActivities } = await getUpcomingActivities();
@@ -19,6 +20,7 @@ console.log(popularActivities.value);
     <CurrentActivities />
     <PopularActivities />
     <HoldActivity />
+    <MatchWithYou />
   </div>
 </template>
 
