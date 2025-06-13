@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { emailSignUp, nuxtEmailLogin } from "@/apis/auth";
   import { ElMessage } from "element-plus";
-  import { useAuthStore } from "~/stores/auth";
+  import { useAuthStore } from "@/stores/auth";
+  import { Message, Lock, User } from "@element-plus/icons-vue";
 
   const { visible } = defineProps({
     visible: {
@@ -29,14 +30,14 @@
     if (!form.value.email || !form.value.password) {
       ElMessage({
         message: "請填寫帳號和密碼",
-        type: "warning",
+        type: "error",
       });
       return;
     }
     if (isSignUp.value && !form.value.name) {
       ElMessage({
         message: "請填寫暱稱",
-        type: "warning",
+        type: "error",
       });
       return;
     }
@@ -96,80 +97,82 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="加入 羽神同行"
-    width="500"
+    width="400"
     center
     :show-close="false"
+    class="py-5 lg:py-8 border-t-10 border-primary-accent-500"
+    :z-index="1000"
     @update:model-value="emit('update:visible', $event)"
   >
-    <template #title>
-      <div class="text-2xl">加入 羽神同行</div>
+    <template #header>
+      <div class="text-2xl font-bold">{{ isSignUp ? "註冊" : "登入" }} 羽神同行</div>
     </template>
-    <div class="text-center text-sm text-neutral-800">
+    <div class="text-center text-secondary-300 mb-5">
       尋找你心目中的羽球活動
     </div>
-
-    <div v-if="!isSignUp" class="flex flex-col items-center mt-5">
-      <el-form label-position="top" label-width="auto" style="width: 60%">
-        <el-form-item label="帳號">
+    <div v-if="!isSignUp" class="flex flex-col items-center">
+      <el-form label-position="top" label-width="auto" style="width: 70%">
+        <el-form-item label="帳號" required>
           <el-input
             v-model="form.email"
             type="email"
-            placeholder="請輸入帳號"
+            size="large"
+            :prefix-icon="Message"
+            placeholder="請輸入電子郵件"
           />
         </el-form-item>
-        <el-form-item label="密碼">
+        <el-form-item label="密碼" required>
           <el-input
             v-model="form.password"
             type="password"
+            size="large"
+            :prefix-icon="Lock"
             placeholder="請輸入密碼"
           />
         </el-form-item>
       </el-form>
-
-      <div
-        class="mt-5 text-secondary-800 cursor-pointer underline"
-        @click="isSignUp = true"
-      >
-        立即註冊
-      </div>
     </div>
-
-    <div v-else class="flex flex-col items-center mt-5">
-      <el-form label-position="top" label-width="auto" style="width: 60%">
-        <el-form-item label="帳號">
+    <div v-else class="flex flex-col items-center">
+      <el-form label-position="top" label-width="auto" style="width: 70%">
+        <el-form-item label="帳號" required>
           <el-input
             v-model="form.email"
             type="email"
-            placeholder="請輸入帳號"
+            size="large"
+            :prefix-icon="Message"
+            placeholder="請輸入電子郵件"
           />
         </el-form-item>
-        <el-form-item label="密碼">
+        <el-form-item label="密碼" required>
           <el-input
             v-model="form.password"
             type="password"
+            size="large"
+            :prefix-icon="Lock"
             placeholder="請輸入密碼"
           />
         </el-form-item>
-        <el-form-item label="暱稱">
-          <el-input v-model="form.name" placeholder="請輸入暱稱" />
+        <el-form-item label="暱稱" required>
+          <el-input v-model="form.name" size="large" :prefix-icon="User" placeholder="請輸入暱稱" />
         </el-form-item>
       </el-form>
-
-      <div
-        class="mt-5 text-secondary-800 cursor-pointer underline"
-        @click="isSignUp = false"
-      >
-        立即登入
-      </div>
     </div>
-
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" class="w-[150px]" @click="handleSubmit">
+        <el-button
+          type="primary"
+          size="large"
+          class="w-[70%] mb-5 text-md" @click="handleSubmit"
+        >
           {{ isSignUp ? "註冊" : "登入" }}
         </el-button>
       </div>
+      <p
+        class="text-sm cursor-pointer underline"
+        @click="isSignUp = !isSignUp"
+      >
+        立即{{ isSignUp ? "登入" : "註冊" }}
+      </p>
     </template>
   </el-dialog>
 </template>
