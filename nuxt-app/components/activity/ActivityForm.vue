@@ -12,7 +12,7 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { venueFacilities as availableVenueFacilities } from "@/constants/venueFacilities";
-  import { createActivity, updateActivity } from "@/apis/activity";
+  import { createActivity, updateActivity, draftActivityToPublished } from "@/apis/activity";
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
@@ -43,7 +43,9 @@
     twCity,
     twDistrict,
     twDistrictName,
-    initLocationByZip
+    initLocationByZip,
+    manuallySetCity,
+    manuallySetDistrictNameByName
   } = useTwLocationState();
   const activityInfo = ref<Partial<ActivityDetail> & CreateActivityPayload>({
     name: "",
@@ -216,18 +218,15 @@
       emits("reloadData");
     };
 
-    if (isOrganizerPage) {
-      if (status !== "update") activityInfo.value.status = status;
-      const { error } = await updateActivity(
-        activityInfo.value as ActivityDetail
-      );
-      if (!error.value) {
-        handleSuccess(
-          status === "update"
-            ? "修改成功"
-            : `活動已${status === "draft" ? "儲存" : "發佈"}成功`
-        );
-      }
+    if (isOrganizerPage && status === "update") {
+      const { error } = await updateActivity(activityInfo.value as ActivityDetail);
+      if (!error.value) handleSuccess("修改成功");
+      return;
+    }
+    if (isOrganizerPage && status !== "update") {
+      activityInfo.value.status = status;
+      const { error } = await draftActivityToPublished(activityInfo.value as ActivityDetail)
+      if (!error.value) handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
       return;
     }
 
@@ -298,29 +297,37 @@
       return "00:00";
     }
   });
-
+  const isImporting = ref(true);
   onMounted(() => {
-    initLocationByZip("100");
-
     if (activityEditInfo.value?.activityId) {
       activityInfo.value = activityEditInfo.value;
+      manuallySetCity(activityEditInfo.value.city);
+      setTimeout(() => {
+        manuallySetDistrictNameByName(activityEditInfo.value?.district as string);
+      }, 100);
+
+    } else {
+      initLocationByZip("100");
     }
+    setTimeout(() => {
+      isImporting.value = false;
+    }, 500);
   });
 
   watch([twCity, twDistrict], () => {
-    if (!activityInfo.value?.activityId) {
-      activityInfo.value.city = twCity.value;
-      activityInfo.value.district = twDistrictName.value;
-      activityInfo.value.venueName = "";
-      activityInfo.value.address = "";
-      activityInfo.value.venueFacilities = [];
-    }
+    activityInfo.value.city = twCity.value;
+    if (isImporting.value) return;
+    activityInfo.value.district = twDistrictName.value;
+    activityInfo.value.venueName = "";
+    activityInfo.value.address = "";
+    activityInfo.value.venueFacilities = [];
   });
 
   watch(
     () => activityInfo.value.venueName,
-    (newValue) => {
-      if (!activityInfo.value?.activityId && newValue === "") {
+    () => {
+      if (isImporting.value) return;
+      if( activityInfo.value.venueName === "") {
         activityInfo.value.address = "";
         activityInfo.value.venueFacilities = [];
       }
@@ -330,10 +337,9 @@
   watch(
     () => activityInfo.value.date,
     () => {
-      if (!activityInfo.value?.activityId) {
-        activityInfo.value.startTime = "";
-        activityInfo.value.endTime = "";
-      }
+      if (isImporting.value) return;
+      activityInfo.value.startTime = "";
+      activityInfo.value.endTime = "";
     }
   );
 </script>
