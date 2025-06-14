@@ -66,6 +66,11 @@ export default defineNuxtConfig({
         }
       }
     },
+    server: {
+      hmr: {
+        port: process.env.NITRO_PORT || 3000
+      }
+    },
     $server: {
       build: {
         rollupOptions: {
