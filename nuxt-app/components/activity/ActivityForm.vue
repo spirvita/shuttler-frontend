@@ -239,6 +239,7 @@
       return;
     }
 
+    activityInfo.value.district = twDistrictName.value;
     const { error } = await createActivity(
       activityInfo.value,
       status as "draft" | "published"
