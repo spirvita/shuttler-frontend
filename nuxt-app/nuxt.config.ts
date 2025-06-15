@@ -27,7 +27,8 @@ export default defineNuxtConfig({
           "Noto Sans": true
         }
       }
-    ]
+    ],
+    "nuxt-swiper"
   ],
   pinia: {
     storesDirs: ["./stores/**"]

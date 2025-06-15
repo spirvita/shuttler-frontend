@@ -55,3 +55,17 @@ export interface PopularActivity {
   bookedCount: number;
   points: number;
 }
+
+export interface UpcomingActivity {
+  activityId: string;
+  name: string;
+  picture: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  city: string;
+  level: string[];
+  participantCount: number;
+  bookedCount: number;
+  points: number;
+}
