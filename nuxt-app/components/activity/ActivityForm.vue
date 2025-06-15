@@ -12,7 +12,11 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { venueFacilities as availableVenueFacilities } from "@/constants/venueFacilities";
-  import { createActivity, updateActivity, draftActivityToPublished } from "@/apis/activity";
+  import {
+    createActivity,
+    updateActivity,
+    draftActivityToPublished
+  } from "@/apis/activity";
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
@@ -219,17 +223,23 @@
     };
 
     if (isOrganizerPage && status === "update") {
-      const { error } = await updateActivity(activityInfo.value as ActivityDetail);
+      const { error } = await updateActivity(
+        activityInfo.value as ActivityDetail
+      );
       if (!error.value) handleSuccess("修改成功");
       return;
     }
     if (isOrganizerPage && status !== "update") {
       activityInfo.value.status = status;
-      const { error } = await draftActivityToPublished(activityInfo.value as ActivityDetail)
-      if (!error.value) handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
+      const { error } = await draftActivityToPublished(
+        activityInfo.value as ActivityDetail
+      );
+      if (!error.value)
+        handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
       return;
     }
 
+    activityInfo.value.district = twDistrictName.value;
     const { error } = await createActivity(
       activityInfo.value,
       status as "draft" | "published"
@@ -303,9 +313,10 @@
       activityInfo.value = activityEditInfo.value;
       manuallySetCity(activityEditInfo.value.city);
       setTimeout(() => {
-        manuallySetDistrictNameByName(activityEditInfo.value?.district as string);
+        manuallySetDistrictNameByName(
+          activityEditInfo.value?.district as string
+        );
       }, 100);
-
     } else {
       initLocationByZip("100");
     }
@@ -327,7 +338,7 @@
     () => activityInfo.value.venueName,
     () => {
       if (isImporting.value) return;
-      if( activityInfo.value.venueName === "") {
+      if (activityInfo.value.venueName === "") {
         activityInfo.value.address = "";
         activityInfo.value.venueFacilities = [];
       }

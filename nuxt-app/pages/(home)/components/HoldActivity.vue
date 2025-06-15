@@ -1,58 +1,78 @@
+<script lang="ts" setup>
+  import HoldActivity1 from "@/assets/images/hold-activity-1.png";
+  import HoldActivity2 from "@/assets/images/hold-activity-2.png";
+  import HoldActivity3 from "@/assets/images/hold-activity-3.png";
 
+  const holdActivities = [
+    {
+      image: HoldActivity1,
+      title: "註冊會員",
+      description: "免費註冊成為羽神"
+    },
+    {
+      image: HoldActivity2,
+      title: "舉辦活動",
+      description: "編輯活動資料 / 選擇活動發佈"
+    },
+    {
+      image: HoldActivity3,
+      title: "活動管理",
+      description: "讓您輕鬆掌握活動狀態"
+    }
+  ];
+</script>
 
 <template>
-  <section
-    class="max-h-[100dvh] py-10"
-  >
-    <div class="container">
-      <div class="flex flex-col items-center justify-center">
-        <h2 class="text-neutral-800 mb-[40px]">舉辦活動</h2>
-        <div class="text-md mb-2">
-          「告別繁瑣的活動籌備！我們提供一站式解決方案，讓您輕鬆舉辦精彩活動。
-        </div>
-        <div class="text-md">
-          舉辦活動超簡單！三步驟輕鬆搞定：
-        </div>
+  <section class="container py-10 lg:py-20">
+    <div class="flex flex-col items-center justify-center">
+      <h2 class="text-neutral-800 mb-[40px]">舉辦活動</h2>
+      <div class="text-md mb-2">
+        「告別繁瑣的活動籌備！我們提供一站式解決方案，讓您輕鬆舉辦精彩活動。
+      </div>
+      <div class="text-md">舉辦活動超簡單！三步驟輕鬆搞定：</div>
 
-        <div class="w-full flex justify-center items-center bg-[#FFFDF2] rounded-[40px] p-10 my-10">
-          <div class="flex flex-1 flex-col items-center justify-center">
-            <img src="@/assets/images/hold-activity-1.png" alt="hold-activity-1" height="220" width="306"/>
-            <div class="text-md text-red-300">註冊會員</div>
-            <div class="text-sm">免費註冊成為羽神</div>
+      <ul
+        class="flex flex-col lg:flex-row justify-center items-center bg-primary-accent-50 rounded-[40px] px-[22.5px] lg:px-[55px] py-10 my-10"
+      >
+        <li
+          v-for="(holdActivity, index) in holdActivities"
+          :key="holdActivity.title"
+          class="flex flex-col lg:flex-row justify-center items-center"
+        >
+          <div class="flex flex-col items-center">
+            <img
+              :src="holdActivity.image"
+              :alt="holdActivity.title"
+              class="w-[306px] h-[220px] object-contain"
+            />
+            <h3 class="mb-4">
+              <span class="text-2xl font-bold text-red-300">
+                {{ holdActivity.title }}
+              </span>
+            </h3>
+            <p class="text-md">{{ holdActivity.description }}</p>
           </div>
-          <div>
-            <img src="@/assets/images/arrow-right-bold.svg" alt="arrow" />
-          </div>
-          <div class="flex flex-1 flex-col items-center justify-center">
-            <img src="@/assets/images/hold-activity-2.png" alt="hold-activity-2" height="220" width="306"/>
-            <div class="text-md text-red-300">舉辦活動</div>
-            <div class="text-sm">編輯活動資料 / 選擇活動發佈</div>
-          </div>
-          <div>
-            <img src="@/assets/images/arrow-right-bold.svg" alt="arrow" />
-          </div>
-          <div class="flex flex-1 flex-col items-center justify-center">
-            <img src="@/assets/images/hold-activity-3.png" alt="hold-activity-3" height="220" width="306"/>
-            <div class="text-md text-red-300">活動管理</div>
-            <div class="text-sm">讓您輕鬆掌握活動狀態</div>
-          </div>
-        </div>
+          <img
+            src="@/assets/images/arrow-right-bold.svg"
+            alt="arrow"
+            class="transform rotate-90 lg:rotate-0 w-[86px] h-[86px] object-contain m-6"
+            :class="index === holdActivities.length - 1 ? 'hidden' : ''"
+          />
+        </li>
+      </ul>
 
-        <div class="flex justify-center">
+      <div class="flex justify-center">
         <NuxtLink to="/create-activity">
           <ElButton
             type="primary"
-            class="rounded-2xl"
+            size="large"
+            round
+            @click="$router.push('/create-activity')"
           >
             立刻體驗
           </ElButton>
         </NuxtLink>
       </div>
-      </div>
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-  const bgImage = ref("https://images.unsplash.com/photo-1659081463572-4c5903a309e6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-</script>

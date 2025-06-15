@@ -2,6 +2,7 @@
   import { Clock, User, Money } from "@element-plus/icons-vue";
 
   const {
+    activityId,
     imageUrl,
     activityName,
     location,
@@ -9,8 +10,9 @@
     dateTime,
     participants,
     bookedCount,
-    pointsRequired,
+    pointsRequired
   } = defineProps<{
+    activityId: string;
     imageUrl: string;
     activityName: string;
     location: string;
@@ -20,47 +22,72 @@
     bookedCount: number;
     pointsRequired: number;
   }>();
+
+  const pushTo = (activityId: string) => {
+    const { $router } = useNuxtApp();
+    if (activityId.includes("template")) {
+      ElMessage.warning("此為範例活動");
+      return;
+    }
+    $router.push(`/activities/${activityId}`);
+  };
 </script>
 
 <template>
-  <div class="activity-card rounded-3xl overflow-hidden shadow-lg">
-    <div
-      class="activity-card-image h-48 bg-cover bg-center"
-      :style="{ backgroundImage: `url(${imageUrl})` }"
+  <div
+    class="activity-card w-full lg:w-[416px] lg:max-w-[416px] rounded-3xl overflow-hidden shadow-lg"
+  >
+    <img
+      :src="imageUrl"
+      :alt="activityName"
+      class="h-[220px] w-full block object-cover"
     />
-    <div class="activity-card-content p-4 flex flex-col gap-2 bg-white">
-      <h3 class="mb-2">
+    <div class="flex flex-col p-4 gap-2">
+      <h3>
         <span class="text-xl">{{ activityName }}</span>
       </h3>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center">
         <el-tag
           round
-          class="p-4 border-0 text-base"
-          type="info"
+          class="p-4 border-0 text-black text-base bg-neutral-200 mr-2"
         >
           {{ location }}
         </el-tag>
         <ActivityElTags :level="level" />
       </div>
-      <div class="text-sm text-gray-600 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+      <div class="text-md text-neutral-800 flex items-center">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <Clock />
         </el-icon>
         {{ dateTime }}
       </div>
-      <div class="text-sm text-gray-600 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+      <div class="text-md text-neutral-800 flex items-center">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <User />
         </el-icon>
-        {{ bookedCount }} / {{ participants }} 人
+        {{ bookedCount }}/{{ participants }}人
       </div>
-      <div class="text-sm text-red-300 mb-1 flex items-center">
-        <el-icon class="text-neutral-400 mr-2" size="16">
+      <div class="text-xl font-bold text-primary-300 flex items-center">
+        <el-icon
+          class="text-neutral-400 mr-2"
+          size="16"
+        >
           <Money />
         </el-icon>
         {{ pointsRequired }} 點
       </div>
-      <el-button type="primary" class="w-full rounded-[20px]">
+      <el-button
+        type="primary"
+        size="large"
+        class="w-full rounded-[20px]"
+        @click="pushTo(activityId)"
+      >
         立刻報名
       </el-button>
     </div>
@@ -69,14 +96,8 @@
 
 <style scoped>
   .activity-card {
-    width: 30%;
-    max-width: 416px;
     box-shadow:
       0px 1px 3px 1px #00000026,
       0px 1px 2px 0px #0000004d;
-  }
-
-  .activity-card-image {
-    background-color: #f0f0f0;
   }
 </style>

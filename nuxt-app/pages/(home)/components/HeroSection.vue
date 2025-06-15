@@ -3,86 +3,166 @@
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { Location, Odometer, User } from "@element-plus/icons-vue";
+  import { shuttlerLevels } from "@/constants/shuttlerLevels";
+
+  const router = useRouter();
   const { twCitiesOptions, twCity } = useTwLocationState();
   const shuttlerLevelOptions = useShuttlerLevelOptions();
-  const level = ref("");
+  const level = ref();
   const spotsLeft = ref("");
+  const searchActivities = () => {
+    const queryParams = [];
+
+    if (twCity.value) {
+      queryParams.push(`city=${twCity.value}`);
+    }
+    if (level.value) {
+      queryParams.push(`level=${shuttlerLevels[level.value]}`);
+    }
+    if (spotsLeft.value) {
+      queryParams.push(`spotsLeft=${spotsLeft.value}`);
+    }
+
+    const queryString = queryParams.join("&");
+    router.push(`/activities?${queryString}`);
+  };
 </script>
 
 <template>
   <section
-    class="bg-cover bg-no-repeat bg-center h-[100dvh]"
+    class="bg-cover bg-no-repeat bg-center h-[100dvh] -mt-20"
     :style="{ backgroundImage: `url(${bgImage})` }"
   >
-    <div class="flex flex-col items-center justify-center">
-      <h1 class="text-5xl mt-[18%] mb-[5%] text-neutral-800">
-        尋找你想參與的活動
-      </h1>
-    </div>
-
     <div
-      class="flex justify-center items-center mx-auto w-fit gap-2 max-w-[100%]"
+      class="container flex flex-col items-center justify-center h-full py-20"
     >
+      <h2 class="mb-20">
+        <span
+          class="text-4xl sm:text-5xl lg:text-[64px] leading-[1.2] text-neutral-800"
+        >
+          尋找你想參與的活動
+        </span>
+      </h2>
       <div
-        class="filter-wrapper flex items-center justify-center mx-auto px-4 py-2"
+        class="flex flex-col lg:flex-row justify-center items-center w-full lg:w-fit"
       >
-        <el-select
-          v-model="twCity"
-          class="hero-section-select"
-          placeholder="選擇縣市"
+        <div
+          class="filter-wrapper flex flex-col md:flex-row items-center justify-center py-2 mb-3 lg:mr-2 lg:mb-0 w-full"
         >
-          <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
-              <Location />
-            </el-icon>
-          </template>
-          <el-option
-            v-for="item in twCitiesOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-
-        <el-select
-          v-model="level"
-          class="hero-section-select"
-          placeholder="請選擇程度"
+          <el-select
+            v-model="twCity"
+            class="hero-section-select w-full lg:w-[300px]"
+            placeholder="選擇縣市"
+          >
+            <template #prefix>
+              <el-icon
+                class="text-secondary-300 mr-2"
+                size="24"
+              >
+                <Location />
+              </el-icon>
+            </template>
+            <el-option
+              v-for="item in twCitiesOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-select
+            v-model="level"
+            class="hero-section-select hidden lg:block lg:w-[300px]"
+            placeholder="請選擇程度"
+          >
+            <template #prefix>
+              <el-icon
+                class="text-secondary-300 mr-2"
+                size="24"
+              >
+                <Odometer />
+              </el-icon>
+            </template>
+            <el-option
+              v-for="item in shuttlerLevelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-select
+            v-model="spotsLeft"
+            class="hero-section-select hidden lg:block lg:w-[300px]"
+            placeholder="請選擇人數"
+          >
+            <template #prefix>
+              <el-icon
+                class="text-secondary-300 mr-2"
+                size="24"
+              >
+                <User />
+              </el-icon>
+            </template>
+            <el-option
+              v-for="item in 10"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+        </div>
+        <div
+          class="filter-wrapper flex items-center justify-center py-2 mb-3 w-full lg:hidden"
         >
-          <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
-              <Odometer />
-            </el-icon>
-          </template>
-          <el-option
-            v-for="item in shuttlerLevelOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-
-        <el-select
-          v-model="spotsLeft"
-          class="hero-section-select"
-          placeholder="請選擇人數"
+          <el-select
+            v-model="level"
+            class="hero-section-select w-full"
+            placeholder="請選擇程度"
+          >
+            <template #prefix>
+              <el-icon
+                class="text-secondary-300 mr-2"
+                size="24"
+              >
+                <Odometer />
+              </el-icon>
+            </template>
+            <el-option
+              v-for="item in shuttlerLevelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-select
+            v-model="spotsLeft"
+            class="hero-section-select w-full"
+            placeholder="請選擇人數"
+          >
+            <template #prefix>
+              <el-icon
+                class="text-secondary-300 mr-2"
+                size="24"
+              >
+                <User />
+              </el-icon>
+            </template>
+            <el-option
+              v-for="item in 10"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+        </div>
+        <el-button
+          type="primary"
+          size="large"
+          class="h-full text-md w-full lg:w-[104px] rounded-[40px]"
+          @click="searchActivities"
         >
-          <template #prefix>
-            <el-icon class="text-secondary-300 mr-2" size="24">
-              <User />
-            </el-icon>
-          </template>
-          <el-option
-            v-for="item in 10"
-            :key="item"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
+          搜尋
+        </el-button>
       </div>
-      <el-button type="primary" class="h-14 text-md w-[104px] rounded-[40px]">
-        搜尋
-      </el-button>
     </div>
   </section>
 </template>
@@ -98,7 +178,6 @@
   }
 
   .hero-section-select {
-    width: 300px;
     border: none;
     box-shadow: none;
     &:hover {

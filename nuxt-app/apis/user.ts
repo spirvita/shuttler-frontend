@@ -14,15 +14,14 @@ export const updateUserInfo = (data: Partial<MemberInfo>) => {
 
 export const getUserFavorites = () => {
   return useShuttlerTwAPI.get<{
-    message: string,
-    data: ActivityDetail[]
+    message: string;
+    data: ActivityDetail[];
   }>("/user/favorites");
 };
 
-
 export const getUserPointsRecord = () => {
   return useShuttlerTwAPI.get<{
-    message: string,
+    message: string;
     data: {
       createdTime: string;
       recordType: string;
@@ -31,6 +30,6 @@ export const getUserPointsRecord = () => {
         id: string;
         name: string;
       };
-    }[]
+    }[];
   }>("/user/records");
 };

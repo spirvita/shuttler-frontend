@@ -27,7 +27,8 @@ export default defineNuxtConfig({
           "Noto Sans": true
         }
       }
-    ]
+    ],
+    "nuxt-swiper"
   ],
   pinia: {
     storesDirs: ["./stores/**"]
@@ -64,6 +65,11 @@ export default defineNuxtConfig({
         scss: {
           additionalData: `@use "~/assets/css/styles/element/index.scss";`
         }
+      }
+    },
+    server: {
+      hmr: {
+        port: process.env.NITRO_PORT || 3000
       }
     },
     $server: {
