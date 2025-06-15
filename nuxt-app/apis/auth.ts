@@ -39,3 +39,11 @@ export const emailSignUp = (signUpData: {
     message: string;
   }>("/auth/signup", signUpData, { watch: false });
 };
+
+export const resetPassword = (resetPwPayload: {
+	password: string;
+	newPassword: string;
+	checkNewPassword: string;
+}) => {
+  return useShuttlerTwAPI.post("/auth/reset-password", { ...resetPwPayload }, { watch: false });
+};

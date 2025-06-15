@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { FormInstance, FormRules } from "element-plus";
+  import { resetPassword } from "@/apis/auth";
 
   const memberPw = ref({
     oldPassword: "",
@@ -34,12 +35,15 @@
 
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    await formEl.validate((valid, _fields) => {
+    await formEl.validate(async (valid, _fields) => {
       if (valid) {
-        ElMessage({
-          message: "修改成功",
-          type: "success"
+        const { error } = await resetPassword({
+          password: memberPw.value.oldPassword,
+          newPassword: memberPw.value.newPassword,
+          checkNewPassword: memberPw.value.confirmPassword
         });
+        if (!error.value) ElMessage.success("修改成功");
+        ruleFormRef.value?.resetFields();
       } else {
         ElMessage({
           message: "提交資料有錯誤喔! 請檢查後再送出",
