@@ -1,20 +1,29 @@
 <script setup lang="ts">
   import { useAuthStore } from "~/stores/auth";
   import Footer from "~/components/Footer.vue";
-  import { Menu, Close, SwitchButton, Setting,
+  import {
+    Menu,
+    Close,
+    SwitchButton,
+    Setting,
     Clock,
     Calendar,
     Money,
-    StarFilled } from "@element-plus/icons-vue";
+    StarFilled
+  } from "@element-plus/icons-vue";
 
   const loginDialogVisible = ref(false);
   const authStore = useAuthStore();
   const { loggedIn } = useUserSession();
   const mobileMenuDialogVisible = ref(false);
   const loginOrLogout = () => {
-    authStore.isAuthenticated ? authStore.clearToken() : (loginDialogVisible.value = true);
+    if (authStore.isAuthenticated) {
+      authStore.clearToken();
+    } else {
+      loginDialogVisible.value = true;
+    }
     mobileMenuDialogVisible.value = false;
-  }
+  };
   const menuItems = [
     { path: "/member-center", label: "帳號設定", icon: Setting },
     {
@@ -51,11 +60,33 @@
             class="w-[150px] h-[56px]"
           />
         </NuxtLink>
-        <div class="hidden lg:flex lg:justify-end lg:items-center text-black gap-5">
-          <NuxtLink to="/activities" class="link-hover">活動列表</NuxtLink>
-          <NuxtLink to="/create-activity" class="link-hover">舉辦活動</NuxtLink>
-          <NuxtLink to="/buy-points" class="link-hover">購買點數</NuxtLink>
-          <NuxtLink to="/about" class="link-hover">關於我們</NuxtLink>
+        <div
+          class="hidden lg:flex lg:justify-end lg:items-center text-black gap-5"
+        >
+          <NuxtLink
+            to="/activities"
+            class="link-hover"
+          >
+            活動列表
+          </NuxtLink>
+          <NuxtLink
+            to="/create-activity"
+            class="link-hover"
+          >
+            舉辦活動
+          </NuxtLink>
+          <NuxtLink
+            to="/buy-points"
+            class="link-hover"
+          >
+            購買點數
+          </NuxtLink>
+          <NuxtLink
+            to="/about"
+            class="link-hover"
+          >
+            關於我們
+          </NuxtLink>
           <NuxtLink
             v-if="loggedIn"
             to="/member-center"
@@ -95,8 +126,13 @@
       :show-close="false"
     >
       <template #header>
-        <div class="flex justify-between items-center border-b border-neutral-300">
-          <img src="@/assets/images/logo.png" alt="羽神同行">
+        <div
+          class="flex justify-between items-center border-b border-neutral-300"
+        >
+          <img
+            src="@/assets/images/logo.png"
+            alt="羽神同行"
+          />
           <el-button
             size="large"
             class="border-0 bg-white"
@@ -106,7 +142,9 @@
           </el-button>
         </div>
       </template>
-      <div class="flex flex-col items-center gap-6 px-4 pt-5 pb-10 border-b-3 border-neutral-300">
+      <div
+        class="flex flex-col items-center gap-6 px-4 pt-5 pb-10 border-b-3 border-neutral-300"
+      >
         <NuxtLink
           to="/activities"
           class="text-lg text-center link-hover w-full"
@@ -135,16 +173,19 @@
         >
           <span class="pb-2 border-b border-neutral-300">關於我們</span>
         </NuxtLink>
-        <NuxtLink
-          v-if="loggedIn"
-          v-for="item in menuItems"
-          :key="item.path"
-          :to="item.path"
-          class="text-lg text-center link-hover w-full"
-          @click="mobileMenuDialogVisible = false"
-        >
-          <span class="pb-2 border-b border-neutral-300">{{ item.label }}</span>
-        </NuxtLink>
+        <template v-if="loggedIn">
+          <NuxtLink
+            v-for="item in menuItems"
+            :key="item.path"
+            :to="item.path"
+            class="text-lg text-center link-hover w-full"
+            @click="mobileMenuDialogVisible = false"
+          >
+            <span class="pb-2 border-b border-neutral-300">
+              {{ item.label }}
+            </span>
+          </NuxtLink>
+        </template>
       </div>
       <template #footer>
         <ElButton

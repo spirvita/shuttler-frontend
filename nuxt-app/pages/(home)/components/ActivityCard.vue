@@ -34,8 +34,14 @@
 </script>
 
 <template>
-  <div class="activity-card w-full lg:w-[416px] lg:max-w-[416px] rounded-3xl overflow-hidden shadow-lg">
-    <img :src="imageUrl" :alt="activityName" class="h-[220px] w-full block object-cover">
+  <div
+    class="activity-card w-full lg:w-[416px] lg:max-w-[416px] rounded-3xl overflow-hidden shadow-lg"
+  >
+    <img
+      :src="imageUrl"
+      :alt="activityName"
+      class="h-[220px] w-full block object-cover"
+    />
     <div class="flex flex-col p-4 gap-2">
       <h3>
         <span class="text-xl">{{ activityName }}</span>

@@ -97,10 +97,13 @@
     if (data.value?.data && data.value?.data.length < displayCount) {
       const activities = data.value?.data || [];
       const remainingCount = displayCount - activities.length;
-      return [...activities, ...defaultPopularActivities.value.slice(0, remainingCount)];
+      return [
+        ...activities,
+        ...defaultPopularActivities.value.slice(0, remainingCount)
+      ];
     }
     return defaultPopularActivities.value;
-  })
+  });
 </script>
 
 <template>
@@ -122,7 +125,9 @@
               class="min-w-[128px] w-[128px] h-[132px] lg:h-[96px] object-cover"
               :alt="activity.name"
             />
-            <div class="p-4 lg:px-6 flex flex-col lg:flex-row lg:items-center lg:justify-between w-full h-full">
+            <div
+              class="p-4 lg:px-6 flex flex-col lg:flex-row lg:items-center lg:justify-between w-full h-full"
+            >
               <div class="flex flex-col mb-2 lg:mb-0">
                 <div class="text-md mb-2">{{ activity.name }}</div>
                 <div class="flex items-center gap-2">
@@ -141,7 +146,9 @@
                 <div class="text-right text-md lg:mb-1.5 flex-1">
                   {{ activity.bookedCount }}/{{ activity.participantCount }}人
                 </div>
-                <div class="text-xl font-bold text-primary-300">{{ activity.points }} 點</div>
+                <div class="text-xl font-bold text-primary-300">
+                  {{ activity.points }} 點
+                </div>
               </div>
             </div>
           </div>

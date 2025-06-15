@@ -25,7 +25,7 @@
 
     const queryString = queryParams.join("&");
     router.push(`/activities?${queryString}`);
-  }
+  };
 </script>
 
 <template>
@@ -33,9 +33,15 @@
     class="bg-cover bg-no-repeat bg-center h-[100dvh] -mt-20"
     :style="{ backgroundImage: `url(${bgImage})` }"
   >
-    <div class="container flex flex-col items-center justify-center h-full py-20">
-      <h2 class=mb-20>
-        <span class="text-4xl sm:text-5xl lg:text-[64px] leading-[1.2] text-neutral-800">尋找你想參與的活動</span>
+    <div
+      class="container flex flex-col items-center justify-center h-full py-20"
+    >
+      <h2 class="mb-20">
+        <span
+          class="text-4xl sm:text-5xl lg:text-[64px] leading-[1.2] text-neutral-800"
+        >
+          尋找你想參與的活動
+        </span>
       </h2>
       <div
         class="flex flex-col lg:flex-row justify-center items-center w-full lg:w-fit"
@@ -158,7 +164,6 @@
         </el-button>
       </div>
     </div>
-
   </section>
 </template>
 

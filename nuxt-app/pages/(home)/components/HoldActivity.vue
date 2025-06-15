@@ -20,7 +20,6 @@
       description: "讓您輕鬆掌握活動狀態"
     }
   ];
-
 </script>
 
 <template>
@@ -40,16 +39,16 @@
           :key="holdActivity.title"
           class="flex flex-col lg:flex-row justify-center items-center"
         >
-          <div
-            class="flex flex-col items-center"
-          >
+          <div class="flex flex-col items-center">
             <img
               :src="holdActivity.image"
               :alt="holdActivity.title"
               class="w-[306px] h-[220px] object-contain"
             />
             <h3 class="mb-4">
-              <span class="text-2xl font-bold text-red-300">{{ holdActivity.title }}</span>
+              <span class="text-2xl font-bold text-red-300">
+                {{ holdActivity.title }}
+              </span>
             </h3>
             <p class="text-md">{{ holdActivity.description }}</p>
           </div>

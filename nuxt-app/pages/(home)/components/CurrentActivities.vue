@@ -70,35 +70,35 @@
     if (data.value?.data && data.value?.data.length < displayCount) {
       const activities = data.value?.data || [];
       const remainingCount = displayCount - activities.length;
-      return [...activities, ...defaultUpcomingActivities.value.slice(0, remainingCount)];
+      return [
+        ...activities,
+        ...defaultUpcomingActivities.value.slice(0, remainingCount)
+      ];
     }
     return defaultUpcomingActivities.value;
-  })
+  });
 
   const containerRef = ref(null);
+  // eslint-disable-next-line
   const swiper = useSwiper(containerRef, {
     slidesPerView: 1,
     spaceBetween: 24,
     loop: false,
     pagination: {
       el: ".swiper-pagination",
-      clickable: true,
+      clickable: true
     },
     breakpoints: {
       1280: {
         slidesPerView: 3,
-        spaceBetween: 24,
+        spaceBetween: 24
       }
-    },
-  })
+    }
+  });
 
   const formatDateTime = (date: string, startTime: string, endTime: string) => {
     return `${date.replace(/-/g, "/")}（${new Date(date).toLocaleDateString("zh-TW", { weekday: "short" })}）${startTime} - ${endTime}`;
   };
-
-  onMounted(() => {
-    console.log(`Swiper instance:`, swiper.instance);
-  })
 </script>
 <template>
   <section
@@ -119,7 +119,13 @@
               :activity-name="activity.name"
               :location="activity.city"
               :level="activity.level"
-              :date-time="formatDateTime(activity.date, activity.startTime, activity.endTime)"
+              :date-time="
+                formatDateTime(
+                  activity.date,
+                  activity.startTime,
+                  activity.endTime
+                )
+              "
               :booked-count="activity.bookedCount"
               :participants="activity.participantCount"
               :points-required="activity.points"
