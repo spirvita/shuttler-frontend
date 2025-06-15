@@ -1,4 +1,4 @@
-import type { Activity } from "@/types/activities";
+import type { Activity, PopularActivity } from "@/types/activities";
 
 export const getActivities = (queryString?: string) => {
   return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
@@ -25,7 +25,7 @@ export const getUpcomingActivities = () => {
 };
 
 export const getPopularActivities = () => {
-  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+  return useShuttlerTwAPI.get<{ message: string; data: PopularActivity[] }>(
     "/activity/popular"
   );
 };

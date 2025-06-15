@@ -44,3 +44,14 @@ export interface ActivityFilter {
   timeSlot: string;
   points: number;
 }
+
+export interface PopularActivity {
+  activityId: string;
+  name: string;
+  picture: string;
+  city: string;
+  level: string[];
+  participantCount: number;
+  bookedCount: number;
+  points: number;
+}
