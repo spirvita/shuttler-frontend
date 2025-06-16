@@ -6,9 +6,8 @@ const { loggedIn } = useUserSession();
 export const useUserStore = defineStore("user", () => {
   const userInfo = ref<MemberInfo>();
   async function fetchUserInfo() {
-
     if (!loggedIn.value) return;
-    setTimeout(async() => {
+    setTimeout(async () => {
       const { data } = await getUserInfo();
       userInfo.value = JSON.parse(JSON.stringify(data.value?.data));
     }, 300);

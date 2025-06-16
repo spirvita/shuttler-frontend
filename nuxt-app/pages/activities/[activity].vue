@@ -23,7 +23,8 @@
     Phone,
     UserFilled,
     ChatDotSquare,
-    Money
+    Money,
+    MapLocation
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
@@ -38,7 +39,7 @@
   const userStore = useUserStore();
   await userStore.fetchUserInfo();
   const userPoints = computed(() => {
-    return userStore.userInfo?.totalPoint || 0
+    return userStore.userInfo?.totalPoint || 0;
   });
 
   const participantCount = ref(1);
@@ -214,6 +215,14 @@
     await updateUserAndActivity();
   };
 
+  const openGoogleMaps = () => {
+    if (!activity.value) return;
+    const { venueName } = activity.value;
+    const query = venueName;
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    window.open(url, "_blank");
+  };
+
   watch(
     () => loggedIn.value,
     async (newValue) => {
@@ -291,14 +300,21 @@
               >
                 <component :is="activityInfo.icon" />
               </el-icon>
-              <span class="text-lg text-neutral-700">
+              <span class="text-lg text-neutral-700 text-nowrap">
                 {{ activityInfo.label }}：
               </span>
               <span
                 v-if="activityInfo.label !== '活動程度'"
-                class="text-lg"
+                class="text-lg flex items-center"
               >
                 {{ activityInfo.value }}
+                <el-icon
+                  v-if="activityInfo.label === '場館名稱'"
+                  class="cursor-pointer ml-1"
+                  @click="openGoogleMaps"
+                >
+                  <MapLocation />
+                </el-icon>
               </span>
               <ActivityElTags
                 v-else
