@@ -37,7 +37,9 @@
   });
   const userStore = useUserStore();
   await userStore.fetchUserInfo();
-  const userPoints = computed(() => userStore.userInfo?.totalPoint || 0);
+  const userPoints = computed(() => {
+    return userStore.userInfo?.totalPoint || 0
+  });
 
   const participantCount = ref(1);
   const remainingSlots = computed(() => {
