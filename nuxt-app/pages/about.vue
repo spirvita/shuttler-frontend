@@ -15,7 +15,7 @@
     {
       title: "揪團打球",
       description:
-        "我們了解口耳相傳的重要性，鼓勵所有羽人們留下最真實的感受，提供更多資訊給其他羽友們，也協助我們打造更多適合大家喜歡平台。",
+        "依球友等級分類，確保實力相近，提升對戰樂趣與公平性，讓揪團打球變得更有趣、比賽更精彩。",
       image: GroupPlayImage
     },
     {
@@ -57,6 +57,36 @@
       image: LogoBall
     }
   ];
+  useHead({
+    title: "關於我們-羽神同行",
+    meta: [
+      {
+        name: "description",
+        content:
+          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
+      },
+      { property: "og:title", content: "關於我們-羽神同行" },
+      {
+        property: "og:description",
+        content:
+          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
+      },
+      { property: "og:image", content: "/about-banner.png" },
+      { property: "og:image:alt", content: "羽神同行的起源與使命" },
+      { property: "og:url", content: "https://dev.spirvita.tw/about" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "羽神同行" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "關於我們 - 羽神同行" },
+      {
+        name: "twitter:description",
+        content:
+          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
+      },
+      { name: "twitter:image", content: "/about-banner.png" }
+    ],
+    link: [{ rel: "canonical", href: "https://dev.spirvita.tw/about" }]
+  });
 </script>
 <template>
   <div>

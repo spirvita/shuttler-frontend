@@ -9,7 +9,14 @@ dotenv.config({ path: resolve(__dirname, "../.env") });
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    baseURL: process.env.NUXT_BASE_URL
+    baseURL: process.env.NUXT_BASE_URL,
+    head: {
+      title: "羽神同行",
+      htmlAttrs: {
+        lang: "zh-Hant"
+      },
+      link: [{ rel: "icon", type: "image/x-icon", href: "/logo.ico" }]
+    }
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
