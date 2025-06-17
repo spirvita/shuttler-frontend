@@ -15,7 +15,7 @@
   const memberInfo = computed(() => userStore.userInfo);
 </script>
 <template>
-  <div class="container py-20">
+  <div class="container py-10 lg:py-20">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
       <div class="hidden md:block col-span-2">
         <div class="flex flex-col items-center">

@@ -7,7 +7,7 @@
   const { data, refresh } = await getUserFavorites();
   const userFavorites = computed(() => data.value?.data || []);
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "date", label: "活動日期", fixed: "left", width: "100px" },
+    { prop: "date", label: "活動日期", width: "100px" },
     { prop: "name", label: "活動名稱", width: "100px" },
     { prop: "startTime", label: "時間(起)", width: "80px" },
     { prop: "endTime", label: "時間(訖)", width: "80px" },
