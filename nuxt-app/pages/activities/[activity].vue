@@ -24,7 +24,7 @@
     UserFilled,
     ChatDotSquare,
     Money,
-    MapLocation,
+    MapLocation
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
@@ -37,7 +37,7 @@
     return data.value.data as ActivityDetail;
   });
   const userStore = useUserStore();
-  await userStore.fetchUserInfo();
+  if (loggedIn.value) await userStore.fetchUserInfo();
   const userPoints = computed(() => {
     return userStore.userInfo?.totalPoint || 0;
   });
@@ -224,14 +224,14 @@
   };
 
   const openGoogleCalendar = () => {
-  if (!activity.value) return;
-  const { date, startTime, endTime, name, brief } = activity.value;
-  const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00Z`;
-  const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00Z`;
-  const url = `https://calendar.google.com/calendar/r/eventedit?dates=${startDateTime}/${endDateTime}&text=${encodeURIComponent(name)}&details=${encodeURIComponent(brief)}`;
+    if (!activity.value) return;
+    const { date, startTime, endTime, name, brief } = activity.value;
+    const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00Z`;
+    const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00Z`;
+    const url = `https://calendar.google.com/calendar/r/eventedit?dates=${startDateTime}/${endDateTime}&text=${encodeURIComponent(name)}&details=${encodeURIComponent(brief)}`;
 
-  window.open(url, "_blank");
-};
+    window.open(url, "_blank");
+  };
 
   watch(
     () => loggedIn.value,
