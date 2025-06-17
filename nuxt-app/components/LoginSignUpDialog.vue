@@ -84,7 +84,7 @@
       return;
     }
     if (data.value?.token) {
-      await refreshSession();
+      refreshSession();
       ElMessage({
         message: `歡迎 ${user.value?.name}`,
         type: "success"
@@ -210,7 +210,7 @@
         >
           <a
             href="https://dev-api.spirvita.tw/api/v1/auth/google"
-            class="flex items-center border px-14 py-2"
+            class="flex items-center px-14 py-2"
           >
             <img
               :src="GoogleSVG"
