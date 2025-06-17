@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { emailSignUp, nuxtEmailLogin } from "@/apis/auth";
+  import { emailSignUp, nuxtEmailLogin, nuxtGoogleLogin } from "@/apis/auth";
   import { ElMessage } from "element-plus";
   import { useAuthStore } from "@/stores/auth";
   import { Message, Lock, User } from "@element-plus/icons-vue";
+  import GoogleSVG from "@/assets/images/google.svg";
 
   const { visible } = defineProps({
     visible: {
@@ -75,6 +76,26 @@
       email: form.value.email,
       password: form.value.password
     });
+    if (error.value) {
+      ElMessage({
+        message: error.value?.data.message,
+        type: "error"
+      });
+      return;
+    }
+    if (data.value?.token) {
+      await refreshSession();
+      ElMessage({
+        message: `歡迎 ${user.value?.name}`,
+        type: "success"
+      });
+      authStore.setToken(data.value?.token);
+      emit("update:visible", false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { data, error } = await nuxtGoogleLogin();
     if (error.value) {
       ElMessage({
         message: error.value?.data.message,
@@ -194,22 +215,34 @@
       </el-form>
     </div>
     <template #footer>
-      <div class="dialog-footer">
+      <div class="flex flex-col items-center w-[70%] gap-5 mx-auto">
         <el-button
           type="primary"
           size="large"
-          class="w-[70%] mb-5 text-md"
+          class="w-full text-md"
           @click="handleSubmit"
         >
           {{ isSignUp ? "註冊" : "登入" }}
         </el-button>
+        <el-button
+          size="large"
+          class="w-full flex text-md text-neutral-800 bg-white hover:border-neutral-800 m-0"
+          @click="handleGoogleLogin"
+        >
+          <img
+            :src="GoogleSVG"
+            alt="Google Logo"
+            class="w-5 h-5 mr-5 rounded-full"
+          />
+          使用 Google 繼續
+        </el-button>
+        <p
+          class="text-sm cursor-pointer underline"
+          @click="isSignUp = !isSignUp"
+        >
+          立即{{ isSignUp ? "登入" : "註冊" }}
+        </p>
       </div>
-      <p
-        class="text-sm cursor-pointer underline"
-        @click="isSignUp = !isSignUp"
-      >
-        立即{{ isSignUp ? "登入" : "註冊" }}
-      </p>
     </template>
   </el-dialog>
 </template>
