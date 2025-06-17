@@ -23,7 +23,8 @@
     Phone,
     UserFilled,
     ChatDotSquare,
-    Money
+    Money,
+    MapLocation,
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
@@ -37,7 +38,9 @@
   });
   const userStore = useUserStore();
   await userStore.fetchUserInfo();
-  const userPoints = computed(() => userStore.userInfo?.totalPoint || 0);
+  const userPoints = computed(() => {
+    return userStore.userInfo?.totalPoint || 0;
+  });
 
   const participantCount = ref(1);
   const remainingSlots = computed(() => {
@@ -212,6 +215,24 @@
     await updateUserAndActivity();
   };
 
+  const openGoogleMaps = () => {
+    if (!activity.value) return;
+    const { venueName } = activity.value;
+    const query = venueName;
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    window.open(url, "_blank");
+  };
+
+  const openGoogleCalendar = () => {
+  if (!activity.value) return;
+  const { date, startTime, endTime, name, brief } = activity.value;
+  const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00Z`;
+  const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00Z`;
+  const url = `https://calendar.google.com/calendar/r/eventedit?dates=${startDateTime}/${endDateTime}&text=${encodeURIComponent(name)}&details=${encodeURIComponent(brief)}`;
+
+  window.open(url, "_blank");
+};
+
   watch(
     () => loggedIn.value,
     async (newValue) => {
@@ -289,14 +310,28 @@
               >
                 <component :is="activityInfo.icon" />
               </el-icon>
-              <span class="text-lg text-neutral-700">
+              <span class="text-lg text-neutral-700 text-nowrap">
                 {{ activityInfo.label }}：
               </span>
               <span
                 v-if="activityInfo.label !== '活動程度'"
-                class="text-lg"
+                class="text-lg flex items-center"
               >
                 {{ activityInfo.value }}
+                <el-icon
+                  v-if="activityInfo.label === '場館名稱'"
+                  class="cursor-pointer ml-1"
+                  @click="openGoogleMaps"
+                >
+                  <MapLocation />
+                </el-icon>
+                <el-icon
+                  v-else-if="activityInfo.label === '活動日期'"
+                  class="cursor-pointer ml-1 pb-1"
+                  @click="openGoogleCalendar"
+                >
+                  <Calendar />
+                </el-icon>
               </span>
               <ActivityElTags
                 v-else
