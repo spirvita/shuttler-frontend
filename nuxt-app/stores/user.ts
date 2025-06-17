@@ -5,7 +5,7 @@ import { getUserInfo } from "@/apis/user";
 export const useUserStore = defineStore("user", () => {
   const userInfo = ref<MemberInfo>();
   async function fetchUserInfo() {
-    const cookie = useCookie("userInfo");
+    const cookie = useCookie("token");
     if (cookie.value) {
       const { data } = await getUserInfo();
       userInfo.value = JSON.parse(JSON.stringify(data.value?.data));
