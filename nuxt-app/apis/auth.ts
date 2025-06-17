@@ -23,9 +23,7 @@ export const nuxtEmailLogin = (loginData: {
 };
 
 export const nuxtGoogleLogin = () => {
-  return useFetch("/api/googleLogin", {
-    method: "POST"
-  });
+  return useFetch("/api/googleLogin");
 };
 
 export const emailSignUp = (signUpData: {
