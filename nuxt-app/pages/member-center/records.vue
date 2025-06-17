@@ -13,7 +13,7 @@
     suspendAct: "活動停辦"
   };
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "createdTime", label: "建立時間", fixed: "left" }
+    { prop: "createTime", label: "建立時間" }
   ]);
 </script>
 <template>
@@ -22,7 +22,7 @@
     <el-table
       v-if="recordData.length > 0"
       :data="recordData"
-      :style="{ height: '320px' }"
+      :style="{ height: '380px' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
     >
       <el-table-column
@@ -44,14 +44,46 @@
       </el-table-column>
       <el-table-column
         label="點數"
-        prop="points"
-      />
+        align="center"
+        header-align="center"
+        prop="pointsChange"
+      >
+        <template #default="scope">
+          <span
+            :class="
+              scope.row.pointsChange < 0
+                ? 'text-success-500'
+                : 'text-primary-300'
+            "
+          >
+            {{ scope.row.pointsChange < 0 ? "使用" : "增加" }}
+            {{ Math.abs(scope.row.pointsChange) }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
-        label="活動名稱"
+        label="點數來源"
+        align="center"
+        header-align="center"
         prop="activity"
       >
         <template #default="scope">
-          <span>{{ scope.row.activity.name }}</span>
+          <el-button
+            v-if="scope.row.activity"
+            type="info"
+            @click="
+              $router.push(`/activities/${scope.row.activity.activityId}`)
+            "
+          >
+            活動
+          </el-button>
+          <el-button
+            v-else
+            type="danger"
+            @click="$router.push('/buy-points')"
+          >
+            儲值
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
