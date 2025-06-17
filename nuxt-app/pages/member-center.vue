@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import ElMenuForUser from "@/components/memberCenter/ElMenuForUser.vue";
   import { useUserStore } from "@/stores/user";
+  import { Money } from "@element-plus/icons-vue";
 
   definePageMeta({
     middleware: ["auth"]
@@ -27,6 +28,10 @@
               :src="memberInfo?.avatar || defaultAvatar"
             />
             <p class="font-bold py-3">{{ memberInfo?.name }}</p>
+            <div class="flex justify-center items-center">
+              <el-icon class="mr-1"><Money /></el-icon>
+              <span>{{ memberInfo?.totalPoint }}</span>
+            </div>
           </section>
           <ElMenuForUser />
         </div>
