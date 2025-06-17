@@ -49,22 +49,9 @@
       </el-table-column>
       <el-table-column
         fixed="right"
-        label="取消"
-        width="65"
-      >
-        <template #default="scope">
-          <el-button
-            class="px-3"
-            @click="removeFavorite(scope.row.activityId)"
-          >
-            <Icon name="ic:baseline-bookmark" />
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column
-        fixed="right"
+        align="center"
+        header-align="center"
         label="詳情"
-        width=""
       >
         <template #default="scope">
           <el-button
@@ -73,6 +60,21 @@
             :icon="TopRight"
             @click="$router.push(`/activities/${scope.row.activityId}`)"
           />
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="取消收藏"
+        align="center"
+        header-align="center"
+      >
+        <template #default="scope">
+          <el-button
+            class="px-3"
+            @click="removeFavorite(scope.row.activityId)"
+          >
+            <Icon name="ic:baseline-bookmark" />
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

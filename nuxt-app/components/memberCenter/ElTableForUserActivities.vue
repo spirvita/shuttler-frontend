@@ -59,7 +59,8 @@
       <el-table-column
         fixed="right"
         label="詳情"
-        width=""
+        align="center"
+        header-align="center"
       >
         <template #default="scope">
           <el-button
@@ -73,7 +74,8 @@
         v-if="props.data[0].status === 'registered'"
         fixed="right"
         label="操作"
-        width=""
+        align="center"
+        header-align="center"
       >
         <template #default="scope">
           <el-button

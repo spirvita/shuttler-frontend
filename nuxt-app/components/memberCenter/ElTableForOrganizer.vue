@@ -88,12 +88,14 @@
         v-if="props.data[0].status !== 'draft'"
         fixed="right"
         label="報名者"
+        align="center"
+        header-align="center"
       >
         <template #default="scope">
           <el-button
             v-if="scope.row.bookedCount"
             type="info"
-            class="w-16"
+            class="w-full"
             :disabled="scope.row.bookedCount === 0"
             @click="handleGetActivityParticipants(scope.row.activityId)"
           >
@@ -105,6 +107,8 @@
         v-if="!(props.data[0].status === 'ended')"
         fixed="right"
         label="操作"
+        align="center"
+        header-align="center"
         :width="props.data[0].status !== 'ended' ? 120 : undefined"
       >
         <template #default="scope">
