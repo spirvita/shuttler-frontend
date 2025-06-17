@@ -11,9 +11,12 @@
     Money,
     StarFilled
   } from "@element-plus/icons-vue";
+  import { useUserStore } from "@/stores/user";
 
   const loginDialogVisible = ref(false);
   const authStore = useAuthStore();
+  const userStore = useUserStore();
+  const userInfo = computed(() => userStore.userInfo);
   const { loggedIn } = useUserSession();
   const mobileMenuDialogVisible = ref(false);
   const loginOrLogout = () => {
@@ -120,14 +123,14 @@
     <LoginSignUpDialog v-model:visible="loginDialogVisible" />
     <el-dialog
       v-model="mobileMenuDialogVisible"
-      class="p-3"
+      class="p-0"
       :fullscreen="true"
       :z-index="1000"
       :show-close="false"
     >
       <template #header>
         <div
-          class="flex justify-between items-center border-b border-neutral-300"
+          class="flex justify-between items-center border-b border-neutral-300 p-2 px-3"
         >
           <img
             src="@/assets/images/logo.png"
@@ -142,9 +145,40 @@
           </el-button>
         </div>
       </template>
+      <template v-if="loggedIn">
+        <div class="flex items-center border-b-3 border-neutral-300 py-5 px-3">
+          <img
+            v-if="userInfo?.avatar"
+            :src="userInfo.avatar"
+            alt="User Avatar"
+            class="w-15 h-15 rounded-full mr-6"
+          />
+          <div class="text-md">
+            <p class="text-neutral-400 mb-1">會員</p>
+            <p>{{ userInfo?.name }}</p>
+          </div>
+        </div>
+      </template>
       <div
-        class="flex flex-col items-center gap-6 px-4 pt-5 pb-10 border-b-3 border-neutral-300"
+        class="flex flex-col items-center gap-6 pt-5 pb-8 border-b-3 border-neutral-300"
       >
+        <template v-if="loggedIn">
+          <div
+            class="flex flex-col w-full items-center gap-6 pb-8 border-b-3 border-neutral-300"
+          >
+            <NuxtLink
+              v-for="item in menuItems"
+              :key="item.path"
+              :to="item.path"
+              class="text-lg text-center link-hover w-full"
+              @click="mobileMenuDialogVisible = false"
+            >
+              <span class="pb-2 border-b border-neutral-300">
+                {{ item.label }}
+              </span>
+            </NuxtLink>
+          </div>
+        </template>
         <NuxtLink
           to="/activities"
           class="text-lg text-center link-hover w-full"
@@ -173,19 +207,6 @@
         >
           <span class="pb-2 border-b border-neutral-300">關於我們</span>
         </NuxtLink>
-        <template v-if="loggedIn">
-          <NuxtLink
-            v-for="item in menuItems"
-            :key="item.path"
-            :to="item.path"
-            class="text-lg text-center link-hover w-full"
-            @click="mobileMenuDialogVisible = false"
-          >
-            <span class="pb-2 border-b border-neutral-300">
-              {{ item.label }}
-            </span>
-          </NuxtLink>
-        </template>
       </div>
       <template #footer>
         <ElButton
@@ -243,5 +264,9 @@
       color: var(--el-color-black);
       font-weight: 700;
     }
+  }
+
+  :deep(.el-dialog__header) {
+    padding-bottom: 0px;
   }
 </style>

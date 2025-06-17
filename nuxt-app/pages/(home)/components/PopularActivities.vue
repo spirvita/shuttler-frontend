@@ -142,8 +142,10 @@
                   <ActivityElTags :level="activity.level" />
                 </div>
               </div>
-              <div class="flex lg:flex-col">
-                <div class="text-right text-md lg:mb-1.5 flex-1">
+              <div
+                class="flex items-center justify-between lg:flex-col lg:items-end"
+              >
+                <div class="text-md lg:mb-1.5">
                   {{ activity.bookedCount }}/{{ activity.participantCount }}人
                 </div>
                 <div class="text-xl font-bold text-primary-300">

@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "zh-Hant"
       },
-      link: [{ rel: "icon", type: "image/x-icon", href: "/logo.ico" }]
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
     }
   },
   compatibilityDate: "2024-11-01",
