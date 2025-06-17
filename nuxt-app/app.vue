@@ -4,9 +4,10 @@
   import { useHead } from "#app"; // Nuxt 3 提供的 Composable
 
   const authStore = useAuthStore();
-
+  const { fetch } = useUserSession();
   onMounted(() => {
     authStore.initializeToken();
+    fetch();
   });
 
   // 加入 Iconify CDN script

@@ -11,12 +11,9 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async clearToken() {
-      const { clear, fetch } = useUserSession();
-      this.token = null;
-      await clear();
-      await fetch();
       const cookie = useCookie("token");
       cookie.value = null;
+      this.token = null;
       navigateTo("/");
     },
 

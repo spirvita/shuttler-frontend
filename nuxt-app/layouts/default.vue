@@ -12,16 +12,20 @@
     StarFilled
   } from "@element-plus/icons-vue";
   import { useUserStore } from "@/stores/user";
+  import { logout } from "@/apis/auth";
 
   const loginDialogVisible = ref(false);
   const authStore = useAuthStore();
   const userStore = useUserStore();
   const userInfo = computed(() => userStore.userInfo);
-  const { loggedIn } = useUserSession();
+  const { loggedIn, clear } = useUserSession();
   const mobileMenuDialogVisible = ref(false);
-  const loginOrLogout = () => {
+  const loginOrLogout = async () => {
     if (authStore.isAuthenticated) {
       authStore.clearToken();
+      clear();
+      const { error } = await logout();
+      if (!error.value) ElMessage.success("登出成功");
     } else {
       loginDialogVisible.value = true;
     }

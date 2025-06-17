@@ -57,3 +57,7 @@ export const resetPassword = (resetPwPayload: {
     { watch: false }
   );
 };
+
+export const logout = () => {
+  return useShuttlerTwAPI.post("/auth/logout", {}, { watch: false });
+};
