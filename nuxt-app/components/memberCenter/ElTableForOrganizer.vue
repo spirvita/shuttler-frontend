@@ -11,8 +11,8 @@
   }>();
   const emits = defineEmits(["reloadData"]);
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "date", label: "日期", width: "100", fixed: "left" },
-    { prop: "name", label: "活動名稱", width: "140", fixed: "left" },
+    { prop: "date", label: "日期", width: "100" },
+    { prop: "name", label: "活動名稱", width: "140" },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
     { prop: "venueName", label: "場館名稱", width: "150" },
@@ -85,10 +85,27 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="props.data[0].status !== 'draft'"
+        fixed="right"
+        label="報名者"
+      >
+        <template #default="scope">
+          <el-button
+            v-if="scope.row.bookedCount"
+            type="info"
+            class="w-16"
+            :disabled="scope.row.bookedCount === 0"
+            @click="handleGetActivityParticipants(scope.row.activityId)"
+          >
+            {{ scope.row.bookedCount }} 人
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="!(props.data[0].status === 'ended')"
         fixed="right"
         label="操作"
-        width="120"
+        :width="props.data[0].status !== 'ended' ? 120 : undefined"
       >
         <template #default="scope">
           <el-button-group>
@@ -102,23 +119,6 @@
               @click="handleSuspendActivityDialog(scope.row)"
             />
           </el-button-group>
-        </template>
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="報名者"
-        width=""
-      >
-        <template #default="scope">
-          <el-button
-            v-if="scope.row.bookedCount"
-            type="info"
-            class="w-16"
-            :disabled="scope.row.bookedCount === 0"
-            @click="handleGetActivityParticipants(scope.row.activityId)"
-          >
-            {{ scope.row.bookedCount }} 人
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -172,13 +172,11 @@
     </el-dialog>
     <el-dialog
       v-model="activityParticipantsDialogVisible"
-      class="w-[65vw] max-w-[800px]"
+      fullscreen
+      class="lg:w-[75vw] lg:h-[85vh] lg:top-1/2 lg:-translate-y-1/2"
     >
       <template #header>報名者名單</template>
-      <el-table
-        :data="activityParticipants"
-        :style="{ height: '320px' }"
-      >
+      <el-table :data="activityParticipants">
         <el-table-column
           v-for="column in displayedParticipantsColumns"
           :key="column.prop"
