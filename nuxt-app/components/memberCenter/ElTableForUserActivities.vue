@@ -12,8 +12,8 @@
   const activityId = ref<string>("");
   const cancelRegistrationDialogVisible = ref(false);
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "date", label: "日期", width: "100", fixed: "left" },
-    { prop: "name", label: "活動名稱", width: "140", fixed: "left" },
+    { prop: "date", label: "日期", width: "100" },
+    { prop: "name", label: "活動名稱", width: "140" },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
     { prop: "venueName", label: "場館名稱", width: "150" },
@@ -57,19 +57,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="props.data[0].status === 'registered'"
-        fixed="right"
-        label="操作"
-        width=""
-      >
-        <template #default="scope">
-          <el-button
-            :icon="WarnTriangleFilled"
-            @click="handleCancelDialog(scope.row.activityId)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
         fixed="right"
         label="詳情"
         width=""
@@ -79,6 +66,19 @@
             type="info"
             :icon="Link"
             @click="$router.push(`/activities/${scope.row.activityId}`)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="props.data[0].status === 'registered'"
+        fixed="right"
+        label="操作"
+        width=""
+      >
+        <template #default="scope">
+          <el-button
+            :icon="WarnTriangleFilled"
+            @click="handleCancelDialog(scope.row.activityId)"
           />
         </template>
       </el-table-column>
