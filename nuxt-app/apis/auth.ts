@@ -22,6 +22,18 @@ export const nuxtEmailLogin = (loginData: {
   });
 };
 
+export const nuxtGoogleLogin = (loginData: {
+  token: string;
+  name: string;
+  email: string;
+}) => {
+  return useFetch("/api/googleLogin", {
+    method: "POST",
+    body: loginData,
+    watch: false
+  });
+};
+
 export const emailSignUp = (signUpData: {
   email: string;
   password: string;
@@ -50,4 +62,8 @@ export const resetPassword = (resetPwPayload: {
     { ...resetPwPayload },
     { watch: false }
   );
+};
+
+export const logout = () => {
+  return useShuttlerTwAPI.post("/auth/logout", {}, { watch: false });
 };
