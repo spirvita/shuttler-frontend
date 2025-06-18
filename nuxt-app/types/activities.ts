@@ -27,11 +27,16 @@ export interface ActivityDetail extends Activity {
   contactLine: string;
   isFavorite: boolean;
   status: string;
+  registeredCount: number;
 }
 
 export type CreateActivityPayload = Omit<
   ActivityDetail,
-  "activityId" | "isFavorite" | "contactAvatar" | "bookedCount"
+  | "activityId"
+  | "isFavorite"
+  | "contactAvatar"
+  | "bookedCount"
+  | "registeredCount"
 >;
 
 export interface ActivityFilter {
