@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { mapNamesToLevels } from "@/constants/shuttlerLevels";
   import { Edit, WarnTriangleFilled, DocumentCopy, Delete } from "@element-plus/icons-vue";
-  import { getActivityParticipants, suspendActivity } from "@/apis/activity";
+  import { getActivityParticipants, suspendActivity, deleteDraftActivity } from "@/apis/activity";
   import type { ActivityDetail } from "@/types/activities";
   import type { ActivityParticipant } from "@/types/memberCenter";
   import type { TableColumn } from "@/types/elTable";
@@ -12,10 +12,10 @@
   const emits = defineEmits(["reloadData"]);
   const displayedColumns = ref<TableColumn[]>([
     { prop: "date", label: "日期", width: "100" },
-    { prop: "name", label: "活動名稱", width: "140" },
+    { prop: "name", label: "活動名稱" },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
-    { prop: "venueName", label: "場館名稱", width: "150" },
+    { prop: "venueName", label: "場館名稱" },
     { prop: "contactName", label: "聯絡人", width: "100" },
     { prop: "level", label: "活動程度", width: "200" }
   ]);
@@ -28,6 +28,7 @@
   ]);
   const editActivityDialogVisible = ref(false);
   const suspendActivityDialogVisible = ref(false);
+  const deleteDraftActivityDialogVisible = ref(false);
   const activityParticipantsDialogVisible = ref(false);
   const selectActivity = ref();
   const activityParticipants = ref<ActivityParticipant[]>([]);
@@ -47,6 +48,10 @@
     suspendActivityDialogVisible.value = true;
     selectActivity.value = JSON.parse(JSON.stringify(row));
   };
+  const handleDeleteDraftActivityDialog = (row: unknown) => {
+    deleteDraftActivityDialogVisible.value = true;
+    selectActivity.value = JSON.parse(JSON.stringify(row));
+  };
   const handleGetActivityParticipants = async (activityId: string) => {
     const { data, error } = await getActivityParticipants(activityId);
     if (!error.value) {
@@ -57,6 +62,14 @@
   const handleSuspendActivity = async (activityId: string) => {
     suspendActivityDialogVisible.value = false;
     const { data, error } = await suspendActivity(activityId);
+    if (!error.value) {
+      ElMessage.success(data.value?.message);
+    }
+    reloadData();
+  };
+  const handleDeleteDraftActivity = async (activityId: string) => {
+    deleteDraftActivityDialogVisible.value = false;
+    const { data, error } = await deleteDraftActivity(activityId);
     if (!error.value) {
       ElMessage.success(data.value?.message);
     }
@@ -117,7 +130,6 @@
         label="操作"
         align="center"
         header-align="center"
-        :width="props.data[0].status !== 'ended' ? 120 : undefined"
       >
         <template #default="scope">
           <el-button-group>
@@ -127,8 +139,14 @@
               @click="editActivityDialog(scope.row)"
             />
             <el-button
+              v-if="props.data[0].status === 'published'"
               :icon="WarnTriangleFilled"
               @click="handleSuspendActivityDialog(scope.row)"
+            />
+            <el-button
+              v-if="props.data[0].status === 'draft'"
+              :icon="Delete"
+              @click="handleDeleteDraftActivityDialog(scope.row)"
             />
           </el-button-group>
         </template>
@@ -184,7 +202,7 @@
       title="停辦活動"
       width="500"
     >
-      <span>確定要停辦此活動嗎?</span>
+      <p class="py-3">確定要停辦此活動嗎?</p>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="handleSuspendActivity(selectActivity.activityId)">
@@ -195,6 +213,26 @@
             @click="suspendActivityDialogVisible = false"
           >
             不停辦
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-model="deleteDraftActivityDialogVisible"
+      title="刪除活動草稿"
+      width="500"
+    >
+      <p class="py-3">確定要刪除此活動嗎?</p>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="handleDeleteDraftActivity(selectActivity.activityId)">
+            確定刪除
+          </el-button>
+          <el-button
+            type="primary"
+            @click="deleteDraftActivityDialogVisible = false"
+          >
+            不刪除
           </el-button>
         </div>
       </template>

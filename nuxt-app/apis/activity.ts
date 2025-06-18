@@ -87,3 +87,9 @@ export const suspendActivity = (activityId: string) => {
     `/organizer/activity/${activityId}/suspend`
   );
 };
+
+export const deleteDraftActivity = (activityId: string) => {
+  return useShuttlerTwAPI.delete<{ message: string }>(
+    `/organizer/draft/${activityId}`
+  );
+};
