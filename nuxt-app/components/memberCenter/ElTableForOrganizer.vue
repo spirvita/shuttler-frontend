@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { mapNamesToLevels } from "@/constants/shuttlerLevels";
-  import { Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
+  import { Edit, WarnTriangleFilled, DocumentCopy, Delete } from "@element-plus/icons-vue";
   import { getActivityParticipants, suspendActivity } from "@/apis/activity";
   import type { ActivityDetail } from "@/types/activities";
   import type { ActivityParticipant } from "@/types/memberCenter";
@@ -36,6 +36,13 @@
     selectActivity.value = JSON.parse(JSON.stringify(row));
     selectActivity.value.level = mapNamesToLevels(selectActivity.value.level);
   };
+  const copyActivityDialog = (row: unknown) => {
+    editActivityDialogVisible.value = true;
+    selectActivity.value = JSON.parse(JSON.stringify(row));
+    delete selectActivity.value.activityId;
+    selectActivity.value.status = "copy"
+    selectActivity.value.level = mapNamesToLevels(selectActivity.value.level);
+  };
   const handleSuspendActivityDialog = (row: unknown) => {
     suspendActivityDialogVisible.value = true;
     selectActivity.value = JSON.parse(JSON.stringify(row));
@@ -56,6 +63,7 @@
     reloadData();
   };
   const reloadData = () => {
+    console.log("Reloading data...");
     emits("reloadData");
   };
 </script>
@@ -121,6 +129,23 @@
             <el-button
               :icon="WarnTriangleFilled"
               @click="handleSuspendActivityDialog(scope.row)"
+            />
+          </el-button-group>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-else-if="props.data[0].status === 'ended'"
+        fixed="right"
+        label="複製活動"
+        align="center"
+        header-align="center"
+      >
+        <template #default="scope">
+          <el-button-group>
+            <el-button
+              type="primary"
+              :icon="DocumentCopy"
+              @click="copyActivityDialog(scope.row)"
             />
           </el-button-group>
         </template>

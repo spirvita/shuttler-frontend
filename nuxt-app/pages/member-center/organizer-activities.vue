@@ -40,7 +40,10 @@
         :label="`已結束 (${endedList.length})`"
         name="ended"
       >
-        <ElTableForOrganizer :data="endedList" />
+        <ElTableForOrganizer
+          :data="endedList"
+          @reload-data="reloadData"
+        />
       </el-tab-pane>
       <el-tab-pane
         :label="`草稿 (${draftList.length})`"

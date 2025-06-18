@@ -25,7 +25,7 @@
     activityEditInfo?: ActivityDetail;
   }
 
-  type ActivityStatus = "draft" | "published" | "update";
+  type ActivityStatus = "draft" | "published" | "update" | "";
 
   const props = defineProps<ActivityForm>();
   const emits = defineEmits(["close", "reloadData"]);
@@ -222,14 +222,14 @@
       emits("reloadData");
     };
 
-    if (isOrganizerPage && status === "update") {
+    if (isOrganizerPage && activityInfo.value.activityId && status === "update") {
       const { error } = await updateActivity(
         activityInfo.value as ActivityDetail
       );
       if (!error.value) handleSuccess("修改成功");
       return;
     }
-    if (isOrganizerPage && status !== "update") {
+    if (isOrganizerPage && activityInfo.value.activityId && status !== "update") {
       activityInfo.value.status = status;
       const { error } = await draftActivityToPublished(
         activityInfo.value as ActivityDetail
@@ -245,8 +245,9 @@
       status as "draft" | "published"
     );
     if (!error.value) {
+      if (!isOrganizerPage && status === "published") router.push("/activities");
+      if (!isOrganizerPage && status === "draft") router.push("/member-center/organizer-activities");
       handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
-      router.push("/activities");
     }
     activityInfoFormRef.value?.resetFields();
     clearUploadedFiles();
@@ -309,8 +310,14 @@
   });
   const isImporting = ref(true);
   onMounted(() => {
-    if (activityEditInfo.value?.activityId) {
+    if (activityEditInfo.value?.activityId || activityEditInfo.value?.status === "copy") {
       activityInfo.value = activityEditInfo.value;
+      if (activityEditInfo.value?.status === "copy") {
+        activityInfo.value.date = new Date(new Date().setDate(new Date().getDate() + 1))
+  .toISOString()
+  .split("T")[0];
+        activityInfo.value.status = "";
+      }
       manuallySetCity(activityEditInfo.value.city);
       setTimeout(() => {
         manuallySetDistrictNameByName(
