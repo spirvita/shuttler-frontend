@@ -84,7 +84,7 @@
       return;
     }
     if (data.value?.token) {
-      refreshSession();
+      await refreshSession();
       ElMessage({
         message: `歡迎 ${user.value?.name}`,
         type: "success"
