@@ -7,7 +7,13 @@
     points: number;
   }>();
 
+  const { loggedIn } = useUserSession();
+
   const pointsPurchaseByNewebpay = async () => {
+    if (!loggedIn.value) {
+      ElMessage.error("請先登入");
+      return;
+    }
     const { data, error: purchaseInfoError } = await getPointsPurchaseInfo(
       props.points
     );
