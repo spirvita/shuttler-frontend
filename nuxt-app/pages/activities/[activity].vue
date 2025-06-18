@@ -5,7 +5,8 @@
     addActivityToFavorites,
     removeActivityFromFavorites,
     registerActivity,
-    cancelActivity
+    cancelActivity,
+    updateActivityParticipantCount
   } from "@/apis/activity";
   import { activityPictures as defaultActivityPictures } from "@/constants/activityPictures";
   import ActivityPictures from "@/components/activity/ActivityPictures.vue";
@@ -54,6 +55,7 @@
   }
 
   const registrationDialogVisible = ref(false);
+  const updateRegistrationDialogVisible = ref(false);
   const cancelRegistrationDialogVisible = ref(false);
   const registeredDialogVisible = ref(false);
 
@@ -136,7 +138,11 @@
   const canRegisterByPoints = computed(() => {
     if (!activity.value) return false;
     const pointsNeeded = activity.value.points * participantCount.value;
-    return pointsNeeded > userPoints.value;
+    return (
+      pointsNeeded > userPoints.value ||
+      participantCount.value <= 0 ||
+      participantCount.value === activity.value.registeredCount
+    );
   });
 
   const checkPointsBalance = computed(() => {
@@ -148,6 +154,30 @@
     return `此活動將扣除 ${pointsNeeded} 點數，剩餘 ${
       userPoints.value - pointsNeeded
     } 點數`;
+  });
+
+  const checkPointsBalanceByRegisteredCount = computed(() => {
+    if (!activity.value) return "";
+
+    if (participantCount.value < activity.value.registeredCount) {
+      return `您已報名 ${activity.value.registeredCount} 人，若修改為 ${participantCount.value} 人，將退還 ${
+        (activity.value.registeredCount - participantCount.value) *
+        activity.value.points
+      } 點數`;
+    }
+
+    const pointsNeeded =
+      (participantCount.value - activity.value.registeredCount) *
+      activity.value.points;
+    if (pointsNeeded > userPoints.value) {
+      return `您的點數餘額不足，還需要 ${pointsNeeded - userPoints.value} 點數`;
+    }
+    if (participantCount.value === activity.value.registeredCount) {
+      return `您已報名 ${activity.value.registeredCount} 人，不須修改`;
+    }
+    return `您已報名 ${activity.value.registeredCount} 人，若修改為 ${participantCount.value} 人，將扣除 ${
+      pointsNeeded
+    } 點數，剩餘 ${userPoints.value - pointsNeeded} 點數`;
   });
 
   const toggleFavorite = async () => {
@@ -179,7 +209,7 @@
       if (action === "cancel") {
         cancelRegistrationDialogVisible.value = true;
       } else if (action === "register") {
-        registrationDialogVisible.value = true;
+        updateRegistrationDialogVisible.value = true;
       }
     }, 300);
   };
@@ -204,6 +234,24 @@
     const { error } = await registerActivity(payload);
     if (!error.value) ElMessage.success("報名成功");
     registrationDialogVisible.value = false;
+    participantCount.value = 1;
+    await updateUserAndActivity();
+  };
+  const handleUpdateRegisterActivity = async (action: boolean) => {
+    if (!action) {
+      updateRegistrationDialogVisible.value = false;
+      participantCount.value = 1;
+      return;
+    }
+    if (!activity.value?.activityId) return;
+    const payload = {
+      activityId: activity.value.activityId,
+      participantCount: participantCount.value
+    };
+    const { error } = await updateActivityParticipantCount(payload);
+    if (!error.value) ElMessage.success("修改成功");
+    updateRegistrationDialogVisible.value = false;
+    participantCount.value = 1;
     await updateUserAndActivity();
   };
 
@@ -217,18 +265,21 @@
 
   const openGoogleMaps = () => {
     if (!activity.value) return;
-    const { venueName } = activity.value;
-    const query = venueName;
+    const { venueName, city, district, address } = activity.value;
+    const query = `${venueName}, ${city}${district}${address}`;
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+
     window.open(url, "_blank");
   };
 
   const openGoogleCalendar = () => {
     if (!activity.value) return;
-    const { date, startTime, endTime, name, brief } = activity.value;
-    const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00Z`;
-    const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00Z`;
-    const url = `https://calendar.google.com/calendar/r/eventedit?dates=${startDateTime}/${endDateTime}&text=${encodeURIComponent(name)}&details=${encodeURIComponent(brief)}`;
+    const { date, startTime, endTime, name, brief, city, district, address } =
+      activity.value;
+    const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00`;
+    const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00`;
+    const location = `${city}${district}${address}`;
+    const url = `https://calendar.google.com/calendar/u/0/r/eventedit?text=${encodeURIComponent(name)}&dates=${startDateTime}/${endDateTime}&details=${encodeURIComponent(brief)}&location=${encodeURIComponent(location)}`;
 
     window.open(url, "_blank");
   };
@@ -341,7 +392,9 @@
           </ul>
         </section>
         <div class="lg:col-span-3">
-          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+          <div
+            class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3"
+          >
             <p class="text-lg font-bold text-neutral-800 mb-3">
               {{ activity.name }}
             </p>
@@ -400,6 +453,40 @@
               {{ activityStatus[activity.status] }}
             </el-button>
           </div>
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3">
+            <el-button
+              type="info"
+              :icon="Calendar"
+              class="py-5 text-md mb-3 border-0 bg-secondary-300 hover:bg-secondary-800"
+              round
+              @click="openGoogleCalendar"
+            >
+              加行事曆
+            </el-button>
+            <el-button
+              type="info"
+              :icon="Location"
+              class="py-5 text-md m-0 border-0 bg-secondary-300 hover:bg-secondary-800"
+              round
+              @click="openGoogleMaps"
+            >
+              地點導航
+            </el-button>
+          </div>
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+            <p>
+              <span class="text-lg text-neutral-700">主辦者：</span>
+              {{ activity.organizer }}
+            </p>
+            <p>
+              <span class="text-lg text-neutral-700">已舉辦：</span>
+              {{ activity.organizerStats.totalHosted }} 場活動
+            </p>
+            <p>
+              <span class="text-lg text-neutral-700">舉辦中：</span>
+              {{ activity.organizerStats.ongoingHosted }} 場活動
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -407,24 +494,25 @@
       v-model="registrationDialogVisible"
       title="報名確認"
       width="350"
-      class="text-md"
     >
-      <p class="mb-2">您是否要報名此活動?</p>
-      <p class="mb-2">
-        <span class="mr-2">時段 :</span>
+      <p class="text-md my-3">
+        <span class="mr-1">活動時段 :</span>
         {{ `${activity.date} ${activity.startTime} ${activity.endTime}` }}
       </p>
-      <div class="flex items-center pb-5 border-b border-neutral-200 mb-5">
+      <div
+        class="flex items-center pb-5 border-b border-neutral-200 mb-5 text-md"
+      >
         <label
           for="participantCount"
           class="text-nowrap mr-2"
         >
-          人數 :
+          報名人數 :
         </label>
         <el-select
           id="participantCount"
           v-model="participantCount"
           placeholder="請選擇人數"
+          size="large"
           class="w-full"
         >
           <el-option
@@ -442,6 +530,7 @@
           <el-button
             class="w-full mr-2"
             round
+            size="large"
             @click="handleRegisterActivity(false)"
           >
             取消
@@ -450,6 +539,7 @@
             type="primary"
             class="w-full"
             round
+            size="large"
             :disabled="canRegisterByPoints"
             @click="handleRegisterActivity(true)"
           >
@@ -459,28 +549,88 @@
       </template>
     </el-dialog>
     <el-dialog
-      v-model="cancelRegistrationDialogVisible"
-      title="取消確認"
+      v-model="updateRegistrationDialogVisible"
+      title="修改確認"
       width="350"
-      class="text-md"
     >
-      <p class="mb-2">您是否要取消此活動?</p>
+      <p class="text-md my-3">
+        <span class="= mr-1">活動時段 :</span>
+        {{ `${activity.date} ${activity.startTime} ${activity.endTime}` }}
+      </p>
+      <div
+        class="flex items-center text-md pb-5 border-b border-neutral-200 mb-5"
+      >
+        <label
+          for="participantCount"
+          class="text-nowrap mr-2"
+        >
+          報名人數 :
+        </label>
+        <span clas="block text-nowrap">修改為</span>
+        <el-select
+          id="participantCount"
+          v-model="participantCount"
+          placeholder="請選擇人數"
+          size="large"
+          class="flex-1 ml-2"
+        >
+          <el-option
+            v-for="item in remainingSlots + activity.registeredCount"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+      </div>
+      <p class="mb-3">您有尚有 {{ userPoints }} 點數</p>
+      <p>{{ checkPointsBalanceByRegisteredCount }}</p>
       <template #footer>
         <div class="flex">
+          <el-button
+            class="w-full mr-2"
+            round
+            size="large"
+            @click="handleUpdateRegisterActivity(false)"
+          >
+            取消
+          </el-button>
           <el-button
             type="primary"
             class="w-full"
             round
-            @click="cancelRegistrationDialogVisible = false"
+            size="large"
+            :disabled="canRegisterByPoints"
+            @click="handleUpdateRegisterActivity(true)"
           >
-            不取消
+            修改
           </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-model="cancelRegistrationDialogVisible"
+      title="取消確認"
+      width="350"
+    >
+      <p class="text-md my-3">您是否要取消此活動?</p>
+      <template #footer>
+        <div class="flex">
           <el-button
             class="w-full mr-2"
             round
+            size="large"
             @click="handleCancelActivity"
           >
             取消報名
+          </el-button>
+          <el-button
+            type="primary"
+            class="w-full"
+            round
+            size="large"
+            @click="cancelRegistrationDialogVisible = false"
+          >
+            不取消
           </el-button>
         </div>
       </template>
@@ -490,24 +640,25 @@
       :model="false"
       title="您已報名活動"
       width="350"
-      class="text-md"
     >
-      <p class="mb-2">您要取消報名或是再次報名?</p>
+      <p class="text-md my-3">您要取消報名或是修改人數?</p>
       <template #footer>
         <div class="flex">
           <el-button
             class="w-full"
             round
+            size="large"
             @click="handleRegisteredDialog('cancel')"
           >
             取消報名
           </el-button>
           <el-button
-            class="w-full mr-2"
+            class="w-full"
             round
+            size="large"
             @click="handleRegisteredDialog('register')"
           >
-            再次報名
+            修改人數
           </el-button>
         </div>
       </template>

@@ -56,6 +56,19 @@ export const registerActivity = ({
   });
 };
 
+export const updateActivityParticipantCount = ({
+  activityId,
+  participantCount
+}: {
+  activityId: string;
+  participantCount: number;
+}) => {
+  return useShuttlerTwAPI.put<{ message: string }>("/activity/registration", {
+    activityId,
+    participantCount
+  });
+};
+
 export const cancelActivity = (activityId: string) => {
   return useShuttlerTwAPI.delete<{ message: string }>(
     `/activity/registration/${activityId}`

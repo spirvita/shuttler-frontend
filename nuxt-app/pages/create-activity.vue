@@ -1,11 +1,9 @@
 <script setup lang="ts">
   import ActivityForm from "~/components/activity/ActivityForm.vue";
 
-  const { loggedIn } = useUserSession();
-  if (!loggedIn.value) {
-    ElMessage.error("請先登入");
-    navigateTo("/");
-  }
+  definePageMeta({
+    middleware: ["auth"]
+  });
 </script>
 <template>
   <div class="py-20">

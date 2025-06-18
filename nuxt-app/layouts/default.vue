@@ -54,6 +54,13 @@
       icon: Money
     }
   ];
+  const handlePushCreateActivity = () => {
+    if (!loggedIn.value) {
+      ElMessage.error("請先登入");
+      return;
+    }
+    navigateTo("/create-activity");
+  };
 </script>
 
 <template>
@@ -79,6 +86,7 @@
           <NuxtLink
             to="/create-activity"
             class="link-hover"
+            @click.prevent="handlePushCreateActivity"
           >
             舉辦活動
           </NuxtLink>
