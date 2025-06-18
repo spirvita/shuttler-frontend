@@ -217,18 +217,21 @@
 
   const openGoogleMaps = () => {
     if (!activity.value) return;
-    const { venueName } = activity.value;
-    const query = venueName;
+    const { venueName, city, district, address } = activity.value;
+    const query = `${venueName}, ${city}${district}${address}`;
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+
     window.open(url, "_blank");
   };
 
   const openGoogleCalendar = () => {
     if (!activity.value) return;
-    const { date, startTime, endTime, name, brief } = activity.value;
-    const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00Z`;
-    const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00Z`;
-    const url = `https://calendar.google.com/calendar/r/eventedit?dates=${startDateTime}/${endDateTime}&text=${encodeURIComponent(name)}&details=${encodeURIComponent(brief)}`;
+    const { date, startTime, endTime, name, brief, city, district, address } =
+      activity.value;
+    const startDateTime = `${date.replace(/-/g, "")}T${startTime.replace(/:/g, "")}00`;
+    const endDateTime = `${date.replace(/-/g, "")}T${endTime.replace(/:/g, "")}00`;
+    const location = `${city}${district}${address}`;
+    const url = `https://calendar.google.com/calendar/u/0/r/eventedit?text=${encodeURIComponent(name)}&dates=${startDateTime}/${endDateTime}&details=${encodeURIComponent(brief)}&location=${encodeURIComponent(location)}`;
 
     window.open(url, "_blank");
   };
@@ -341,7 +344,9 @@
           </ul>
         </section>
         <div class="lg:col-span-3">
-          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+          <div
+            class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3"
+          >
             <p class="text-lg font-bold text-neutral-800 mb-3">
               {{ activity.name }}
             </p>
@@ -398,6 +403,26 @@
               @click="handleDialog(activity.status)"
             >
               {{ activityStatus[activity.status] }}
+            </el-button>
+          </div>
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+            <el-button
+              type="info"
+              :icon="Calendar"
+              class="py-5 text-md mb-3 border-0 bg-secondary-300 hover:bg-secondary-800"
+              round
+              @click="openGoogleCalendar"
+            >
+              加行事曆
+            </el-button>
+            <el-button
+              type="info"
+              :icon="Location"
+              class="py-5 text-md m-0 border-0 bg-secondary-300 hover:bg-secondary-800"
+              round
+              @click="openGoogleMaps"
+            >
+              地點導航
             </el-button>
           </div>
         </div>
