@@ -453,7 +453,7 @@
               {{ activityStatus[activity.status] }}
             </el-button>
           </div>
-          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3">
             <el-button
               type="info"
               :icon="Calendar"
@@ -472,6 +472,20 @@
             >
               地點導航
             </el-button>
+          </div>
+          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl">
+            <p>
+              <span class="text-lg text-neutral-700">主辦者：</span>
+              {{ activity.organizer }}
+            </p>
+            <p>
+              <span class="text-lg text-neutral-700">已舉辦：</span>
+              {{ activity.organizerStats.totalHosted }} 場活動
+            </p>
+            <p>
+              <span class="text-lg text-neutral-700">舉辦中：</span>
+              {{ activity.organizerStats.ongoingHosted }} 場活動
+            </p>
           </div>
         </div>
       </div>

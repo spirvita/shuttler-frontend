@@ -28,6 +28,10 @@ export interface ActivityDetail extends Activity {
   isFavorite: boolean;
   status: string;
   registeredCount: number;
+  organizerStats: {
+    totalHosted: number;
+    ongoingHosted: number;
+  };
 }
 
 export type CreateActivityPayload = Omit<
@@ -37,6 +41,7 @@ export type CreateActivityPayload = Omit<
   | "contactAvatar"
   | "bookedCount"
   | "registeredCount"
+  | "organizerStats"
 >;
 
 export interface ActivityFilter {
