@@ -5,6 +5,37 @@
   import { useParticipantStatus } from "@/composables/useParticipantStatus";
   import type { Activity, ActivityFilter } from "@/types/activities";
 
+  useHead({
+    title: "活動列表 - 羽神同行",
+    meta: [
+      {
+        name: "description",
+        content: "探索最新的羽球活動，報名參加並享受羽球樂趣！"
+      },
+      { property: "og:title", content: "活動列表 - 羽神同行" },
+      {
+        property: "og:description",
+        content: "探索最新的羽球活動，報名參加並享受羽球樂趣！"
+      },
+      { property: "og:image", content: "/logo.png" },
+      { property: "og:image:alt", content: "羽神同行活動列表圖片" },
+      { property: "og:url", content: "https://www.spirvita.tw/activities" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "羽神同行" }
+    ]
+  });
+  useSeoMeta({
+    title: "活動列表 - 羽神同行",
+    description: "探索最新的羽球活動，報名參加並享受羽球樂趣！",
+    ogTitle: "活動列表 - 羽神同行",
+    ogDescription: "探索最新的羽球活動，報名參加並享受羽球樂趣！",
+    ogImage: "/logo.png",
+    ogImageAlt: "羽神同行活動列表圖片",
+    ogUrl: "https://www.spirvita.tw/activities",
+    ogType: "website",
+    ogSiteName: "羽神同行"
+  });
+
   const runtimeConfig = useRuntimeConfig();
   const filter = ref<ActivityFilter>({
     date: ""

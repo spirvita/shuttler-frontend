@@ -5,6 +5,41 @@
   import LogoBall from "@/assets/images/logo-ball.png";
   import AboutBanner from "@/assets/images/about-banner.png";
 
+  useHead({
+    title: "關於我們 - 羽神同行",
+    meta: [
+      {
+        name: "description",
+        content:
+          "了解羽神同行的起源、使命和團隊，探索我們如何讓羽球活動更輕鬆、更有趣！"
+      },
+      { property: "og:title", content: "關於我們 - 羽神同行" },
+      {
+        property: "og:description",
+        content:
+          "了解羽神同行的起源、使命和團隊，探索我們如何讓羽球活動更輕鬆、更有趣！"
+      },
+      { property: "og:image", content: "/logo.png" },
+      { property: "og:image:alt", content: "羽神同行關於我們圖片" },
+      { property: "og:url", content: "https://www.spirvita.tw/about" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "羽神同行" }
+    ]
+  });
+  useSeoMeta({
+    title: "關於我們 - 羽神同行",
+    description:
+      "了解羽神同行的起源、使命和團隊，探索我們如何讓羽球活動更輕鬆、更有趣！",
+    ogTitle: "關於我們 - 羽神同行",
+    ogDescription:
+      "了解羽神同行的起源、使命和團隊，探索我們如何讓羽球活動更輕鬆、更有趣！",
+    ogImage: "/logo.png",
+    ogImageAlt: "羽神同行關於我們圖片",
+    ogUrl: "https://www.spirvita.tw/about",
+    ogType: "website",
+    ogSiteName: "羽神同行"
+  });
+
   const aboutMissions = [
     {
       title: "誠實評價",
@@ -57,36 +92,6 @@
       image: LogoBall
     }
   ];
-  useHead({
-    title: "關於我們-羽神同行",
-    meta: [
-      {
-        name: "description",
-        content:
-          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
-      },
-      { property: "og:title", content: "關於我們-羽神同行" },
-      {
-        property: "og:description",
-        content:
-          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
-      },
-      { property: "og:image", content: "/about-banner.png" },
-      { property: "og:image:alt", content: "羽神同行的起源與使命" },
-      { property: "og:url", content: "https://dev.spirvita.tw/about" },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "羽神同行" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "關於我們 - 羽神同行" },
-      {
-        name: "twitter:description",
-        content:
-          "羽神同行的起源與使命，讓羽球愛好者更輕鬆地找到場地、結識球友。"
-      },
-      { name: "twitter:image", content: "/about-banner.png" }
-    ],
-    link: [{ rel: "canonical", href: "https://dev.spirvita.tw/about" }]
-  });
 </script>
 <template>
   <div>
