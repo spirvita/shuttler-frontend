@@ -302,7 +302,7 @@
     const currentMinute = now.getMinutes();
 
     if (activityInfo.value.date === currentDate) {
-      const nextHour = currentMinute > 0 ? currentHour + 1 : currentHour;
+      const nextHour = currentMinute > 0 ? currentHour + 3 : currentHour;
       return `${String(nextHour).padStart(2, "0")}:00`;
     } else {
       return "00:00";
