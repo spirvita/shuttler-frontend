@@ -9,8 +9,9 @@
   }>();
   const emits = defineEmits(["reloadData"]);
 
-  const activityId = ref<string>("");
+  const activity = ref<ActivityDetail>();
   const cancelRegistrationDialogVisible = ref(false);
+  const cancellationLimitHours = ref(2);
   const displayedColumns = ref<TableColumn[]>([
     { prop: "name", label: "活動名稱", width: "120" },
     { prop: "date", label: "日期", width: "100" },
@@ -20,13 +21,30 @@
     { prop: "contactName", label: "聯絡人", width: "100" },
     { prop: "level", label: "活動程度", width: "200" }
   ]);
-  const handleCancelDialog = (newActivityId: string) => {
-    activityId.value = newActivityId;
+  const isCancelable = computed(() => {
+    if (!activity.value?.activityId) return false;
+    const activityDateTime = new Date(
+      `${activity.value.date}T${activity.value.startTime}`
+    );
+    const hoursBefore = new Date(
+      activityDateTime.getTime() - cancellationLimitHours.value * 60 * 60 * 1000
+    );
+    return new Date() < hoursBefore;
+  });
+  const handleCancelDialog = (newActivity: ActivityDetail) => {
+    activity.value = newActivity;
+    if (!isCancelable.value) {
+      ElMessage.error(
+        `活動開始前 ${cancellationLimitHours.value} 小時內無法取消報名`
+      );
+      cancelRegistrationDialogVisible.value = false;
+      return;
+    }
     cancelRegistrationDialogVisible.value = true;
   };
   const handleCancelActivity = async () => {
-    if (!activityId.value) return;
-    const { error } = await cancelActivity(activityId.value);
+    if (!activity.value?.activityId) return;
+    const { error } = await cancelActivity(activity.value.activityId);
     if (!error.value) ElMessage.success("取消報名成功");
     cancelRegistrationDialogVisible.value = false;
     emits("reloadData");
@@ -85,7 +103,7 @@
           <el-button
             class="px-3"
             :icon="WarnTriangleFilled"
-            @click="handleCancelDialog(scope.row.activityId)"
+            @click="handleCancelDialog(scope.row)"
           />
         </template>
       </el-table-column>

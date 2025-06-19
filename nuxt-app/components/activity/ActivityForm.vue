@@ -222,14 +222,22 @@
       emits("reloadData");
     };
 
-    if (isOrganizerPage && activityInfo.value.activityId && status === "update") {
+    if (
+      isOrganizerPage &&
+      activityInfo.value.activityId &&
+      status === "update"
+    ) {
       const { error } = await updateActivity(
         activityInfo.value as ActivityDetail
       );
       if (!error.value) handleSuccess("修改成功");
       return;
     }
-    if (isOrganizerPage && activityInfo.value.activityId && status !== "update") {
+    if (
+      isOrganizerPage &&
+      activityInfo.value.activityId &&
+      status !== "update"
+    ) {
       activityInfo.value.status = status;
       const { error } = await draftActivityToPublished(
         activityInfo.value as ActivityDetail
@@ -245,8 +253,10 @@
       status as "draft" | "published"
     );
     if (!error.value) {
-      if (!isOrganizerPage && status === "published") router.push("/activities");
-      if (!isOrganizerPage && status === "draft") router.push("/member-center/organizer-activities");
+      if (!isOrganizerPage && status === "published")
+        router.push("/activities");
+      if (!isOrganizerPage && status === "draft")
+        router.push("/member-center/organizer-activities");
       handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
     }
     activityInfoFormRef.value?.resetFields();
@@ -302,7 +312,7 @@
     const currentMinute = now.getMinutes();
 
     if (activityInfo.value.date === currentDate) {
-      const nextHour = currentMinute > 0 ? currentHour + 1 : currentHour;
+      const nextHour = currentMinute > 0 ? currentHour + 3 : currentHour;
       return `${String(nextHour).padStart(2, "0")}:00`;
     } else {
       return "00:00";
@@ -310,12 +320,17 @@
   });
   const isImporting = ref(true);
   onMounted(() => {
-    if (activityEditInfo.value?.activityId || activityEditInfo.value?.status === "copy") {
+    if (
+      activityEditInfo.value?.activityId ||
+      activityEditInfo.value?.status === "copy"
+    ) {
       activityInfo.value = activityEditInfo.value;
       if (activityEditInfo.value?.status === "copy") {
-        activityInfo.value.date = new Date(new Date().setDate(new Date().getDate() + 1))
-  .toISOString()
-  .split("T")[0];
+        activityInfo.value.date = new Date(
+          new Date().setDate(new Date().getDate() + 1)
+        )
+          .toISOString()
+          .split("T")[0];
         activityInfo.value.status = "";
       }
       manuallySetCity(activityEditInfo.value.city);

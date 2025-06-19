@@ -25,7 +25,8 @@
     UserFilled,
     ChatDotSquare,
     Money,
-    MapLocation
+    MapLocation,
+    InfoFilled
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
@@ -75,6 +76,7 @@
   });
 
   const participantCount = ref(1);
+  const cancellationLimitHours = ref(2);
   const remainingSlots = computed(() => {
     if (!activity.value) return 0;
     return activity.value.participantCount - activity.value.bookedCount;
@@ -227,7 +229,13 @@
 
   const handleDialog = (status: string) => {
     if (!loggedIn.value) return;
-
+    if (!isCancelable.value) {
+      ElMessage.error(
+        `活動開始前 ${cancellationLimitHours.value} 小時內無法取消報名/修改人數`
+      );
+      cancelRegistrationDialogVisible.value = false;
+      return;
+    }
     if (status === "published") {
       registrationDialogVisible.value = true;
     } else if (status === "registered") {
@@ -285,6 +293,17 @@
     participantCount.value = 1;
     await updateUserAndActivity();
   };
+
+  const isCancelable = computed(() => {
+    if (!activity.value) return false;
+    const activityDateTime = new Date(
+      `${activity.value.date}T${activity.value.startTime}`
+    );
+    const hoursBefore = new Date(
+      activityDateTime.getTime() - cancellationLimitHours.value * 60 * 60 * 1000
+    );
+    return new Date() < hoursBefore;
+  });
 
   const handleCancelActivity = async () => {
     if (!activity.value?.activityId) return;
@@ -452,6 +471,11 @@
               <span class="text-lg text-neutral-800 font-bold">
                 {{ activity.points }} 點
               </span>
+            </p>
+            <p class="flex items-center mb-3 text-xs text-neutral-500">
+              <el-icon class="mr-1"><InfoFilled /></el-icon>
+              活動開始前
+              {{ cancellationLimitHours }} 小時內無法取消報名/修改人數
             </p>
             <el-button
               v-if="!loggedIn"
