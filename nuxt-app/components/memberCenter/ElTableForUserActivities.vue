@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import type { ActivityDetail } from "@/types/activities";
-  import { WarnTriangleFilled, Link } from "@element-plus/icons-vue";
+  import { WarnTriangleFilled, TopRight } from "@element-plus/icons-vue";
   import { cancelActivity } from "@/apis/activity";
   import type { TableColumn } from "@/types/elTable";
 
@@ -12,11 +12,11 @@
   const activityId = ref<string>("");
   const cancelRegistrationDialogVisible = ref(false);
   const displayedColumns = ref<TableColumn[]>([
+    { prop: "name", label: "活動名稱", width: "120" },
     { prop: "date", label: "日期", width: "100" },
-    { prop: "name", label: "活動名稱", width: "140" },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
-    { prop: "venueName", label: "場館名稱", width: "150" },
+    { prop: "venueName", label: "場館名稱" },
     { prop: "contactName", label: "聯絡人", width: "100" },
     { prop: "level", label: "活動程度", width: "200" }
   ]);
@@ -39,6 +39,7 @@
       :data="props.data"
       :style="{ height: '320px' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
+      show-overflow-tooltip
     >
       <el-table-column
         v-for="column in displayedColumns"
@@ -61,11 +62,13 @@
         label="詳情"
         align="center"
         header-align="center"
+        width="70"
       >
         <template #default="scope">
           <el-button
             type="info"
-            :icon="Link"
+            class="px-3"
+            :icon="TopRight"
             @click="$router.push(`/activities/${scope.row.activityId}`)"
           />
         </template>
@@ -73,12 +76,14 @@
       <el-table-column
         v-if="props.data[0].status === 'registered'"
         fixed="right"
-        label="操作"
+        label="取消"
         align="center"
         header-align="center"
+        width="70"
       >
         <template #default="scope">
           <el-button
+            class="px-3"
             :icon="WarnTriangleFilled"
             @click="handleCancelDialog(scope.row.activityId)"
           />
@@ -95,9 +100,8 @@
       v-model="cancelRegistrationDialogVisible"
       title="取消確認"
       width="350"
-      class="text-md"
     >
-      <p class="mb-2">您是否要取消此活動?</p>
+      <p class="text-md my-3">您是否要取消此活動?</p>
       <template #footer>
         <div class="flex">
           <el-button

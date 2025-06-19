@@ -488,6 +488,7 @@
             class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3"
           >
             <el-button
+              v-if="activity.status !== 'ended'"
               type="info"
               :icon="Calendar"
               class="py-5 text-md mb-3 border-0 bg-secondary-300 hover:bg-secondary-800"
