@@ -1,14 +1,12 @@
 <script setup lang="ts">
-  import type { FormInstance, FormRules } from "element-plus";
+  import type { FormInstance, FormRules, UploadFiles } from "element-plus";
   import type { MemberInfo } from "@/types/memberCenter";
   import { ElMessage } from "element-plus";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { useUserStore } from "@/stores/user";
   import { updateUserInfo } from "@/apis/user";
-  import type { UploadFiles } from "element-plus";
   import { uploadImages } from "@/apis/upload";
-
 
   const userStore = useUserStore();
 
@@ -34,11 +32,9 @@
         max: 10,
         message: "名稱長度應在 2 到 10 個字之間",
         trigger: "blur"
-      },
+      }
     ],
-    level: [
-      { required: true, message: "請選擇羽球程度", trigger: "change" }
-    ]
+    level: [{ required: true, message: "請選擇羽球程度", trigger: "change" }]
   });
   const ruleFormRef = ref<FormInstance>();
   const uploadImageFiles = ref<UploadFiles>([]);
@@ -72,7 +68,11 @@
   };
 
   const hasNotPreferredLocation = computed(() => {
-    return !memberInfo.value.preferredLocation || memberInfo.value.preferredLocation.length === 0 || memberInfo.value.preferredLocation.includes("");
+    return (
+      !memberInfo.value.preferredLocation ||
+      memberInfo.value.preferredLocation.length === 0 ||
+      memberInfo.value.preferredLocation.includes("")
+    );
   });
 
   const submitForm = async (formEl: FormInstance | undefined) => {

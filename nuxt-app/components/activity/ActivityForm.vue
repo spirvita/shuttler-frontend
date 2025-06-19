@@ -344,8 +344,12 @@
         );
       }, 100);
     } else {
-      const userPreferredLocation = userStore.userInfo?.preferredLocation[0] ? userStore.userInfo.preferredLocation[0] : "100";
-      const userLevel = userStore.userInfo?.level ? [userStore.userInfo.level] : [];
+      const userPreferredLocation = userStore.userInfo?.preferredLocation[0]
+        ? userStore.userInfo.preferredLocation[0]
+        : "100";
+      const userLevel = userStore.userInfo?.level
+        ? [userStore.userInfo.level]
+        : [];
       initLocationByZip(userPreferredLocation);
       activityInfo.value.level = userLevel;
     }
