@@ -29,6 +29,37 @@
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
 
+  useHead({
+    title: "活動詳情 - 羽神同行",
+    meta: [
+      {
+        name: "description",
+        content: "查看羽球活動詳情，報名參加並享受羽球樂趣！"
+      },
+      { property: "og:title", content: "活動詳情 - 羽神同行" },
+      {
+        property: "og:description",
+        content: "查看羽球活動詳情，報名參加並享受羽球樂趣！"
+      },
+      { property: "og:image", content: "/logo.png" },
+      { property: "og:image:alt", content: "羽神同行活動詳情圖片" },
+      { property: "og:url", content: "https://www.spirvita.tw/activities" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "羽神同行" }
+    ]
+  });
+  useSeoMeta({
+    title: "活動詳情 - 羽神同行",
+    description: "查看羽球活動詳情，報名參加並享受羽球樂趣！",
+    ogTitle: "活動詳情 - 羽神同行",
+    ogDescription: "查看羽球活動詳情，報名參加並享受羽球樂趣！",
+    ogImage: "/logo.png",
+    ogImageAlt: "羽神同行活動詳情圖片",
+    ogUrl: "https://www.spirvita.tw/activities",
+    ogType: "website",
+    ogSiteName: "羽神同行"
+  });
+
   const { loggedIn } = useUserSession();
   const router = useRoute();
   const activityId = router.params.activity as string;
@@ -453,7 +484,9 @@
               {{ activityStatus[activity.status] }}
             </el-button>
           </div>
-          <div class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3">
+          <div
+            class="flex flex-col border border-neutral-400 p-6 rounded-xl mb-3"
+          >
             <el-button
               type="info"
               :icon="Calendar"

@@ -19,7 +19,7 @@
         content:
           "羽神同行是台灣領先的羽球活動票務與管理平台，為羽球賽事主辦方和球友提供流暢的報名與購票體驗。"
       },
-      { property: "og:image", content: "/home-banner.png" },
+      { property: "og:image", content: "/logo.png" },
       { property: "og:image:alt", content: "羽神同行首頁橫幅圖片" },
       { property: "og:url", content: "https://www.spirvita.tw" },
       { property: "og:type", content: "website" },
@@ -31,9 +31,27 @@
         content:
           "羽神同行是台灣領先的羽球活動票務與管理平台，為羽球賽事主辦方和球友提供流暢的報名與購票體驗。"
       },
-      { name: "twitter:image", content: "/home-banner.png" }
+      { name: "twitter:image", content: "/logo.png" }
     ],
     link: [{ rel: "canonical", href: "https://www.spirvita.tw" }]
+  });
+  useSeoMeta({
+    title: "羽神同行",
+    description:
+      "羽神同行是台灣領先的羽球活動票務與管理平台，為羽球賽事主辦方和球友提供流暢的報名與購票體驗。",
+    ogTitle: "羽神同行",
+    ogDescription:
+      "羽神同行是台灣領先的羽球活動票務與管理平台，為羽球賽事主辦方和球友提供流暢的報名與購票體驗。",
+    ogImage: "/logo.png",
+    ogImageAlt: "羽神同行首頁橫幅圖片",
+    ogUrl: "https://www.spirvita.tw",
+    ogType: "website",
+    ogSiteName: "羽神同行",
+    twitterCard: "summary_large_image",
+    twitterTitle: "羽神同行",
+    twitterDescription:
+      "羽神同行是台灣領先的羽球活動票務與管理平台，為羽球賽事主辦方和球友提供流暢的報名與購票體驗。",
+    twitterImage: "/logo.png"
   });
 </script>
 

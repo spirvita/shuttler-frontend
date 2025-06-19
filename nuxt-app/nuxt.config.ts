@@ -15,7 +15,11 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "zh-Hant"
       },
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", href: "/logo-ball.png" }
+      ]
     }
   },
   compatibilityDate: "2024-11-01",
