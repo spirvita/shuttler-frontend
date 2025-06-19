@@ -6,6 +6,9 @@
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { useUserStore } from "@/stores/user";
   import { updateUserInfo } from "@/apis/user";
+  import type { UploadFiles } from "element-plus";
+  import { uploadImages } from "@/apis/upload";
+
 
   const userStore = useUserStore();
 
@@ -21,10 +24,7 @@
     JSON.parse(JSON.stringify(userStore.userInfo))
   );
 
-  initLocationByZip(memberInfo.value?.preferredLocation?.[0] ?? "100");
-  if (memberInfo.value.level === null) {
-    memberInfo.value.level = shuttlerLevelOptions[0].value;
-  }
+  initLocationByZip(memberInfo.value?.preferredLocation?.[0] ?? "");
 
   const memberInfoFormRules = ref<FormRules<MemberInfo>>({
     name: [
@@ -34,12 +34,24 @@
         max: 10,
         message: "名稱長度應在 2 到 10 個字之間",
         trigger: "blur"
-      }
+      },
+    ],
+    level: [
+      { required: true, message: "請選擇羽球程度", trigger: "change" }
     ]
   });
   const ruleFormRef = ref<FormInstance>();
+  const uploadImageFiles = ref<UploadFiles>([]);
 
   const handleUpdateUserInfo = async () => {
+    if (uploadImageFiles.value.length > 0) {
+      const photo = await handleUploadImages();
+      if (photo && photo.length > 0) {
+        memberInfo.value.avatar = photo as string;
+      } else {
+        return;
+      }
+    }
     const { error } = await updateUserInfo(memberInfo.value);
     if (!error.value) {
       userStore.setUserInfo(memberInfo.value);
@@ -50,10 +62,25 @@
     }
   };
 
+  const handleChange = (uploadFiles: UploadFiles) => {
+    uploadImageFiles.value = uploadFiles;
+    memberInfo.value.avatar = "";
+  };
+
+  const handleUploadImages = async () => {
+    return await uploadImages(uploadImageFiles.value, "avatar");
+  };
+
+  const hasNotPreferredLocation = computed(() => {
+    return !memberInfo.value.preferredLocation || memberInfo.value.preferredLocation.length === 0 || memberInfo.value.preferredLocation.includes("");
+  });
+
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     await formEl.validate(async (valid, _fields) => {
-      if (valid) {
+      if (hasNotPreferredLocation.value) {
+        ElMessage.error("請選擇縣市和區域");
+      } else if (valid) {
         await handleUpdateUserInfo();
       } else {
         ElMessage({
@@ -65,9 +92,9 @@
   };
 
   watch(
-    () => [twDistrict.value],
+    () => twDistrict.value,
     (newVal) => {
-      memberInfo.value.preferredLocation = [...newVal];
+      memberInfo.value.preferredLocation = [newVal];
     }
   );
 </script>
@@ -92,6 +119,11 @@
         label="頭像"
         prop="avatar"
       >
+        <ElUploadImage
+          :pictures="memberInfo.avatar ? [memberInfo.avatar] : []"
+          :limit="1"
+          @on-change="handleChange"
+        />
         <el-input v-model="memberInfo.avatar" />
       </el-form-item>
       <el-form-item

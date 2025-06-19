@@ -6,7 +6,7 @@ export interface Activity {
   date: string;
   startTime: string;
   endTime: string;
-  level: string[];
+  level: string[] | number[]
   participantCount: number;
   bookedCount: number;
   points: number;

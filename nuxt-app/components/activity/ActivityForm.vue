@@ -31,6 +31,7 @@
   const props = defineProps<ActivityForm>();
   const emits = defineEmits(["close", "reloadData"]);
   const userStore = useUserStore();
+  await userStore.fetchUserInfo();
 
   const activityEditInfo = computed(() => {
     return props.activityEditInfo;
@@ -292,7 +293,7 @@
         if (uploadImageFiles.value.length > 0) {
           const photo = await handleUploadImages();
           if (photo && photo.length > 0) {
-            activityInfo.value.pictures = photo;
+            activityInfo.value.pictures = photo as string[];
           } else {
             return;
           }
@@ -343,7 +344,10 @@
         );
       }, 100);
     } else {
-      initLocationByZip(userStore.userInfo?.preferredLocation[0] ?? "100");
+      const userPreferredLocation = userStore.userInfo?.preferredLocation[0] ? userStore.userInfo.preferredLocation[0] : "100";
+      const userLevel = userStore.userInfo?.level ? [userStore.userInfo.level] : [];
+      initLocationByZip(userPreferredLocation);
+      activityInfo.value.level = userLevel;
     }
     setTimeout(() => {
       isImporting.value = false;
@@ -407,8 +411,9 @@
       prop=""
       class="lg:col-span-6"
     >
-      <ActivityElUploadImage
+      <ElUploadImage
         :pictures="activityInfo.pictures"
+        :limit="5"
         @on-change="handleChange"
         @emit-el-upload-ref="handleElUploadRef"
       />

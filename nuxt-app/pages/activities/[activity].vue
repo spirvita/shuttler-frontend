@@ -128,7 +128,7 @@
       {
         icon: Odometer,
         label: "活動程度",
-        value: activity.value.level
+        value: activity.value.level as string[]
       },
       {
         icon: User,
