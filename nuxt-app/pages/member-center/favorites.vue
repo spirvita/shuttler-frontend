@@ -6,9 +6,11 @@
 
   const { data, refresh } = await getUserFavorites();
   const userFavorites = computed(() => data.value?.data || []);
+  const activityId = ref<string>("");
+  const removeFavoriteDiglogVisible = ref(false);
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "date", label: "活動日期", width: "100px" },
     { prop: "name", label: "活動名稱", width: "100px" },
+    { prop: "date", label: "活動日期", width: "100px" },
     { prop: "startTime", label: "時間(起)", width: "80px" },
     { prop: "endTime", label: "時間(訖)", width: "80px" },
     { prop: "venueName", label: "場館名稱", width: "150px" },
@@ -30,6 +32,7 @@
       :data="userFavorites"
       :style="{ height: '320px' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
+      show-overflow-tooltip
     >
       <el-table-column
         v-for="column in displayedColumns"
@@ -52,6 +55,7 @@
         align="center"
         header-align="center"
         label="詳情"
+        width="70"
       >
         <template #default="scope">
           <el-button
@@ -67,11 +71,15 @@
         label="取消收藏"
         align="center"
         header-align="center"
+        width="80"
       >
         <template #default="scope">
           <el-button
             class="px-3"
-            @click="removeFavorite(scope.row.activityId)"
+            @click="
+              removeFavoriteDiglogVisible = true;
+              activityId = scope.row.activityId;
+            "
           >
             <Icon name="ic:baseline-bookmark" />
           </el-button>
@@ -84,6 +92,32 @@
     >
       暫無資料
     </p>
+    <el-dialog
+      v-model="removeFavoriteDiglogVisible"
+      title="移除收藏確認"
+      width="350"
+    >
+      <p class="text-md my-3">您是否要移除收藏此活動?</p>
+      <template #footer>
+        <div class="flex">
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="() => removeFavorite(activityId)"
+          >
+            移除收藏
+          </el-button>
+          <el-button
+            type="primary"
+            class="w-full"
+            round
+            @click="removeFavoriteDiglogVisible = false"
+          >
+            取消
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style scoped></style>

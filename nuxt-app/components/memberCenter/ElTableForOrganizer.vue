@@ -1,7 +1,17 @@
 <script lang="ts" setup>
   import { mapNamesToLevels } from "@/constants/shuttlerLevels";
-  import { Edit, WarnTriangleFilled, DocumentCopy, Delete } from "@element-plus/icons-vue";
-  import { getActivityParticipants, suspendActivity, deleteDraftActivity } from "@/apis/activity";
+  import {
+    Edit,
+    WarnTriangleFilled,
+    DocumentCopy,
+    Delete,
+    TopRight
+  } from "@element-plus/icons-vue";
+  import {
+    getActivityParticipants,
+    suspendActivity,
+    deleteDraftActivity
+  } from "@/apis/activity";
   import type { ActivityDetail } from "@/types/activities";
   import type { ActivityParticipant } from "@/types/memberCenter";
   import type { TableColumn } from "@/types/elTable";
@@ -11,8 +21,8 @@
   }>();
   const emits = defineEmits(["reloadData"]);
   const displayedColumns = ref<TableColumn[]>([
+    { prop: "name", label: "活動名稱", width: "120" },
     { prop: "date", label: "日期", width: "100" },
-    { prop: "name", label: "活動名稱" },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
     { prop: "venueName", label: "場館名稱" },
@@ -21,8 +31,8 @@
   ]);
   const displayedParticipantsColumns = ref<TableColumn[]>([
     { prop: "status", label: "狀態" },
-    { prop: "name", label: "姓名", width: "150", fixed: "left" },
-    { prop: "registrationCount", label: "人數", width: "80" },
+    { prop: "name", label: "姓名", fixed: "left" },
+    { prop: "registrationCount", label: "人數" },
     { prop: "registrationDate", label: "報名時間" },
     { prop: "cancellationDate", label: "取消時間" }
   ]);
@@ -41,7 +51,7 @@
     editActivityDialogVisible.value = true;
     selectActivity.value = JSON.parse(JSON.stringify(row));
     delete selectActivity.value.activityId;
-    selectActivity.value.status = "copy"
+    selectActivity.value.status = "copy";
     selectActivity.value.level = mapNamesToLevels(selectActivity.value.level);
   };
   const handleSuspendActivityDialog = (row: unknown) => {
@@ -76,7 +86,6 @@
     reloadData();
   };
   const reloadData = () => {
-    console.log("Reloading data...");
     emits("reloadData");
   };
 </script>
@@ -97,6 +106,7 @@
         :label="column.label"
         :width="column.width"
         :min-width="column.minWidth"
+        show-overflow-tooltip
       >
         <template
           v-if="column.prop === 'level'"
@@ -107,16 +117,17 @@
       </el-table-column>
       <el-table-column
         v-if="props.data[0].status !== 'draft'"
-        fixed="right"
-        label="報名者"
+        label="報名列表"
         align="center"
         header-align="center"
+        width="100"
       >
         <template #default="scope">
           <el-button
             v-if="scope.row.bookedCount"
-            type="info"
-            class="w-full"
+            type="success"
+            rounded
+            class="w-full bg-white text-black"
             :disabled="scope.row.bookedCount === 0"
             @click="handleGetActivityParticipants(scope.row.activityId)"
           >
@@ -125,47 +136,85 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="!(props.data[0].status === 'ended')"
         fixed="right"
-        label="操作"
+        label="詳情"
         align="center"
         header-align="center"
+        width="65"
       >
         <template #default="scope">
-          <el-button-group>
-            <el-button
-              type="primary"
-              :icon="Edit"
-              @click="editActivityDialog(scope.row)"
-            />
-            <el-button
-              v-if="props.data[0].status === 'published'"
-              :icon="WarnTriangleFilled"
-              @click="handleSuspendActivityDialog(scope.row)"
-            />
-            <el-button
-              v-if="props.data[0].status === 'draft'"
-              :icon="Delete"
-              @click="handleDeleteDraftActivityDialog(scope.row)"
-            />
-          </el-button-group>
+          <el-button
+            type="info"
+            class="px-3"
+            :icon="TopRight"
+            @click="$router.push(`/activities/${scope.row.activityId}`)"
+          />
         </template>
       </el-table-column>
       <el-table-column
-        v-else-if="props.data[0].status === 'ended'"
+        v-if="props.data[0].status !== 'ended'"
         fixed="right"
-        label="複製活動"
+        label="編輯"
         align="center"
         header-align="center"
+        width="65"
       >
         <template #default="scope">
-          <el-button-group>
-            <el-button
-              type="primary"
-              :icon="DocumentCopy"
-              @click="copyActivityDialog(scope.row)"
-            />
-          </el-button-group>
+          <el-button
+            class="px-3"
+            type="primary"
+            :icon="Edit"
+            @click="editActivityDialog(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="props.data[0].status === 'published'"
+        fixed="right"
+        label="停辦"
+        align="center"
+        header-align="center"
+        width="65"
+      >
+        <template #default="scope">
+          <el-button
+            class="px-3"
+            :icon="WarnTriangleFilled"
+            @click="handleSuspendActivityDialog(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="props.data[0].status === 'draft'"
+        fixed="right"
+        label="捨棄"
+        align="center"
+        header-align="center"
+        width="65"
+      >
+        <template #default="scope">
+          <el-button
+            class="px-3"
+            :icon="Delete"
+            @click="handleDeleteDraftActivityDialog(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="props.data[0].status === 'ended'"
+        fixed="right"
+        label="複製"
+        align="center"
+        header-align="center"
+        width="65"
+      >
+        <template #default="scope">
+          <el-button
+            class="px-3"
+            type="primary"
+            :icon="DocumentCopy"
+            @click="copyActivityDialog(scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -200,39 +249,51 @@
     <el-dialog
       v-model="suspendActivityDialogVisible"
       title="停辦活動"
-      width="500"
+      width="350"
     >
-      <p class="py-3">確定要停辦此活動嗎?</p>
+      <p class="text-md py-3">確定要停辦此活動嗎?</p>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="handleSuspendActivity(selectActivity.activityId)">
+        <div class="flex">
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="handleSuspendActivity(selectActivity.activityId)"
+          >
             確定停辦
           </el-button>
           <el-button
             type="primary"
+            class="w-full"
+            round
             @click="suspendActivityDialogVisible = false"
           >
-            不停辦
+            取消
           </el-button>
         </div>
       </template>
     </el-dialog>
     <el-dialog
       v-model="deleteDraftActivityDialogVisible"
-      title="刪除活動草稿"
-      width="500"
+      title="捨棄活動草稿"
+      width="350"
     >
-      <p class="py-3">確定要刪除此活動嗎?</p>
+      <p class="text-md py-3">確定要捨棄此活動草稿嗎?</p>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="handleDeleteDraftActivity(selectActivity.activityId)">
-            確定刪除
+        <div class="flex">
+          <el-button
+            class="w-full mr-2"
+            round
+            @click="handleDeleteDraftActivity(selectActivity.activityId)"
+          >
+            確定捨棄
           </el-button>
           <el-button
             type="primary"
+            class="w-full"
+            round
             @click="deleteDraftActivityDialogVisible = false"
           >
-            不刪除
+            取消
           </el-button>
         </div>
       </template>

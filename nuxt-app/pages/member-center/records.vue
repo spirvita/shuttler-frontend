@@ -8,12 +8,12 @@
   });
   const recordType: Record<string, string> = {
     addPoint: "儲值點數",
-    applyAct: "報名活動",
+    applyAct: "報名活動(含人數修改)",
     cancelAct: "取消報名",
     suspendAct: "活動停辦"
   };
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "createTime", label: "建立時間" }
+    { prop: "createTime", label: "建立時間", width: "150" }
   ]);
 </script>
 <template>
@@ -26,17 +26,9 @@
       :default-sort="{ prop: 'date', order: 'ascending' }"
     >
       <el-table-column
-        v-for="column in displayedColumns"
-        :key="column.prop"
-        :fixed="column?.fixed ? column?.fixed : false"
-        :prop="column.prop"
-        :label="column.label"
-        :width="column.width"
-        :min-width="column.minWidth"
-      />
-      <el-table-column
         label="異動類型"
         prop="recordType"
+        width="160"
       >
         <template #default="scope">
           <span>{{ recordType[scope.row.recordType] }}</span>
@@ -62,10 +54,21 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-for="column in displayedColumns"
+        :key="column.prop"
+        :fixed="column?.fixed ? column?.fixed : false"
+        :prop="column.prop"
+        :label="column.label"
+        :width="column.width"
+        :min-width="column.minWidth"
+      />
+      <el-table-column
         label="點數來源"
+        fixed="right"
         align="center"
         header-align="center"
         prop="activity"
+        width="100"
       >
         <template #default="scope">
           <el-button
