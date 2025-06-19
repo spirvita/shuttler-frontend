@@ -145,6 +145,18 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item
+        label="常用主辦單位名稱"
+        prop="organization"
+      >
+        <el-input v-model="memberInfo.organization" />
+      </el-form-item>
+      <el-form-item
+        label="常用連絡人電話"
+        prop="organization"
+      >
+        <el-input v-model="memberInfo.phone" />
+      </el-form-item>
       <el-form-item class="flex justify-center">
         <el-button
           type="primary"

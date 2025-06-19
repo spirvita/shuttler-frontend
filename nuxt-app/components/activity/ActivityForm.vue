@@ -20,6 +20,7 @@
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
+  import { useUserStore } from "@/stores/user";
 
   interface ActivityForm {
     activityEditInfo?: ActivityDetail;
@@ -29,6 +30,7 @@
 
   const props = defineProps<ActivityForm>();
   const emits = defineEmits(["close", "reloadData"]);
+  const userStore = useUserStore();
 
   const activityEditInfo = computed(() => {
     return props.activityEditInfo;
@@ -68,9 +70,10 @@
     venueName: "",
     address: "",
     venueFacilities: [],
-    organizer: "",
-    contactName: "",
-    contactPhone: "",
+    organizer:
+      userStore.userInfo?.organization || userStore.userInfo?.name || "",
+    contactName: userStore.userInfo?.name || "",
+    contactPhone: userStore.userInfo?.phone || "",
     contactLine: "",
     status: ""
   });
