@@ -18,8 +18,11 @@
   const authStore = useAuthStore();
   const userStore = useUserStore();
   const userInfo = computed(() => userStore.userInfo);
-  const { loggedIn, clear } = useUserSession();
+  const { loggedIn, clear, fetch } = useUserSession();
   const mobileMenuDialogVisible = ref(false);
+  const defaultAvatar = ref(
+    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+  );
   const loginOrLogout = async () => {
     if (authStore.isAuthenticated) {
       authStore.clearToken();
@@ -61,6 +64,12 @@
     }
     navigateTo("/create-activity");
   };
+  onMounted(async () => {
+    await fetch();
+    if (loggedIn.value) {
+      await userStore.fetchUserInfo();
+    }
+  });
 </script>
 
 <template>
@@ -159,11 +168,10 @@
       </template>
       <template v-if="loggedIn">
         <div class="flex items-center border-b-3 border-neutral-300 py-5 px-3">
-          <img
-            v-if="userInfo?.avatar"
-            :src="userInfo.avatar"
-            alt="User Avatar"
-            class="w-15 h-15 rounded-full mr-6"
+          <el-avatar
+            :size="60"
+            :src="userInfo?.avatar || defaultAvatar"
+            class="mr-6"
           />
           <div class="text-md">
             <p class="text-neutral-400 mb-1">會員</p>
@@ -223,7 +231,7 @@
       <template #footer>
         <ElButton
           size="large"
-          class="flex items-center text-lg w-full border-0 bg-white"
+          class="flex items-center text-lg w-full border-0 bg-white mb-6"
           @click="loginOrLogout"
         >
           <el-icon class="mr-2"><SwitchButton /></el-icon>
