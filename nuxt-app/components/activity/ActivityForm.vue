@@ -343,7 +343,7 @@
         );
       }, 100);
     } else {
-      initLocationByZip("100");
+      initLocationByZip(userStore.userInfo?.preferredLocation[0] ?? "100");
     }
     setTimeout(() => {
       isImporting.value = false;
