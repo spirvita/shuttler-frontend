@@ -36,12 +36,16 @@
     ogSiteName: "羽神同行"
   });
 
+  const route = useRoute();
   const runtimeConfig = useRuntimeConfig();
   const filter = ref<ActivityFilter>({
-    date: ""
+    date: "",
+    city: (route.query.city as string) || "",
+    spotsLeft: (route.query.spotsLeft as string) || "",
+    level: (route.query.level as string) || ""
   } as ActivityFilter);
   const queryString = computed(() => {
-    const newFilter = JSON.parse(JSON.stringify(filter.value));
+    const newFilter = filter.value;
     if (filter.value?.zipCode) {
       delete newFilter.city;
     } else if (newFilter?.city) {

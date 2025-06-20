@@ -34,3 +34,10 @@ export const mapNamesToLevels = (names: string[]) => {
     return Number(level);
   });
 };
+
+export const mapLevelToLevel = (name: string) => {
+  const level = Object.keys(shuttlerLevels).find(
+    (key) => shuttlerLevels[Number(key)] === name
+  );
+  return Number(level);
+};
