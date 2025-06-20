@@ -7,6 +7,7 @@
   import { useUserStore } from "@/stores/user";
   import { updateUserInfo } from "@/apis/user";
   import { uploadImages } from "@/apis/upload";
+  import { InfoFilled } from "@element-plus/icons-vue";
 
   const userStore = useUserStore();
 
@@ -128,7 +129,7 @@
       </el-form-item>
       <el-form-item
         label="羽球程度"
-        prop=""
+        prop="level"
         required
       >
         <el-select
@@ -188,6 +189,15 @@
         prop="organization"
       >
         <el-input v-model="memberInfo.phone" />
+      </el-form-item>
+      <el-form-item
+        label=""
+        prop=""
+      >
+        <p class="flex items-center text-xs text-neutral-500">
+          <el-icon class="mr-1"><InfoFilled /></el-icon>
+          填寫完整資料可在舉辦活動時自動帶入喔!
+        </p>
       </el-form-item>
       <el-form-item class="flex justify-center">
         <el-button

@@ -344,14 +344,14 @@
         );
       }, 100);
     } else {
-      const userPreferredLocation = userStore.userInfo?.preferredLocation[0]
+      const userPreferredLocation = userStore.userInfo?.preferredLocation?.[0]
         ? userStore.userInfo.preferredLocation[0]
         : "100";
       const userLevel = userStore.userInfo?.level
         ? [userStore.userInfo.level]
         : [];
+      if (userLevel.length > 0) activityInfo.value.level = userLevel;
       initLocationByZip(userPreferredLocation);
-      activityInfo.value.level = userLevel;
     }
     setTimeout(() => {
       isImporting.value = false;

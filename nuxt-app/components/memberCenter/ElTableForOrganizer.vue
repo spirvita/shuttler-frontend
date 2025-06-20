@@ -116,7 +116,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="props.data[0].status !== 'draft'"
+        v-if="
+          props.data[0].status === 'published' ||
+          props.data[0].status === 'ended'
+        "
         label="報名列表"
         align="center"
         header-align="center"
@@ -136,6 +139,10 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="
+          props.data[0].status === 'published' ||
+          props.data[0].status === 'ended'
+        "
         fixed="right"
         label="詳情"
         align="center"
@@ -152,7 +159,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="props.data[0].status !== 'ended'"
+        v-if="
+          props.data[0].status == 'published' || props.data[0].status == 'draft'
+        "
         fixed="right"
         label="編輯"
         align="center"
@@ -201,7 +210,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="props.data[0].status === 'ended'"
+        v-if="
+          props.data[0].status === 'ended' ||
+          props.data[0].status === 'suspended'
+        "
         fixed="right"
         label="複製"
         align="center"
