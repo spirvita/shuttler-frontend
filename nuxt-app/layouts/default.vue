@@ -175,7 +175,7 @@
           />
           <div class="text-md">
             <p class="text-neutral-400 mb-1">會員</p>
-            <p>{{ userInfo?.name }}</p>
+            <p>{{ userInfo?.name || "羽神" }}</p>
           </div>
         </div>
       </template>

@@ -1,8 +1,10 @@
 <script lang="ts" setup>
   import { nuxtGoogleLogin } from "@/apis/auth";
   import { useAuthStore } from "@/stores/auth";
+  import { useUserStore } from "@/stores/user";
 
   const authStore = useAuthStore();
+  const userStore = useUserStore();
   const route = useRoute();
   const { token, name, email } = route.query;
   const { user, fetch: refreshSession } = useUserSession();
@@ -19,6 +21,7 @@
       await refreshSession();
       ElMessage.success(`歡迎 ${user.value?.name}`);
       authStore.setToken(token as string);
+      await userStore.fetchUserInfo();
     }
     navigateTo("/");
   };
