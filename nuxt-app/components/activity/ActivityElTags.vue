@@ -3,7 +3,7 @@
 
   const props = defineProps({
     level: {
-      type: Array as PropType<string[]>,
+      type: Array as PropType<string[] | number[]>,
       required: true
     }
   });
@@ -21,7 +21,7 @@
         round
         size="large"
         class="p-4 border-0 text-base"
-        :type="getElementPlusTypeByLevel(item)"
+        :type="getElementPlusTypeByLevel(item as string)"
       >
         {{ item }}
       </el-tag>

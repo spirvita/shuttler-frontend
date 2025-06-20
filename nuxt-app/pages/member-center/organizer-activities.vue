@@ -19,6 +19,7 @@
   const publishedList = getActivitiesByStatus("published");
   const endedList = getActivitiesByStatus("ended");
   const draftList = getActivitiesByStatus("draft");
+  const suspendList = getActivitiesByStatus("suspended");
   const reloadData = () => {
     refreshOrganizerActivities();
   };
@@ -42,6 +43,15 @@
       >
         <ElTableForOrganizer
           :data="endedList"
+          @reload-data="reloadData"
+        />
+      </el-tab-pane>
+      <el-tab-pane
+        :label="`已停辦 (${suspendList.length})`"
+        name="suspended"
+      >
+        <ElTableForOrganizer
+          :data="suspendList"
           @reload-data="reloadData"
         />
       </el-tab-pane>

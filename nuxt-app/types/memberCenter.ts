@@ -7,6 +7,8 @@ export interface MemberInfo {
   attendCount: number;
   totalPoint: number;
   preferredLocation: string[];
+  organization: string;
+  phone: string;
 }
 
 export interface ActivityParticipant {

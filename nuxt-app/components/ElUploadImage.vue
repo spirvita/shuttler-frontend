@@ -7,6 +7,7 @@
 
   const props = defineProps<{
     pictures: string[];
+    limit: number;
   }>();
   const emits = defineEmits(["onChange", "emitElUploadRef"]);
   const elementPlusPictureList = ref<UploadUserFile[]>([]);
@@ -25,7 +26,7 @@
   };
 
   const handleExceed = () => {
-    ElMessage.warning("最多只能上傳 5 張圖片");
+    ElMessage.warning(`最多只能上傳 ${props.limit} 張圖片`);
   };
 
   const handleChange: UploadProps["onChange"] = (_uploadFile, uploadFiles) => {
@@ -55,7 +56,7 @@
     action="#"
     multiple
     list-type="picture"
-    :limit="5"
+    :limit="limit"
     :on-exceed="handleExceed"
     :on-change="handleChange"
     :before-upload="beforeAvatarUpload"
@@ -63,15 +64,15 @@
   >
     <el-button
       type="primary"
-      :disabled="elementPlusPictureList.length === 5"
+      :disabled="elementPlusPictureList.length === limit"
       round
     >
       {{
-        elementPlusPictureList.length === 5 ? "已達圖片上限" : "選擇活動圖片"
+        elementPlusPictureList.length === limit ? "已達圖片上限" : "選擇圖片"
       }}
     </el-button>
     <template #tip>
-      <p>最多五張圖片，格式為 JPG 或 PNG</p>
+      <p>最多 {{ limit }} 張圖片，格式為 JPG 或 PNG</p>
     </template>
   </el-upload>
 </template>

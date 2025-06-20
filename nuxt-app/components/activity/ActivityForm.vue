@@ -20,6 +20,7 @@
   import { uploadImages } from "@/apis/upload";
   import { queryBallTypesSearch } from "@/constants/ballTypes";
   import { queryVenuesSearch } from "@/constants/venues";
+  import { useUserStore } from "@/stores/user";
 
   interface ActivityForm {
     activityEditInfo?: ActivityDetail;
@@ -29,6 +30,8 @@
 
   const props = defineProps<ActivityForm>();
   const emits = defineEmits(["close", "reloadData"]);
+  const userStore = useUserStore();
+  await userStore.fetchUserInfo();
 
   const activityEditInfo = computed(() => {
     return props.activityEditInfo;
@@ -68,9 +71,10 @@
     venueName: "",
     address: "",
     venueFacilities: [],
-    organizer: "",
-    contactName: "",
-    contactPhone: "",
+    organizer:
+      userStore.userInfo?.organization || userStore.userInfo?.name || "",
+    contactName: userStore.userInfo?.name || "",
+    contactPhone: userStore.userInfo?.phone || "",
     contactLine: "",
     status: ""
   });
@@ -289,7 +293,7 @@
         if (uploadImageFiles.value.length > 0) {
           const photo = await handleUploadImages();
           if (photo && photo.length > 0) {
-            activityInfo.value.pictures = photo;
+            activityInfo.value.pictures = photo as string[];
           } else {
             return;
           }
@@ -340,7 +344,14 @@
         );
       }, 100);
     } else {
-      initLocationByZip("100");
+      const userPreferredLocation = userStore.userInfo?.preferredLocation?.[0]
+        ? userStore.userInfo.preferredLocation[0]
+        : "100";
+      const userLevel = userStore.userInfo?.level
+        ? [userStore.userInfo.level]
+        : [];
+      if (userLevel.length > 0) activityInfo.value.level = userLevel;
+      initLocationByZip(userPreferredLocation);
     }
     setTimeout(() => {
       isImporting.value = false;
@@ -404,8 +415,9 @@
       prop=""
       class="lg:col-span-6"
     >
-      <ActivityElUploadImage
+      <ElUploadImage
         :pictures="activityInfo.pictures"
+        :limit="5"
         @on-change="handleChange"
         @emit-el-upload-ref="handleElUploadRef"
       />

@@ -17,7 +17,7 @@ export const uploadImages = async (
   });
   const { data, error } = await useFetch<{
     message: string;
-    data: { photo: string[] };
+    data: { photo: string[] | string };
   }>(`${runtimeConfig.public.API_BASE_URL}/upload-image`, {
     method: "POST",
     body: formData,
@@ -29,6 +29,7 @@ export const uploadImages = async (
     ElMessage.error("圖片上傳失敗，請稍後再試");
     return;
   }
+  if (uploadType === "avatar") return data.value?.data.photo as string;
   const uploadedUrls = data.value?.data.photo || [];
   return [...existingUrls, ...uploadedUrls];
 };
