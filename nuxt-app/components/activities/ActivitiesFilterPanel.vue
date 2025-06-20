@@ -13,6 +13,7 @@
   import { useTwLocationState } from "@/composables/useTwLocationState";
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import type { ActivityFilter } from "@/types/activities";
+  import { mapLevelToLevel } from "@/constants/shuttlerLevels";
 
   const route = useRoute();
   const city = (route.query.city as string) || "";
@@ -76,9 +77,12 @@
     () => activitiesFilter.value,
     (newFilter) => {
       if (newFilter.date === null) activitiesFilter.value.timeSlot = "";
-      emits("updateFilter", newFilter);
+      const filter = JSON.parse(JSON.stringify(activitiesFilter.value));
+      if (filter.level !== "")
+        filter.level = mapLevelToLevel(filter.level).toString();
+      emits("updateFilter", filter);
     },
-    { deep: true }
+    { deep: true, immediate: true }
   );
 
   watch([twCity, twDistrict], (newValue) => {
@@ -162,9 +166,9 @@
       >
         <el-option
           v-for="item in shuttlerLevelOptions"
-          :key="item.value"
+          :key="item.label"
           :label="item.label"
-          :value="item.value"
+          :value="item.label"
         />
       </el-select>
     </div>
