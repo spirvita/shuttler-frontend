@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { emailSignUp, nuxtEmailLogin } from "@/apis/auth";
-  import { ElMessage } from "element-plus";
+  import { emailSignUp, nuxtEmailLogin, forgotPassword } from "@/apis/auth";
+  import { ElMessage, ElLoading } from "element-plus";
   import { useAuthStore } from "@/stores/auth";
   import { Message, Lock, User } from "@element-plus/icons-vue";
   import GoogleSVG from "@/assets/images/google.svg";
@@ -13,7 +13,7 @@
   });
 
   const isSignUp = ref(false);
-
+  const forgotPasswordDialogVisible = ref(false);
   const form = ref({
     email: "",
     password: "",
@@ -93,12 +93,44 @@
       emit("update:visible", false);
     }
   };
+
+  const handleForgotPassword = async () => {
+    if (!form.value.email) {
+      ElMessage({
+        message: "請填寫電子郵件",
+        type: "error"
+      });
+      return;
+    }
+    const loading = ElLoading.service({
+      lock: true,
+      text: "正在發送重設密碼郵件...",
+      background: "rgba(0, 0, 0, 0.7)"
+    });
+    const { error } = await forgotPassword(form.value.email);
+    if (!error.value) {
+      loading.close();
+      ElMessage({
+        message: "重設密碼郵件已發送，請檢查您的電子郵件",
+        type: "success"
+      });
+      forgotPasswordDialogVisible.value = false;
+      emit("update:visible", false);
+      isSignUp.value = false;
+      form.value.email = "";
+      form.value.password = "";
+      form.value.name = "";
+    }
+  };
+  const handleForgotPwDialog = () => {
+    forgotPasswordDialogVisible.value = true;
+  };
 </script>
 
 <template>
   <el-dialog
     :model-value="visible"
-    width="400"
+    width="375"
     center
     :show-close="false"
     class="py-5 lg:py-8 border-t-10 border-primary-accent-500"
@@ -114,7 +146,7 @@
       尋找你心目中的羽球活動
     </div>
     <div
-      v-if="!isSignUp"
+      v-if="!isSignUp && !forgotPasswordDialogVisible"
       class="flex flex-col items-center"
     >
       <el-form
@@ -145,11 +177,19 @@
             :prefix-icon="Lock"
             placeholder="請輸入密碼"
           />
+          <div class="flex justify-end w-full">
+            <span
+              class="cursor-pointer underline text-neutral-500"
+              @click="handleForgotPwDialog"
+            >
+              忘記密碼?
+            </span>
+          </div>
         </el-form-item>
       </el-form>
     </div>
     <div
-      v-else
+      v-else-if="isSignUp && !forgotPasswordDialogVisible"
       class="flex flex-col items-center"
     >
       <el-form
@@ -194,8 +234,34 @@
         </el-form-item>
       </el-form>
     </div>
+    <div
+      v-if="forgotPasswordDialogVisible"
+      class="flex flex-col items-center"
+    >
+      <el-form
+        label-position="top"
+        label-width="auto"
+        style="width: 70%"
+      >
+        <el-form-item
+          label="帳號"
+          required
+        >
+          <el-input
+            v-model="form.email"
+            type="email"
+            size="large"
+            :prefix-icon="Message"
+            placeholder="請輸入電子郵件"
+          />
+        </el-form-item>
+      </el-form>
+    </div>
     <template #footer>
-      <div class="flex flex-col items-center w-[70%] gap-5 mx-auto">
+      <div
+        v-if="!forgotPasswordDialogVisible"
+        class="flex flex-col items-center w-[70%] gap-5 mx-auto"
+      >
         <el-button
           type="primary"
           size="large"
@@ -227,6 +293,30 @@
           立即{{ isSignUp ? "登入" : "註冊" }}
         </p>
       </div>
+      <div
+        v-else
+        class="flex flex-col items-center w-[70%] gap-5 mx-auto"
+      >
+        <el-button
+          type="primary"
+          size="large"
+          class="w-full text-md"
+          @click="handleForgotPassword"
+        >
+          重設密碼
+        </el-button>
+        <p
+          class="text-sm cursor-pointer underline"
+          @click="forgotPasswordDialogVisible = false"
+        >
+          返回登入
+        </p>
+      </div>
     </template>
   </el-dialog>
 </template>
+<style scoped>
+  .el-form-item {
+    margin-bottom: 0.75rem;
+  }
+</style>
