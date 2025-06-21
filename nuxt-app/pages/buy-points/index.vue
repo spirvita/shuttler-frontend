@@ -8,6 +8,7 @@
   const selectedPoints = ref<number>(0);
   const buyPoints = (points: number) => {
     selectedPoints.value = points;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const { data } = await getPointsPlan();
   const pointsCardList = computed(() => {
@@ -22,10 +23,11 @@
 
   const resetPoints = () => {
     selectedPoints.value = 0;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 </script>
 <template>
-  <div class="py-20">
+  <div class="py-10 lg:py-20">
     <div class="flex flex-col items-center mb-10">
       <h2 class="mb-6">
         <span class="text-5xl">羽神買點數</span>
@@ -40,16 +42,16 @@
     </div>
     <div
       v-if="selectedPoints > 0"
-      class="container"
+      class="flex flex-col items-center"
     >
+      <Payment :points="selectedPoints" class="mb-10" />
       <el-button
-        type="info"
+        :text="true"
         class="mb-6"
         @click="resetPoints"
       >
         返回點數購買
       </el-button>
-      <Payment :points="selectedPoints" />
     </div>
     <ul
       v-else

@@ -29,6 +29,7 @@
     InfoFilled
   } from "@element-plus/icons-vue";
   import { activityStatus } from "@/constants/activityStatus";
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
 
   useHead({
     title: "活動詳情 - 羽神同行",
@@ -62,6 +63,8 @@
   });
 
   const { loggedIn } = useUserSession();
+  const loginDialogStore = useLoginDialogStore();
+
   const router = useRoute();
   const activityId = router.params.activity as string;
   const { data, refresh: refreshActivity } = await getActivity(activityId);
@@ -427,7 +430,7 @@
                   <MapLocation />
                 </el-icon>
                 <el-icon
-                  v-else-if="activityInfo.label === '活動日期'"
+                  v-else-if="activityInfo.label === '活動日期' && activity.status !== 'ended'"
                   class="cursor-pointer ml-1 pb-1"
                   @click="openGoogleCalendar"
                 >
@@ -480,15 +483,11 @@
             <el-button
               v-if="!loggedIn"
               type="primary"
-              :disabled="!loggedIn"
               class="w-full py-5 text-md border-0"
               round
+              @click="loginDialogStore.open()"
             >
-              {{
-                activity.status === "published"
-                  ? "報名請先登入"
-                  : activityStatus[activity.status]
-              }}
+              報名活動
             </el-button>
             <el-button
               v-else
@@ -624,7 +623,7 @@
         >
           報名人數 :
         </label>
-        <span clas="block text-nowrap">修改為</span>
+        <span class="block text-nowrap">修改為</span>
         <el-select
           id="participantCount"
           v-model="participantCount"

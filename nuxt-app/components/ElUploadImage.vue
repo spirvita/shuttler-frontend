@@ -64,14 +64,14 @@
   >
     <el-button
       type="primary"
+      class="border-0"
+      :class="elementPlusPictureList.length === limit ? 'bg-neutral-200' : ''"
       :disabled="elementPlusPictureList.length === limit"
       round
     >
-      {{
-        elementPlusPictureList.length === limit ? "已達圖片上限" : "選擇圖片"
-      }}
+      選擇圖片
     </el-button>
-    <template #tip>
+    <template #tip v-if="elementPlusPictureList.length !== limit">
       <p>最多 {{ limit }} 張圖片，格式為 JPG 或 PNG</p>
     </template>
   </el-upload>

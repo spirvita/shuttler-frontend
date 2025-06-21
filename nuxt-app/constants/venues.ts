@@ -1,3 +1,5 @@
+import badmintonPlaces from "@/static/badminton_places.json";
+
 const venues = [
   {
     zipCode: "338",
@@ -88,11 +90,11 @@ const venues = [
 
 export const queryVenuesSearch = (
   queryVenueName: string,
-  cb: (result: typeof venues) => void,
+  cb: (result: typeof badmintonPlaces) => void,
   zipCode: string
 ) => {
   const regex = queryVenueName ? new RegExp(queryVenueName, "i") : null;
-  const filteredVenues = venues.filter((item) => {
+  const filteredVenues = badmintonPlaces.filter((item) => {
     const matchesZipCode = zipCode ? item.zipCode === zipCode : true;
     const matchesQuery = regex
       ? regex.test(item.value) || regex.test(item.address)

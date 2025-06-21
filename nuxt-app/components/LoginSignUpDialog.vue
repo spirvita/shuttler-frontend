@@ -12,6 +12,18 @@
     }
   });
 
+  watch(() => visible, (newValue) => {
+    if (!newValue) {
+      isSignUp.value = false;
+      forgotPasswordDialogVisible.value = false;
+      form.value = {
+        email: "",
+        password: "",
+        name: ""
+      };
+    }
+  });
+
   const isSignUp = ref(false);
   const forgotPasswordDialogVisible = ref(false);
   const form = ref({

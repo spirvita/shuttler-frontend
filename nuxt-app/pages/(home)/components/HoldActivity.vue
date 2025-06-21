@@ -2,7 +2,10 @@
   import HoldActivity1 from "@/assets/images/hold-activity-1.png";
   import HoldActivity2 from "@/assets/images/hold-activity-2.png";
   import HoldActivity3 from "@/assets/images/hold-activity-3.png";
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
 
+  const { loggedIn } = useUserSession();
+  const loginDialogStore = useLoginDialogStore();
   const holdActivities = [
     {
       image: HoldActivity1,
@@ -20,6 +23,13 @@
       description: "讓您輕鬆掌握活動狀態"
     }
   ];
+  const pushToCreateActivity = () => {
+    if (!loggedIn.value) {
+      loginDialogStore.open();
+      return;
+    }
+    navigateTo("/create-activity");
+  }
 </script>
 
 <template>
@@ -67,7 +77,7 @@
             type="primary"
             size="large"
             round
-            @click="$router.push('/create-activity')"
+            @click="pushToCreateActivity"
           >
             立刻體驗
           </ElButton>

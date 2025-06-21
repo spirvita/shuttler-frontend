@@ -6,7 +6,7 @@
   const { data } = await getPopularActivities();
   const defaultPopularActivities = ref([
     {
-      activityId: 1,
+      activityId: "template-1",
       name: "週末羽球友誼賽",
       picture:
         "https://images.unsplash.com/photo-1729166241032-5b339506a0d7?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -20,7 +20,7 @@
       points: 100
     },
     {
-      activityId: 2,
+      activityId: "template-2",
       name: "羽球技術提升工作坊",
       picture:
         "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=2883&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -34,7 +34,7 @@
       points: 250
     },
     {
-      activityId: 3,
+      activityId: "template-3",
       name: "羽球雙打戰術講座",
       picture:
         "https://images.unsplash.com/photo-1564769353575-73f33a36d84f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -48,7 +48,7 @@
       points: 250
     },
     {
-      activityId: 4,
+      activityId: "template-4",
       name: "社區羽球交流賽",
       picture:
         "https://images.unsplash.com/photo-1659081463572-4c5903a309e6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -62,7 +62,7 @@
       points: 150
     },
     {
-      activityId: 5,
+      activityId: "template-5",
       name: "初學者羽球教學課程",
       picture:
         "https://images.unsplash.com/photo-1733141731755-272381a17c59?q=80&w=2910&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -76,7 +76,7 @@
       points: 300
     },
     {
-      activityId: 6,
+      activityId: "template-6",
       name: "羽球體能訓練營",
       picture:
         "https://cdn.pixabay.com/photo/2019/04/19/10/13/badminton-4139024_1280.jpg",
@@ -104,6 +104,13 @@
     }
     return defaultPopularActivities.value;
   });
+  const handlePushToActivity = (activityId: string) => {
+    if (!activityId.startsWith("template")) {
+      navigateTo(`/activities/${activityId}`);
+    } else {
+      ElMessage.warning("範例活動");
+    }
+  };
 </script>
 
 <template>
@@ -117,7 +124,8 @@
         <li
           v-for="activity in popularActivities"
           :key="activity.activityId"
-          class="bg-white rounded-3xl shadow-md overflow-hidden"
+          class="cursor-pointer bg-white rounded-3xl hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+          @click="handlePushToActivity(activity.activityId)"
         >
           <div class="flex">
             <img

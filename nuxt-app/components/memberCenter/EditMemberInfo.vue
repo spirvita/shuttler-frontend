@@ -48,6 +48,8 @@
       } else {
         return;
       }
+    } else {
+      memberInfo.value.avatar = "";
     }
     const { error } = await updateUserInfo(memberInfo.value);
     if (!error.value) {
@@ -125,7 +127,7 @@
           :limit="1"
           @on-change="handleChange"
         />
-        <el-input v-model="memberInfo.avatar" />
+        <el-input hidden v-model="memberInfo.avatar" />
       </el-form-item>
       <el-form-item
         label="羽球程度"

@@ -104,11 +104,14 @@
         :suffix-icon="Search"
       />
       <el-button
-        class="border-0 text-neutral-300 hover:bg-neutral-100 hover:text-neutral-500 active:bg-neutral-200 p-3"
+        class="p-3"
         size="large"
+        :text="true"
         :icon="CloseBold"
         @click="resetActivitiesFilter"
-      />
+      >
+        清除篩選
+      </el-button>
     </div>
     <div class="flex items-center pb-4 border-b border-neutral-300">
       <el-icon class="mr-1.5"><Location /></el-icon>
@@ -163,6 +166,7 @@
       <el-select
         v-model="activitiesFilter.level"
         placeholder="請選擇程度"
+        clearable
       >
         <el-option
           v-for="item in shuttlerLevelOptions"
@@ -179,6 +183,7 @@
         type="date"
         class="w-full"
         placeholder="請選擇日期"
+        clearable
         value-format="YYYY-MM-DD"
         :disabled-date="(date: string) => isOutsideTwoWeeksOrPastDate(date)"
         :prefix-icon="customDatePrefix"
@@ -194,17 +199,23 @@
         :disabled="!activitiesFilter.date"
         placeholder="請先選擇時段(需有日期)"
         prefix-icon=""
+        clearable
       />
     </div>
-    <div class="flex items-center">
-      <el-icon class="mr-5"><Money /></el-icon>
-      <el-slider
-        v-model="activitiesFilter.points"
-        class="pr-5"
-        :step="100"
-        show-stops
-        :max="1000"
-      />
+    <div>
+      <div class="flex items-center">
+        <el-icon class="mr-5"><Money /></el-icon>
+        <el-slider
+          v-model="activitiesFilter.points"
+          class="pr-5"
+          :step="100"
+          show-stops
+          :max="1000"
+        />
+      </div>
+      <span class="text-neutral-500 text-sm">
+        最低篩選 {{ activitiesFilter.points }} 點以上
+      </span>
     </div>
   </div>
 </template>
