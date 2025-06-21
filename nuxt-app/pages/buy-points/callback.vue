@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-  import { Check, Close, Money } from "@element-plus/icons-vue";
+  import { Check, Close } from "@element-plus/icons-vue";
+  import bgImage from "@/assets/images/current-activities-bg.png";
 
   const router = useRouter();
   const query = useRoute().query;
@@ -16,30 +17,40 @@
     <h2 class="mb-10">
       <span class="text-5xl">羽神交易結果</span>
     </h2>
-    <div class="flex flex-col items-center">
-      <el-icon
-        size="60"
-        class="mb-10"
-        :class="
-          queryInfo.status === 'success'
-            ? 'text-success-500'
-            : 'text-danger-500'
-        "
-      >
-        <Check v-if="queryInfo.status === 'success'" />
-        <Close v-else />
-      </el-icon>
+    <el-icon
+      size="60"
+      class="mb-10"
+      :class="
+        queryInfo.status === 'success'
+          ? 'text-success-500'
+          : 'text-danger-500'
+      "
+    >
+      <Check v-if="queryInfo.status === 'success'" />
+      <Close v-else />
+    </el-icon>
+    <div
+      class="flex flex-col justify-between items-center border border-neutral-300 rounded-lg shadow-md py-6 px-10 max-w-[300px] mx-auto"
+      :style="{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'bottom'
+      }"
+    >
+      <img
+        src="@/assets/images/logo.png"
+        alt="logo"
+        class="w-[150px] h-[56px]"
+      />
+      <p class="text-2xl my-6">交易明細</p>
       <template v-if="queryInfo.status === 'success'">
-        <p class="mb-5">訂單編號：{{ queryInfo.merchantOrderNo }}</p>
-        <p class="mb-5">您已成功購買 {{ queryInfo.pointsValue }} 點數</p>
-        <p class="mb-10 flex items-center justify-center">
-          <el-icon
-            size="24"
-            class="mr-1"
-          >
-            <Money />
-          </el-icon>
-          {{ queryInfo.userPoints }} 可用
+        <div class="mb-6 w-full text-left">
+          <p class="mb-6">訂單編號：{{ queryInfo.merchantOrderNo }}</p>
+          <p>成功購買：{{ queryInfo.pointsValue }} 點數</p>
+        </div>
+        <p class="flex items-center mb-10 w-full text-left">
+          可用點數：{{ queryInfo.userPoints }} 點數
         </p>
       </template>
       <template v-else>
@@ -47,7 +58,9 @@
       </template>
       <el-button
         type="primary"
-        class="mb-5"
+        size="large"
+        class="w-full"
+        round
         @click="
           router.push(
             `${queryInfo.status === 'success' ? '/activities' : '/buy-points'}`

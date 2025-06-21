@@ -38,35 +38,33 @@
   };
 </script>
 <template>
-  <div class="flex">
-    <div
-      class="flex flex-col justify-between items-center border border-neutral-300 rounded-lg shadow-md py-6 px-16 max-w-[300px] h-[350px] mx-auto"
-      :style="{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'bottom'
-      }"
-    >
-      <img
-        src="@/assets/images/logo.png"
-        alt="logo"
-        class="w-[150px] h-[56px]"
-      />
-      <div class="text-center">
-        <p class="text-2xl mb-6">結帳明細</p>
-        <p class="mb-6">您此次購買共 {{ props.points }} 點</p>
-        <p>{{ props.points }} NTD</p>
-      </div>
-      <el-button
-        type="primary"
-        size="large"
-        class="w-full"
-        round
-        @click="pointsPurchaseByNewebpay"
-      >
-        確認購買
-      </el-button>
+  <div
+    class="flex flex-col justify-between items-center border border-neutral-300 rounded-lg shadow-md py-6 px-16 max-w-[300px] mx-auto"
+    :style="{
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'bottom'
+    }"
+  >
+    <img
+      src="@/assets/images/logo.png"
+      alt="logo"
+      class="w-[150px] h-[56px]"
+    />
+    <p class="text-2xl my-6">結帳明細</p>
+    <div class="text-center mb-6">
+      <p class="mb-6">您此次購買共 {{ props.points }} 點</p>
+      <p>{{ props.points }} NTD</p>
     </div>
+    <el-button
+      type="primary"
+      size="large"
+      class="w-full"
+      round
+      @click="pointsPurchaseByNewebpay"
+    >
+      確認購買
+    </el-button>
   </div>
 </template>
