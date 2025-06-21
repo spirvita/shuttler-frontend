@@ -1,9 +1,5 @@
 <script setup lang="ts">
   import ActivityForm from "~/components/activity/ActivityForm.vue";
-
-  definePageMeta({
-    middleware: ["auth"]
-  });
 </script>
 <template>
   <div class="py-20">

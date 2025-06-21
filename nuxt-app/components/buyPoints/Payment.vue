@@ -2,16 +2,18 @@
   import bgImage from "@/assets/images/current-activities-bg.png";
   import { getPointsPurchaseInfo } from "@/apis/buyPoints";
   import type { PointsPurchaseInfo } from "@/types/points";
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
 
   const props = defineProps<{
     points: number;
   }>();
 
   const { loggedIn } = useUserSession();
+  const loginDialogStore = useLoginDialogStore();
 
   const pointsPurchaseByNewebpay = async () => {
     if (!loggedIn.value) {
-      ElMessage.error("請先登入");
+      loginDialogStore.open();
       return;
     }
     const { data, error: purchaseInfoError } = await getPointsPurchaseInfo(

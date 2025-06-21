@@ -21,9 +21,13 @@
       await refreshSession();
       ElMessage.success(`歡迎 ${user.value?.name}`);
       authStore.setToken(token as string);
-      await userStore.fetchUserInfo();
+      setTimeout(async () => {
+        await userStore.fetchUserInfo();
+      }, 300);
     }
-    navigateTo("/");
+    const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+    localStorage.removeItem("redirectAfterLogin");
+    navigateTo(redirectPath);
   };
   onMounted(() => {
     setTimeout(() => {

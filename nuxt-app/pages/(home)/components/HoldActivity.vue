@@ -2,8 +2,10 @@
   import HoldActivity1 from "@/assets/images/hold-activity-1.png";
   import HoldActivity2 from "@/assets/images/hold-activity-2.png";
   import HoldActivity3 from "@/assets/images/hold-activity-3.png";
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
 
   const { loggedIn } = useUserSession();
+  const loginDialogStore = useLoginDialogStore();
   const holdActivities = [
     {
       image: HoldActivity1,
@@ -23,7 +25,7 @@
   ];
   const pushToCreateActivity = () => {
     if (!loggedIn.value) {
-      ElMessage.error("請先登入");
+      loginDialogStore.open();
       return;
     }
     navigateTo("/create-activity");

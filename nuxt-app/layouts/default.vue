@@ -13,8 +13,10 @@
   } from "@element-plus/icons-vue";
   import { useUserStore } from "@/stores/user";
   import { logout } from "@/apis/auth";
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
 
   const loginDialogVisible = ref(false);
+  const loginDialogStore = useLoginDialogStore();
   const authStore = useAuthStore();
   const userStore = useUserStore();
   const userInfo = computed(() => userStore.userInfo);
@@ -58,11 +60,13 @@
     }
   ];
   const handlePushCreateActivity = () => {
+    mobileMenuDialogVisible.value = false;
     if (!loggedIn.value) {
-      ElMessage.error("請先登入");
+      loginDialogVisible.value = true;
       return;
+    } else {
+      navigateTo("/create-activity");
     }
-    navigateTo("/create-activity");
   };
   onMounted(async () => {
     await fetch();
@@ -70,6 +74,17 @@
       await userStore.fetchUserInfo();
     }
   });
+
+  watch(() => loginDialogStore.isOpen, (newVal) => {
+    loginDialogVisible.value = newVal;
+  });
+  watch(() => loginDialogVisible.value, (newValue) => {
+    if (newValue) {
+      const currentRoute = useRoute();
+      localStorage.setItem('redirectAfterLogin', currentRoute.fullPath);
+    }
+    if (!newValue) loginDialogStore.close();
+  })
 </script>
 
 <template>
@@ -92,13 +107,11 @@
           >
             活動列表
           </NuxtLink>
-          <NuxtLink
-            to="/create-activity"
-            class="link-hover"
-            @click.prevent="handlePushCreateActivity"
+          <div
+            class="link-hover cursor-pointer" @click="handlePushCreateActivity"
           >
             舉辦活動
-          </NuxtLink>
+          </div>
           <NuxtLink
             to="/buy-points"
             class="link-hover"
@@ -144,7 +157,7 @@
     <el-dialog
       v-model="mobileMenuDialogVisible"
       class="p-0"
-      :fullscreen="true"
+      fullscreen
       :z-index="1000"
       :show-close="false"
     >
@@ -205,13 +218,11 @@
         >
           <span class="pb-2 border-b border-neutral-300">活動列表</span>
         </NuxtLink>
-        <NuxtLink
-          to="/create-activity"
-          class="text-lg text-center link-hover w-full"
-          @click="mobileMenuDialogVisible = false"
+        <div
+          class="text-lg text-center link-hover w-full cursor-pointer" @click="handlePushCreateActivity"
         >
           <span class="pb-2 border-b border-neutral-300">舉辦活動</span>
-        </NuxtLink>
+        </div>
         <NuxtLink
           to="/buy-points"
           class="text-lg text-center link-hover w-full"
