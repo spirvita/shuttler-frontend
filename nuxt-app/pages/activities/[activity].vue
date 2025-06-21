@@ -427,7 +427,7 @@
                   <MapLocation />
                 </el-icon>
                 <el-icon
-                  v-else-if="activityInfo.label === '活動日期'"
+                  v-else-if="activityInfo.label === '活動日期' && activity.status !== 'ended'"
                   class="cursor-pointer ml-1 pb-1"
                   @click="openGoogleCalendar"
                 >
