@@ -72,16 +72,14 @@
       </ul>
 
       <div class="flex justify-center">
-        <NuxtLink to="/create-activity">
-          <ElButton
-            type="primary"
-            size="large"
-            round
-            @click="pushToCreateActivity"
-          >
-            立刻體驗
-          </ElButton>
-        </NuxtLink>
+        <ElButton
+          type="primary"
+          size="large"
+          round
+          @click="pushToCreateActivity"
+        >
+          立刻體驗
+        </ElButton>
       </div>
     </div>
   </section>
