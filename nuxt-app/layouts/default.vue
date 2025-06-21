@@ -135,10 +135,9 @@
         </ElButton>
       </div>
     </header>
-    <div class="pt-[72px]">
+    <div class="pt-18 min-h-[calc(100vh)-661px] sm:min-h-[calc(100vh-274px)]">
       <slot />
     </div>
-
     <Footer />
 
     <LoginSignUpDialog v-model:visible="loginDialogVisible" />
