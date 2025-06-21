@@ -1,5 +1,16 @@
 <script setup lang="ts">
-  // 如果有需要可以加 props 或 emit，這裡先不寫
+  import { useLoginDialogStore } from "@/stores/loginDialogStore";
+
+  const loginDialogStore = useLoginDialogStore();
+  const { loggedIn } = useUserSession();
+  const handlePushCreateActivity = () => {
+    if (!loggedIn.value) {
+      loginDialogStore.open();
+      return;
+    } else {
+      navigateTo("/create-activity");
+    }
+  };
 </script>
 
 <template>
@@ -12,15 +23,13 @@
         class="w-full sm:w-auto flex justify-center sm:justify-start mb-4 sm:mb-0"
       >
         <div class="flex items-center space-x-2">
-          <!-- 圖片 -->
-          <img
-            src="./images/logo.png"
-            alt="Shuttler Logo"
-            class="w-10 h-auto"
-          />
-
-          <!-- 文字 -->
-          <span class="text-primary-400 text-2xl font-bold">羽神同行</span>
+          <NuxtLink to="/">
+            <img
+              src="@/assets/images/logo.png"
+              alt="logo"
+              class="w-[150px] h-[56px]"
+            />
+          </NuxtLink>
         </div>
       </div>
 
@@ -28,7 +37,7 @@
       <div
         class="flex flex-col w-full sm:w-auto items-center text-center sm:items-start sm:text-left"
       >
-        <h4 class="mb-4">
+        <h4 class="mb-4 cursor-pointer" @click="handlePushCreateActivity">
           <span class="text-primary-300 text-md font-medium">舉辦活動</span>
         </h4>
         <ul class="flex flex-col space-y-4">
@@ -63,7 +72,7 @@
       <div
         class="flex flex-col w-full sm:w-auto items-center text-center sm:items-start sm:text-left"
       >
-        <h4 class="mb-4">
+        <h4 class="mb-4 cursor-pointer" @click="$router.push('/about')">
           <span class="text-primary-300 text-md font-medium">關於我們</span>
         </h4>
         <ul class="flex flex-col space-y-4">
@@ -90,7 +99,7 @@
       <div
         class="flex flex-col w-full sm:w-auto items-center text-center sm:items-start sm:text-left"
       >
-        <h4 class="mb-4">
+        <h4 class="mb-4 cursor-pointer">
           <span class="text-primary-300 text-md font-medium">聯絡我們</span>
         </h4>
         <ul class="flex flex-col space-y-4">
@@ -99,7 +108,7 @@
               href="#"
               class="text-secondary-300 text-base"
             >
-              service@shuttler.tw
+              service@spirvita.tw
             </a>
           </li>
         </ul>
@@ -142,7 +151,7 @@
     </div>
 
     <!-- 分隔線 -->
-    <div class="w-full h-[1px] bg-[#D9D9D9] mx-auto" />
+    <div class="w-full h-[1px] bg-[#D9D9D9]" />
 
     <!-- 版權聲明 -->
     <div class="w-full text-center text-secondary-300 text-sm mt-6">
