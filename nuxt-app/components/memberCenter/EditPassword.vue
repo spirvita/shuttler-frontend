@@ -3,7 +3,6 @@
   import { resetPassword } from "@/apis/auth";
 
   const memberPw = ref({
-    oldPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
@@ -38,7 +37,6 @@
     await formEl.validate(async (valid, _fields) => {
       if (valid) {
         const { error } = await resetPassword({
-          password: memberPw.value.oldPassword,
           newPassword: memberPw.value.newPassword,
           checkNewPassword: memberPw.value.confirmPassword
         });
@@ -63,16 +61,6 @@
       :model="memberPw"
       :rules="memberPwFormRules"
     >
-      <el-form-item
-        label="原密碼"
-        prop="oldPassword"
-        required
-      >
-        <el-input
-          v-model="memberPw.oldPassword"
-          type="password"
-        />
-      </el-form-item>
       <el-form-item
         label="新密碼"
         prop="newPassword"

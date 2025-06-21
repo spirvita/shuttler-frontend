@@ -53,7 +53,6 @@ export const emailSignUp = (signUpData: {
 };
 
 export const resetPassword = (resetPwPayload: {
-  password: string;
   newPassword: string;
   checkNewPassword: string;
 }) => {
