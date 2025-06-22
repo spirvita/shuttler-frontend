@@ -37,7 +37,10 @@
       <div
         class="flex flex-col w-full sm:w-auto items-center text-center sm:items-start sm:text-left"
       >
-        <h4 class="mb-4 cursor-pointer" @click="handlePushCreateActivity">
+        <h4
+          class="mb-4 cursor-pointer"
+          @click="handlePushCreateActivity"
+        >
           <span class="text-primary-300 text-md font-medium">舉辦活動</span>
         </h4>
         <ul class="flex flex-col space-y-4">
@@ -72,7 +75,10 @@
       <div
         class="flex flex-col w-full sm:w-auto items-center text-center sm:items-start sm:text-left"
       >
-        <h4 class="mb-4 cursor-pointer" @click="$router.push('/about')">
+        <h4
+          class="mb-4 cursor-pointer"
+          @click="$router.push('/about')"
+        >
           <span class="text-primary-300 text-md font-medium">關於我們</span>
         </h4>
         <ul class="flex flex-col space-y-4">

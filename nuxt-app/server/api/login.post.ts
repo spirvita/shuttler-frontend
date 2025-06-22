@@ -4,11 +4,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     await setUserSession(event, {
-      user:
-        {
-          name,
-          email
-        }
+      user: {
+        name,
+        email
+      }
     });
   } catch {
     throw createError({
