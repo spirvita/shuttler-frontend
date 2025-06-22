@@ -10,7 +10,8 @@
     addPoint: "儲值點數",
     applyAct: "報名活動(含人數修改)",
     cancelAct: "取消報名",
-    suspendAct: "活動停辦"
+    suspendAct: "活動停辦",
+    receiveAct: "收取報名費"
   };
   const displayedColumns = ref<TableColumn[]>([
     { prop: "createTime", label: "建立時間", width: "150" }
