@@ -1,5 +1,10 @@
 <script setup lang="ts">
-  import { emailLogin, emailSignUp, nuxtEmailLogin, forgotPassword } from "@/apis/auth";
+  import {
+    emailLogin,
+    emailSignUp,
+    nuxtEmailLogin,
+    forgotPassword
+  } from "@/apis/auth";
   import { ElMessage, ElLoading } from "element-plus";
   import { useAuthStore } from "@/stores/auth";
   import { Message, Lock, User } from "@element-plus/icons-vue";
@@ -14,17 +19,20 @@
     }
   });
 
-  watch(() => visible, (newValue) => {
-    if (!newValue) {
-      isSignUp.value = false;
-      forgotPasswordDialogVisible.value = false;
-      form.value = {
-        email: "",
-        password: "",
-        name: ""
-      };
+  watch(
+    () => visible,
+    (newValue) => {
+      if (!newValue) {
+        isSignUp.value = false;
+        forgotPasswordDialogVisible.value = false;
+        form.value = {
+          email: "",
+          password: "",
+          name: ""
+        };
+      }
     }
-  });
+  );
 
   const isSignUp = ref(false);
   const forgotPasswordDialogVisible = ref(false);
@@ -94,7 +102,7 @@
     if (!error.value) {
       await nuxtEmailLogin({
         name: data.value?.data.user.name as string,
-        email: data.value?.data.user.email as string,
+        email: data.value?.data.user.email as string
       });
       await refreshSession();
       ElMessage({

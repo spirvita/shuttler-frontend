@@ -12,10 +12,7 @@ export const emailLogin = (loginData: { email: string; password: string }) => {
   }>("/auth/login", loginData, { watch: false });
 };
 
-export const nuxtEmailLogin = (loginData: {
-  name: string;
-  email: string;
-}) => {
+export const nuxtEmailLogin = (loginData: { name: string; email: string }) => {
   return useFetch("/api/login", {
     method: "POST",
     body: loginData,

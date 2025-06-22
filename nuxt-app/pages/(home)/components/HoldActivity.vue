@@ -29,7 +29,7 @@
       return;
     }
     navigateTo("/create-activity");
-  }
+  };
 </script>
 
 <template>

@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useLoginDialogStore = defineStore('loginDialog', () => {
+export const useLoginDialogStore = defineStore("loginDialog", () => {
   const isOpen = ref(false);
 
   function open() {

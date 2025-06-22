@@ -10,7 +10,8 @@
     addPoint: "儲值點數",
     applyAct: "報名活動(含人數修改)",
     cancelAct: "取消報名",
-    suspendAct: "活動停辦"
+    suspendAct: "活動停辦",
+    receiveAct: "收取報名費"
   };
   const displayedColumns = ref<TableColumn[]>([
     { prop: "createTime", label: "建立時間", width: "150" }
@@ -22,7 +23,7 @@
     <el-table
       v-if="recordData.length > 0"
       :data="recordData"
-      :style="{ height: '380px' }"
+      :style="{ height: '60vh' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
     >
       <el-table-column

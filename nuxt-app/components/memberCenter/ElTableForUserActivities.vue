@@ -55,7 +55,7 @@
     <el-table
       v-if="props.data.length > 0"
       :data="props.data"
-      :style="{ height: '320px' }"
+      :style="{ height: '60vh' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
       show-overflow-tooltip
     >

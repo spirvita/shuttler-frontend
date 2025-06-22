@@ -7,7 +7,7 @@
   const { data, refresh } = await getUserFavorites();
   const userFavorites = computed(() => data.value?.data || []);
   const activityId = ref<string>("");
-  const removeFavoriteDiglogVisible = ref(false);
+  const removeFavoriteDialogVisible = ref(false);
   const displayedColumns = ref<TableColumn[]>([
     { prop: "name", label: "活動名稱", width: "100px" },
     { prop: "date", label: "活動日期", width: "100px" },
@@ -21,6 +21,7 @@
   const removeFavorite = async (activityId: string) => {
     const { error } = await removeActivityFromFavorites(activityId);
     if (!error.value) ElMessage.success("已取消收藏");
+    removeFavoriteDialogVisible.value = false;
     refresh();
   };
 </script>
@@ -30,7 +31,7 @@
     <el-table
       v-if="userFavorites.length > 0"
       :data="userFavorites"
-      :style="{ height: '320px' }"
+      :style="{ height: '60vh' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
       show-overflow-tooltip
     >
@@ -77,7 +78,7 @@
           <el-button
             class="px-3"
             @click="
-              removeFavoriteDiglogVisible = true;
+              removeFavoriteDialogVisible = true;
               activityId = scope.row.activityId;
             "
           >
@@ -93,7 +94,7 @@
       暫無資料
     </p>
     <el-dialog
-      v-model="removeFavoriteDiglogVisible"
+      v-model="removeFavoriteDialogVisible"
       title="移除收藏確認"
       width="350"
     >
@@ -111,7 +112,7 @@
             type="primary"
             class="w-full"
             round
-            @click="removeFavoriteDiglogVisible = false"
+            @click="removeFavoriteDialogVisible = false"
           >
             取消
           </el-button>
