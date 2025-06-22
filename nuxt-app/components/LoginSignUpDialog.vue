@@ -6,6 +6,7 @@
   import GoogleSVG from "@/assets/images/google.svg";
   import { useUserStore } from "@/stores/user";
 
+  const runtimeConfig = useRuntimeConfig();
   const { visible } = defineProps({
     visible: {
       type: Boolean,
@@ -289,7 +290,7 @@
           class="w-full text-md text-neutral-800 bg-white hover:border-neutral-800 m-0"
         >
           <a
-            href="https://dev-api.spirvita.tw/api/v1/auth/google"
+            :href="`${runtimeConfig.public.API_BASE_URL}/auth/google`"
             class="flex items-center px-14 py-2"
           >
             <img
