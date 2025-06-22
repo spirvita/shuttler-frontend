@@ -78,7 +78,7 @@
           <el-button
             class="px-3"
             @click="
-            removeFavoriteDialogVisible = true;
+              removeFavoriteDialogVisible = true;
               activityId = scope.row.activityId;
             "
           >

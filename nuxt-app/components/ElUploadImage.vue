@@ -71,7 +71,10 @@
     >
       選擇圖片
     </el-button>
-    <template #tip v-if="elementPlusPictureList.length !== limit">
+    <template
+      v-if="elementPlusPictureList.length !== limit"
+      #tip
+    >
       <p>最多 {{ limit }} 張圖片，格式為 JPG 或 PNG</p>
     </template>
   </el-upload>

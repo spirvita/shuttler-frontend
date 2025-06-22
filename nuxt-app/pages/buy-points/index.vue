@@ -44,7 +44,10 @@
       v-if="selectedPoints > 0"
       class="flex flex-col items-center"
     >
-      <Payment :points="selectedPoints" class="mb-10" />
+      <Payment
+        :points="selectedPoints"
+        class="mb-10"
+      />
       <el-button
         :text="true"
         class="mb-6"

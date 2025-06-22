@@ -75,16 +75,22 @@
     }
   });
 
-  watch(() => loginDialogStore.isOpen, (newVal) => {
-    loginDialogVisible.value = newVal;
-  });
-  watch(() => loginDialogVisible.value, (newValue) => {
-    if (newValue) {
-      const currentRoute = useRoute();
-      localStorage.setItem('redirectAfterLogin', currentRoute.fullPath);
+  watch(
+    () => loginDialogStore.isOpen,
+    (newVal) => {
+      loginDialogVisible.value = newVal;
     }
-    if (!newValue) loginDialogStore.close();
-  })
+  );
+  watch(
+    () => loginDialogVisible.value,
+    (newValue) => {
+      if (newValue) {
+        const currentRoute = useRoute();
+        localStorage.setItem("redirectAfterLogin", currentRoute.fullPath);
+      }
+      if (!newValue) loginDialogStore.close();
+    }
+  );
 </script>
 
 <template>
@@ -108,7 +114,8 @@
             活動列表
           </NuxtLink>
           <div
-            class="link-hover cursor-pointer" @click="handlePushCreateActivity"
+            class="link-hover cursor-pointer"
+            @click="handlePushCreateActivity"
           >
             舉辦活動
           </div>
@@ -219,7 +226,8 @@
           <span class="pb-2 border-b border-neutral-300">活動列表</span>
         </NuxtLink>
         <div
-          class="text-lg text-center link-hover w-full cursor-pointer" @click="handlePushCreateActivity"
+          class="text-lg text-center link-hover w-full cursor-pointer"
+          @click="handlePushCreateActivity"
         >
           <span class="pb-2 border-b border-neutral-300">舉辦活動</span>
         </div>

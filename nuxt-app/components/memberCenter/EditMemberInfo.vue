@@ -127,7 +127,10 @@
           :limit="1"
           @on-change="handleChange"
         />
-        <el-input hidden v-model="memberInfo.avatar" />
+        <el-input
+          v-model="memberInfo.avatar"
+          hidden
+        />
       </el-form-item>
       <el-form-item
         label="羽球程度"

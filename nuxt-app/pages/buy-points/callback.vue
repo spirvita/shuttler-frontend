@@ -21,9 +21,7 @@
       size="60"
       class="mb-10"
       :class="
-        queryInfo.status === 'success'
-          ? 'text-success-500'
-          : 'text-danger-500'
+        queryInfo.status === 'success' ? 'text-success-500' : 'text-danger-500'
       "
     >
       <Check v-if="queryInfo.status === 'success'" />
