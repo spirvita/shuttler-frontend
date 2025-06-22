@@ -179,8 +179,11 @@
     ```bash
     pnpm config set store-dir "${PNPM_HOME}"
     ```
-
+</details>
+    
 ## 4. Nuxt 啟動方式
+
+<details>
 
 1. 確認當前目錄已在容器內，預設路徑為 /work
 
