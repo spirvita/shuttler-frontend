@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { emailSignUp, nuxtEmailLogin, forgotPassword } from "@/apis/auth";
+  import { emailLogin, emailSignUp, nuxtEmailLogin, forgotPassword } from "@/apis/auth";
   import { ElMessage, ElLoading } from "element-plus";
   import { useAuthStore } from "@/stores/auth";
   import { Message, Lock, User } from "@element-plus/icons-vue";
   import GoogleSVG from "@/assets/images/google.svg";
+  import { useUserStore } from "@/stores/user";
 
   const { visible } = defineProps({
     visible: {
@@ -37,7 +38,8 @@
   }>();
 
   const authStore = useAuthStore();
-  const { user, fetch: refreshSession } = useUserSession();
+  const userStore = useUserStore();
+  const { fetch: refreshSession } = useUserSession();
 
   const handleSubmit = async () => {
     if (!form.value.email || !form.value.password) {
@@ -84,25 +86,25 @@
   };
 
   const handleEmailLogin = async () => {
-    const { data, error } = await nuxtEmailLogin({
+    const { data, error } = await emailLogin({
       email: form.value.email,
       password: form.value.password
     });
-    if (error.value) {
-      ElMessage({
-        message: error.value?.data.message,
-        type: "error"
+    if (!error.value) {
+      await nuxtEmailLogin({
+        name: data.value?.data.user.name as string,
+        email: data.value?.data.user.email as string,
       });
-      return;
-    }
-    if (data.value?.token) {
       await refreshSession();
       ElMessage({
-        message: `歡迎 ${user.value?.name}`,
+        message: `歡迎 ${data.value?.data.user.name}`,
         type: "success"
       });
-      authStore.setToken(data.value?.token);
+      authStore.setToken(data.value?.data.token as string);
       emit("update:visible", false);
+      setTimeout(async () => {
+        await userStore.fetchUserInfo();
+      }, 300);
     }
   };
 
