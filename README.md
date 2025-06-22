@@ -82,7 +82,7 @@
     | --- | --- | --- |
     | PROJECT_NAME | demo | 專案名稱 |
     | DOCKERHUB_ACCOUNT | demo | Docker Hub 上的使用者名稱 |
-    | PLATFORM | arm64 | 當前電腦的 CPU 架構 | 
+    | PLATFORM | arm64 | 當前電腦的 CPU 架構 |
     | NVM_VERSION | 0.40.2 | NVM 版本 |
     | NODE_VERSION | 22.14.0 | NODE 版本 |
     | PNPM_HOME | /pnpm | pnpm 套件的全局目錄 |
@@ -91,14 +91,18 @@
     | GOLANG_VERSION | 1.24.2 | GOLANG 版本 |
     | GUM_VERSION | 0.16.0 | GUM 版本 |
     | LOCAL_PORT | 3000 | 使用本機的 3000 埠號 |
-    | CONTAINER_PORT | 3000 | 使用容器內的 3000 埠號 |
+    | NITRO_PORT | 3000 | Nuxt 3 應用程式監聽埠 |
+    | NUXT_CONTAINER_PORT | 3000 | 使用容器內的 3000 埠號 |
+    | NUXT_SESSION_PASSWORD | 32 characters | Nuxt Auth Utils 使用 |
+    | NUXT_BASE_URL | / | 使用根目錄 |
+    | NUXT_API_BASE_URL | https:// | API 路徑 |
 
 5. make 指令使用說明
 
     在終端機中，輸入指令 `make` 會看到下圖的說明及使用方法
 
     ![image](https://hackmd.io/_uploads/Hkaup-GA1g.png)
-    
+
     $\textcolor{Crimson}{P.S. 以下指令，請務必在本機執行}$
 
     - 查看目前執行中的容器
@@ -134,10 +138,10 @@
     - 容器狀態為 `running` 時，停止運行容器
 
       ```bash
-      make halt 
+      make halt
       ```
 
-    - 清除容器狀態為 `exited` 以及容器映像檔為 `none`  
+    - 清除容器狀態為 `exited` 以及容器映像檔為 `none`
 
       ```bash
       make clean
@@ -174,6 +178,44 @@
 
     ```bash
     pnpm config set store-dir "${PNPM_HOME}"
+    ```
+
+## 4. Nuxt 啟動方式
+
+1. 確認當前目錄已在容器內，預設路徑為 /work
+
+2. 進入預設名稱的資料夾
+
+    ```bash
+    cd nuxt-app
+    ```
+
+3. 首次啟動需執行安裝
+
+    ```bash
+    pnpm i
+    ```
+
+4. 查看可用指令
+
+    ```bash
+    pnpm run
+    ```
+
+    指令說明如下：
+
+    | 指令 | 用途 | 適用場景 | 輸出結果 |
+    | -------- | -------- | -------- | -------- |
+    | `pnpm run build` | 構建生產環境版本 | 部署到伺服器 | `.output` 資料夾|
+    | `pnpm run dev` | 啟動開發伺服器 | 開發過程 | 即時預覽|
+    | `pnpm run generate` | 生成靜態站點 | 部署到靜態網站託管服務 | `dist` 資料夾 |
+    | `pnpm run preview` | 預覽生產環境構建結果 | 部署前檢查 | `.output` 資料夾的預覽 |
+    | `pnpm run start` | 執行生產環境構建結果 | 部屬 | `.output` 資料夾|
+
+5. 執行開發環境
+
+    ```bash
+    pnpm run dev
     ```
 
 </details>
