@@ -31,7 +31,7 @@
     <el-table
       v-if="userFavorites.length > 0"
       :data="userFavorites"
-      :style="{ height: '320px' }"
+      :style="{ height: '60vh' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
       show-overflow-tooltip
     >

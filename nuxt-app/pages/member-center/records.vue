@@ -23,7 +23,7 @@
     <el-table
       v-if="recordData.length > 0"
       :data="recordData"
-      :style="{ height: '380px' }"
+      :style="{ height: '60vh' }"
       :default-sort="{ prop: 'date', order: 'ascending' }"
     >
       <el-table-column
