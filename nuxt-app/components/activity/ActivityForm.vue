@@ -172,6 +172,14 @@
         trigger: "blur"
       }
     ],
+    venueFacilities: [
+      {
+        type: "array",
+        required: true,
+        message: "請至少選擇一項場館設施",
+        trigger: "change"
+      }
+    ],
     address: [
       { required: true, message: "請輸入場館地址", trigger: "change" },
       {
@@ -240,7 +248,7 @@
     if (
       isOrganizerPage &&
       activityInfo.value.activityId &&
-      status !== "update"
+      status === "draft"
     ) {
       activityInfo.value.status = status;
       const { error } = await draftActivityToPublished(
@@ -256,15 +264,16 @@
       activityInfo.value,
       status as "draft" | "published"
     );
+    if (error.value) return;
     if (!error.value) {
       if (!isOrganizerPage && status === "published")
         router.push("/activities");
       if (!isOrganizerPage && status === "draft")
         router.push("/member-center/organizer-activities");
       handleSuccess(`活動已${status === "draft" ? "儲存" : "發佈"}成功`);
+      activityInfoFormRef.value?.resetFields();
+      clearUploadedFiles();
     }
-    activityInfoFormRef.value?.resetFields();
-    clearUploadedFiles();
   };
 
   const handleElUploadRef = (elUploadRef: UploadInstance) => {
@@ -290,6 +299,10 @@
     if (!formEl) return;
     await formEl.validate(async (valid, _fields) => {
       if (valid) {
+        if (!activityInfo.value.city || !activityInfo.value.district) {
+          ElMessage.error("請選擇縣市區域");
+          return;
+        }
         if (uploadImageFiles.value.length > 0) {
           const photo = await handleUploadImages();
           if (photo && photo.length > 0) {
@@ -355,6 +368,7 @@
     }
     setTimeout(() => {
       isImporting.value = false;
+      activityInfo.value.district = twDistrictName.value;
     }, 500);
   });
 
@@ -518,6 +532,7 @@
     <el-form-item
       label="使用球種"
       class="lg:col-span-6"
+      prop="ballType"
       required
     >
       <el-autocomplete
@@ -662,7 +677,7 @@
     </el-form-item>
     <el-form-item
       label="場館設施 ( 至少一項 )"
-      prop=""
+      prop="venueFacilities"
       class="lg:col-span-6"
       required
     >
