@@ -152,9 +152,9 @@
               :class="`${useParticipantStatus('border', activity.bookedCount, activity.participantCount)}`"
               @click="pushToActivity(activity.activityId)"
             >
-              <div class="flex items-center mb-2">
+              <div class="flex items-center mb-2 h-14">
                 <el-avatar
-                  class="mr-2"
+                  class="mr-2 flex-shrink-0"
                   :size="40"
                   :src="activity.contactAvatar"
                 />
