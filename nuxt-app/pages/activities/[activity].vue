@@ -609,6 +609,7 @@
       </template>
     </el-dialog>
     <el-dialog
+      v-if="activity.registeredCount && activity.registeredCount > 0"
       v-model="updateRegistrationDialogVisible"
       title="修改確認"
       width="350"

@@ -3,11 +3,13 @@
   import { WarnTriangleFilled, TopRight } from "@element-plus/icons-vue";
   import { cancelActivity } from "@/apis/activity";
   import type { TableColumn } from "@/types/elTable";
+  import { useUserStore } from "@/stores/user";
 
   const props = defineProps<{
     data: ActivityDetail[];
   }>();
   const emits = defineEmits(["reloadData"]);
+  const userStore = useUserStore();
 
   const activity = ref<ActivityDetail>();
   const cancelRegistrationDialogVisible = ref(false);
@@ -45,9 +47,12 @@
   const handleCancelActivity = async () => {
     if (!activity.value?.activityId) return;
     const { error } = await cancelActivity(activity.value.activityId);
-    if (!error.value) ElMessage.success("取消報名成功");
-    cancelRegistrationDialogVisible.value = false;
-    emits("reloadData");
+    if (!error.value) {
+      ElMessage.success("取消報名成功");
+      cancelRegistrationDialogVisible.value = false;
+      await userStore.fetchUserInfo();
+      emits("reloadData");
+    }
   };
 </script>
 <template>
