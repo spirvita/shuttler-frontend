@@ -59,6 +59,7 @@
     :limit="limit"
     :on-exceed="handleExceed"
     :on-change="handleChange"
+    :on-remove="handleChange"
     :before-upload="beforeAvatarUpload"
     :auto-upload="true"
   >
