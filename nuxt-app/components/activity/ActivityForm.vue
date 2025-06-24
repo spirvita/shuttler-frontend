@@ -310,6 +310,8 @@
           } else {
             return;
           }
+        } else if (uploadImageFiles.value.length === 0) {
+          activityInfo.value.pictures = [];
         }
         await processActivityStatus(status);
       } else {
