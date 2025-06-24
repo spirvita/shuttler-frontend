@@ -14,7 +14,9 @@
   import { useShuttlerLevelOptions } from "@/composables/useShuttlerLevelOptions";
   import type { ActivityFilter } from "@/types/activities";
   import { mapLevelToLevel } from "@/constants/shuttlerLevels";
+  import { useResetFilterStore } from "@/stores/resetFilterStore";
 
+  const resetFilterStore = useResetFilterStore();
   const route = useRoute();
   const city = (route.query.city as string) || "";
   const startTimeSlot = ref("00:00");
@@ -40,7 +42,7 @@
   });
   const customDatePrefix = shallowRef({
     render() {
-      return h("sapn", "");
+      return h("span", "");
     }
   });
   const marks = {
@@ -102,7 +104,6 @@
     emits("updateFilter", activitiesFilter.value);
   });
 
-  // 日期選擇為當天，則時段選擇開始時間為現在時間 +1 時段
   watch(
     () => activitiesFilter.value.date,
     (newDate) => {
@@ -120,6 +121,16 @@
         }
       } else {
         startTimeSlot.value = "00:00";
+      }
+    }
+  );
+
+  watch(
+    () => resetFilterStore.isReset,
+    (newValue) => {
+      if (newValue) {
+        resetActivitiesFilter();
+        resetFilterStore.clear();
       }
     }
   );
