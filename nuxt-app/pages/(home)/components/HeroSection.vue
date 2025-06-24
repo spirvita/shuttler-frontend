@@ -52,7 +52,7 @@
           <el-select
             v-model="twCity"
             class="hero-section-select w-full lg:w-[300px]"
-            placeholder="選擇縣市"
+            placeholder="請選擇活動縣市"
           >
             <template #prefix>
               <el-icon
@@ -72,7 +72,7 @@
           <el-select
             v-model="level"
             class="hero-section-select hidden lg:block lg:w-[300px]"
-            placeholder="請選擇程度"
+            placeholder="請選擇可參與程度"
           >
             <template #prefix>
               <el-icon
@@ -92,7 +92,7 @@
           <el-select
             v-model="spotsLeft"
             class="hero-section-select hidden lg:block lg:w-[300px]"
-            placeholder="請選擇人數"
+            placeholder="請選擇需報名人數"
           >
             <template #prefix>
               <el-icon
@@ -116,7 +116,7 @@
           <el-select
             v-model="level"
             class="hero-section-select w-full"
-            placeholder="請選擇程度"
+            placeholder="可參與程度"
           >
             <template #prefix>
               <el-icon
@@ -136,7 +136,7 @@
           <el-select
             v-model="spotsLeft"
             class="hero-section-select w-full"
-            placeholder="請選擇人數"
+            placeholder="需報名人數"
           >
             <template #prefix>
               <el-icon
