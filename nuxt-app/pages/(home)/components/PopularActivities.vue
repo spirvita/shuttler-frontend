@@ -145,13 +145,16 @@
             <div
               class="p-4 lg:px-6 flex flex-col lg:flex-row lg:items-center lg:justify-between w-full h-full"
             >
-              <div class="flex flex-col mb-2 lg:mb-0">
-                <div class="text-md mb-2">{{ activity.name }}</div>
+              <div class="flex flex-col justify-start items-start mb-2 lg:mb-0">
+                <p class="text-md mb-2 line-clamp-1">
+                  {{ activity.name }}
+                </p>
                 <div class="flex items-center gap-2">
                   <div class="text-gray-600 text-sm">
                     <el-tag
                       round
-                      class="p-4 border-0 text-base text-black bg-neutral-200"
+                      size="large"
+                      class="p-2 lg:p-4 border-0 text-base text-black bg-neutral-200"
                     >
                       {{ activity.city }}
                     </el-tag>
