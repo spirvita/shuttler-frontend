@@ -93,12 +93,16 @@
   const swiper = useSwiper(containerRef, {
     slidesPerView: 1,
     spaceBetween: 24,
-    loop: false,
+    loop: true,
     pagination: {
       el: ".swiper-pagination",
       clickable: true
     },
     breakpoints: {
+      1024: {
+        slidesPerView: 2,
+        spaceBetween: 12
+      },
       1280: {
         slidesPerView: 3,
         spaceBetween: 24
