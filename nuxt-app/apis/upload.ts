@@ -15,6 +15,7 @@ export const uploadImages = async (
       existingUrls.push(file.url);
     }
   });
+  if (formData.get("file") === null) return existingUrls;
   const { data, error } = await useFetch<{
     message: string;
     data: { photo: string[] | string };

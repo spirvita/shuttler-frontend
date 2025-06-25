@@ -14,9 +14,11 @@
   import { useUserStore } from "@/stores/user";
   import { logout } from "@/apis/auth";
   import { useLoginDialogStore } from "@/stores/loginDialogStore";
+  import { useResetFilterStore } from "@/stores/resetFilterStore";
 
   const loginDialogVisible = ref(false);
   const loginDialogStore = useLoginDialogStore();
+  const resetFilterStore = useResetFilterStore();
   const authStore = useAuthStore();
   const userStore = useUserStore();
   const userInfo = computed(() => userStore.userInfo);
@@ -68,6 +70,11 @@
       navigateTo("/create-activity");
     }
   };
+  const handleResetFilter = () => {
+    if (useRoute().path !== "/activities") return;
+    resetFilterStore.reset();
+    mobileMenuDialogVisible.value = false;
+  };
   onMounted(async () => {
     await fetch();
     if (loggedIn.value) {
@@ -110,6 +117,7 @@
           <NuxtLink
             to="/activities"
             class="link-hover"
+            @click="handleResetFilter"
           >
             活動列表
           </NuxtLink>
@@ -221,7 +229,7 @@
         <NuxtLink
           to="/activities"
           class="text-lg text-center link-hover w-full"
-          @click="mobileMenuDialogVisible = false"
+          @click="handleResetFilter"
         >
           <span class="pb-2 border-b border-neutral-300">活動列表</span>
         </NuxtLink>

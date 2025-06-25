@@ -376,11 +376,11 @@
           <div class="flex items-center pb-7 mb-7 border-b border-gray-200">
             <h3 class="flex items-center">
               <el-avatar
-                class="mr-2"
+                class="mr-2 flex-shrink-0"
                 :size="40"
                 :src="activity.contactAvatar"
               />
-              <span class="text-5xl">{{ activity.name }}</span>
+              <span class="text-3xl lg:text-5xl">{{ activity.name }}</span>
             </h3>
             <el-button
               v-if="loggedIn"
@@ -406,17 +406,20 @@
             <li
               v-for="(activityInfo, index) in activityInfoList"
               :key="index"
-              class="flex items-center mb-4"
+              class="flex mb-4"
+              :class="activityInfo.label === '活動程度' ? 'items-center' : 'items-start'"
             >
-              <el-icon
-                class="mr-2"
-                size="16"
-              >
-                <component :is="activityInfo.icon" />
-              </el-icon>
-              <span class="text-lg text-neutral-700 text-nowrap">
-                {{ activityInfo.label }}：
-              </span>
+              <div class="flex items-center">
+                <el-icon
+                  class="mr-2"
+                  size="16"
+                >
+                  <component :is="activityInfo.icon" />
+                </el-icon>
+                <span class="text-lg text-neutral-700 text-nowrap">
+                  {{ activityInfo.label }}：
+                </span>
+              </div>
               <span
                 v-if="activityInfo.label !== '活動程度'"
                 class="text-lg flex items-center"
@@ -609,6 +612,7 @@
       </template>
     </el-dialog>
     <el-dialog
+      v-if="activity.registeredCount && activity.registeredCount > 0"
       v-model="updateRegistrationDialogVisible"
       title="修改確認"
       width="350"

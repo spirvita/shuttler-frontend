@@ -61,6 +61,8 @@
     () => props.disableDate,
     () => {
       setDate("");
+      scrollLeftValue.value = 0;
+      handleScrollValue(0);
     }
   );
 </script>

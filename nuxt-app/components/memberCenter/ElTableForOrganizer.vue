@@ -15,11 +15,14 @@
   import type { ActivityDetail } from "@/types/activities";
   import type { ActivityParticipant } from "@/types/memberCenter";
   import type { TableColumn } from "@/types/elTable";
+  import { useUserStore } from "@/stores/user";
 
   const props = defineProps<{
     data: ActivityDetail[];
   }>();
   const emits = defineEmits(["reloadData"]);
+  const userStore = useUserStore();
+
   const displayedColumns = ref<TableColumn[]>([
     { prop: "name", label: "活動名稱", width: "120" },
     { prop: "date", label: "日期", width: "100" },
@@ -82,11 +85,12 @@
     const { data, error } = await deleteDraftActivity(activityId);
     if (!error.value) {
       ElMessage.success(data.value?.message);
+      reloadData();
     }
-    reloadData();
   };
-  const reloadData = () => {
+  const reloadData = async () => {
     emits("reloadData");
+    await userStore.fetchUserInfo();
   };
 </script>
 
