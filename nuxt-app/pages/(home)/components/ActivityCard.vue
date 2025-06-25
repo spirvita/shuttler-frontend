@@ -44,7 +44,7 @@
     />
     <div class="flex flex-col p-4 gap-2">
       <h3>
-        <span class="text-xl">{{ activityName }}</span>
+        <span class="text-xl line-clamp-1">{{ activityName }}</span>
       </h3>
       <div class="flex items-center">
         <el-tag
