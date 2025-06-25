@@ -20,7 +20,7 @@
       <el-tag
         round
         size="large"
-        class="p-4 border-0 text-base"
+        class="p-2 lg:p-4 border-0 text-base"
         :type="getElementPlusTypeByLevel(item as string)"
       >
         {{ item }}
