@@ -64,17 +64,27 @@
     }
   ]);
   const upcomingActivities = computed(() => {
-    if (data.value?.message === "目前無資料") {
+    const activities = data.value?.data || [];
+    const isNoData = data.value?.message === "目前無資料";
+    const isExactCount = activities.length === displayCount;
+    const isLessCount = activities.length < displayCount;
+
+    if (isNoData || activities.length === 0) {
       return defaultUpcomingActivities.value;
     }
-    if (data.value?.data && data.value?.data.length < displayCount) {
-      const activities = data.value?.data || [];
+
+    if (isExactCount) {
+      return activities.slice(0, displayCount);
+    }
+
+    if (isLessCount) {
       const remainingCount = displayCount - activities.length;
       return [
         ...activities,
         ...defaultUpcomingActivities.value.slice(0, remainingCount)
       ];
     }
+
     return defaultUpcomingActivities.value;
   });
 
