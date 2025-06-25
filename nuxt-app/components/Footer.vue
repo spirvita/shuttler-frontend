@@ -187,9 +187,11 @@
     <el-dialog
       v-model="footerDialogVisible"
       :title="linkTitle"
-      width="500"
+      class="w-[75vw] md:w-[65vw] xl:w-[50vw] 2xl:w-[40vw] max-w-4xl"
     >
-      <p class="py-5 line-clamp-2">{{ linkMessage }}</p>
+      <p class="py-5">
+        {{ linkMessage }}
+      </p>
       <template #footer>
         <div>
           <el-button
