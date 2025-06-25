@@ -4,14 +4,18 @@
   const loginDialogStore = useLoginDialogStore();
   const { loggedIn } = useUserSession();
   const footerDialogVisible = ref(false);
-  const linkTitle = ref("")
+  const linkTitle = ref("");
   const linkMessage = ref("");
   const linkMessages = ref<Record<string, string>>({
-    "首次舉辦活動": "歡迎使用羽神同行！如果您是第一次舉辦活動，可於會員中心更新個人資料後在舉辦活動中自動帶入資訊。",
-    "活動上架規範": "活動主辦方需確保所提供的活動資訊真實、準確且符合平台規範，平台保留審核及下架不符合規範活動的權利",
-    "服務條款": "本平台僅供羽球愛好者報名活動及相關交流使用，禁止任何形式的非法活動或濫用平台功能。",
-    "隱私權政策": "我們重視您的隱私，所有個人資料僅用於活動報名及平台運營相關用途，未經您的同意，我們不會向第三方披露您的個人資訊。",
-    "敬請期待": "我們正在努力完善平台，敬請期待更多功能和服務的推出！"
+    首次舉辦活動:
+      "歡迎使用羽神同行！如果您是第一次舉辦活動，可於會員中心更新個人資料後在舉辦活動中自動帶入資訊。",
+    活動上架規範:
+      "活動主辦方需確保所提供的活動資訊真實、準確且符合平台規範，平台保留審核及下架不符合規範活動的權利",
+    服務條款:
+      "本平台僅供羽球愛好者報名活動及相關交流使用，禁止任何形式的非法活動或濫用平台功能。",
+    隱私權政策:
+      "我們重視您的隱私，所有個人資料僅用於活動報名及平台運營相關用途，未經您的同意，我們不會向第三方披露您的個人資訊。",
+    敬請期待: "我們正在努力完善平台，敬請期待更多功能和服務的推出！"
   });
   const handlePushCreateActivity = () => {
     if (!loggedIn.value) {
@@ -130,44 +134,46 @@
             </a>
           </li>
         </ul>
-        <div class="flex space-x-4 mt-2">
-          <!-- Facebook -->
-          <a
-            href="#"
-            class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-blue-100 transition"
-            aria-label="Facebook"
-            @click.prevent="handleFooterDialogVisible('敬請期待')"
-          >
-            <span
-              class="iconify text-xl text-gray-500"
-              data-icon="mdi:facebook"
-            />
-          </a>
-          <!-- Instagram -->
-          <a
-            href="#"
-            class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-pink-100 transition"
-            aria-label="Instagram"
-            @click.prevent="handleFooterDialogVisible('敬請期待')"
-          >
-            <span
-              class="iconify text-xl text-gray-500"
-              data-icon="mdi:instagram"
-            />
-          </a>
-          <!-- Line -->
-          <a
-            href="#"
-            class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-green-100 transition"
-            aria-label="Line"
-            @click.prevent="handleFooterDialogVisible('敬請期待')"
-          >
-            <span
-              class="iconify text-xl text-gray-500"
-              data-icon="simple-icons:line"
-            />
-          </a>
-        </div>
+        <ClientOnly>
+          <div class="flex space-x-4 mt-2">
+            <!-- Facebook -->
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-blue-100 transition"
+              aria-label="Facebook"
+              @click.prevent="handleFooterDialogVisible('敬請期待')"
+            >
+              <span
+                class="iconify text-xl text-gray-500"
+                data-icon="mdi:facebook"
+              />
+            </a>
+            <!-- Instagram -->
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-pink-100 transition"
+              aria-label="Instagram"
+              @click.prevent="handleFooterDialogVisible('敬請期待')"
+            >
+              <span
+                class="iconify text-xl text-gray-500"
+                data-icon="mdi:instagram"
+              />
+            </a>
+            <!-- Line -->
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full border border-gray-400 flex items-center justify-center hover:bg-green-100 transition"
+              aria-label="Line"
+              @click.prevent="handleFooterDialogVisible('敬請期待')"
+            >
+              <span
+                class="iconify text-xl text-gray-500"
+                data-icon="simple-icons:line"
+              />
+            </a>
+          </div>
+        </ClientOnly>
       </div>
     </div>
 
@@ -181,12 +187,17 @@
     <el-dialog
       v-model="footerDialogVisible"
       :title="linkTitle"
-      width="500"
+      class="w-[75vw] md:w-[65vw] xl:w-[50vw] 2xl:w-[40vw] max-w-4xl"
     >
-      <p class="py-5 line-clamp-2">{{ linkMessage }}</p>
+      <p class="py-5">
+        {{ linkMessage }}
+      </p>
       <template #footer>
         <div>
-          <el-button type="primary" @click="footerDialogVisible = false">
+          <el-button
+            type="primary"
+            @click="footerDialogVisible = false"
+          >
             確定
           </el-button>
         </div>
