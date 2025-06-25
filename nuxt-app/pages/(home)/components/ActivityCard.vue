@@ -35,7 +35,7 @@
 
 <template>
   <div
-    class="activity-card w-full lg:w-[416px] lg:max-w-[416px] rounded-3xl overflow-hidden shadow-lg"
+    class="activity-card mx-0.5 rounded-3xl overflow-hidden"
   >
     <img
       :src="imageUrl"
