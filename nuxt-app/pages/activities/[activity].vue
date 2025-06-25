@@ -407,7 +407,11 @@
               v-for="(activityInfo, index) in activityInfoList"
               :key="index"
               class="flex mb-4"
-              :class="activityInfo.label === '活動程度' ? 'items-center' : 'items-start'"
+              :class="
+                activityInfo.label === '活動程度'
+                  ? 'items-center'
+                  : 'items-start'
+              "
             >
               <div class="flex items-center">
                 <el-icon
