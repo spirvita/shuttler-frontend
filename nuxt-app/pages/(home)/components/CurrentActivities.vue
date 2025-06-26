@@ -2,6 +2,7 @@
   import bgImage from "@/assets/images/current-activities-bg.png";
   import ActivityCard from "./ActivityCard.vue";
   import { getUpcomingActivities } from "@/apis/activities";
+  import { ArrowLeftBold, ArrowRightBold } from "@element-plus/icons-vue";
 
   const displayCount = 6;
   const { data } = await getUpcomingActivities();
@@ -89,30 +90,44 @@
   });
 
   const containerRef = ref(null);
-  // eslint-disable-next-line
   const swiper = useSwiper(containerRef, {
     slidesPerView: 1,
-    spaceBetween: 24,
-    loop: true,
+    spaceBetween: 20,
+    loop: false,
     pagination: {
-      el: ".swiper-pagination",
+      el: "",
       clickable: true
     },
     breakpoints: {
       1024: {
-        slidesPerView: 2,
-        spaceBetween: 12
+        slidesPerView: 2
       },
       1280: {
-        slidesPerView: 3,
-        spaceBetween: 24
+        slidesPerView: 3
       }
     }
   });
+  const bullets = ref(0);
+  const activeIndex = ref(0);
 
   const formatDateTime = (date: string, startTime: string, endTime: string) => {
     return `${date.replace(/-/g, "/")}（${new Date(date).toLocaleDateString("zh-TW", { weekday: "short" })}）${startTime} - ${endTime}`;
   };
+
+  onMounted(() => {
+    setTimeout(() => {
+      if (swiper.instance.value) {
+        bullets.value = Array.from(
+          swiper.instance.value.pagination.bullets
+        ).length;
+        swiper.instance.value.on("slideChange", () => {
+          activeIndex.value = swiper.instance?.value?.activeIndex || 0;
+        });
+        swiper.instance.value.pagination.el.style.display = "none";
+        swiper.instance.value.pagination.el.style.position = "none";
+      }
+    }, 300);
+  });
 </script>
 <template>
   <section
@@ -122,10 +137,14 @@
     <div class="container">
       <h2 class="text-center text-neutral-800 mb-10">近期活動</h2>
       <ClientOnly>
-        <swiper-container ref="containerRef">
+        <swiper-container
+          ref="containerRef"
+          class="mb-6"
+        >
           <swiper-slide
             v-for="activity in upcomingActivities"
             :key="activity.activityId"
+            class="pb-1"
           >
             <ActivityCard
               :activity-id="activity.activityId"
@@ -147,14 +166,37 @@
           </swiper-slide>
         </swiper-container>
       </ClientOnly>
+      <div
+        v-if="bullets > 0"
+        class="flex justify-between items-center md:w-1/2 lg:w-1/4 mx-auto"
+      >
+        <el-button
+          circle
+          size="large"
+          :icon="ArrowLeftBold"
+          @click="swiper.prev()"
+        />
+        <div class="flex items-center justify-center">
+          <span
+            v-for="index in bullets"
+            :key="index"
+            class="h-2 inline-block mx-2 cursor-pointer"
+            :class="
+              activeIndex === index - 1
+                ? 'w-6 rounded-2xl bg-primary-300'
+                : 'w-2 rounded-full bg-primary-accent-300'
+            "
+            @click="swiper.instance.value?.slideTo(index - 1)"
+          />
+        </div>
+        <el-button
+          circle
+          size="large"
+          :icon="ArrowRightBold"
+          @click="swiper.next()"
+        />
+      </div>
+      <!-- <div class="swiper__pagination" :style="{ display: 'none' }"></div> -->
     </div>
   </section>
 </template>
-<style lang="scss">
-  swiper-container span.swiper-pagination-bullet-active {
-    background: var(--color-primary-500) !important;
-  }
-  swiper-slide {
-    padding-bottom: 40px;
-  }
-</style>
