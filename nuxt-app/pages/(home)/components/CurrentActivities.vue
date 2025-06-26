@@ -180,12 +180,13 @@
           <span
             v-for="index in bullets"
             :key="index"
-            class="h-2 inline-block mx-1"
+            class="h-2 inline-block mx-2 cursor-pointer"
             :class="
               activeIndex === index - 1
                 ? 'w-6 rounded-2xl bg-primary-300'
                 : 'w-2 rounded-full bg-primary-accent-300'
             "
+            @click="swiper.instance.value?.slideTo(index - 1)"
           />
         </div>
         <el-button
