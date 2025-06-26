@@ -100,10 +100,10 @@
     },
     breakpoints: {
       1024: {
-        slidesPerView: 2,
+        slidesPerView: 2
       },
       1280: {
-        slidesPerView: 3,
+        slidesPerView: 3
       }
     }
   });
@@ -117,7 +117,9 @@
   onMounted(() => {
     setTimeout(() => {
       if (swiper.instance.value) {
-        bullets.value = Array.from(swiper.instance.value.pagination.bullets).length;
+        bullets.value = Array.from(
+          swiper.instance.value.pagination.bullets
+        ).length;
         swiper.instance.value.on("slideChange", () => {
           activeIndex.value = swiper.instance?.value?.activeIndex || 0;
         });
@@ -135,7 +137,10 @@
     <div class="container">
       <h2 class="text-center text-neutral-800 mb-10">近期活動</h2>
       <ClientOnly>
-        <swiper-container ref="containerRef" class="mb-6">
+        <swiper-container
+          ref="containerRef"
+          class="mb-6"
+        >
           <swiper-slide
             v-for="activity in upcomingActivities"
             :key="activity.activityId"
@@ -161,7 +166,10 @@
           </swiper-slide>
         </swiper-container>
       </ClientOnly>
-      <div v-if="bullets > 0" class="flex justify-between items-center md:w-1/2 lg:w-1/4 mx-auto">
+      <div
+        v-if="bullets > 0"
+        class="flex justify-between items-center md:w-1/2 lg:w-1/4 mx-auto"
+      >
         <el-button
           circle
           size="large"
@@ -173,7 +181,11 @@
             v-for="index in bullets"
             :key="index"
             class="h-2 inline-block mx-1"
-            :class="activeIndex === index - 1 ? 'w-6 rounded-2xl bg-primary-300' : 'w-2 rounded-full bg-primary-accent-300'"
+            :class="
+              activeIndex === index - 1
+                ? 'w-6 rounded-2xl bg-primary-300'
+                : 'w-2 rounded-full bg-primary-accent-300'
+            "
           />
         </div>
         <el-button

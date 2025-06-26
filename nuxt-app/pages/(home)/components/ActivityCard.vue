@@ -34,9 +34,7 @@
 </script>
 
 <template>
-  <div
-    class="activity-card mx-0.5 rounded-3xl overflow-hidden"
-  >
+  <div class="activity-card mx-0.5 rounded-3xl overflow-hidden">
     <img
       :src="imageUrl"
       :alt="activityName"
