@@ -1,5 +1,6 @@
 import type {
   Activity,
+  ActivityDetail,
   PopularActivity,
   UpcomingActivity
 } from "@/types/activities";
@@ -11,13 +12,13 @@ export const getActivities = (queryString?: string) => {
 };
 
 export const getUserActivities = () => {
-  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+  return useShuttlerTwAPI.get<{ message: string; data: ActivityDetail[] }>(
     "/user/activities"
   );
 };
 
 export const getOrganizerActivities = () => {
-  return useShuttlerTwAPI.get<{ message: string; data: Activity[] }>(
+  return useShuttlerTwAPI.get<{ message: string; data: ActivityDetail[] }>(
     "/organizer/activities"
   );
 };

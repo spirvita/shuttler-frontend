@@ -4,4 +4,5 @@ export interface TableColumn {
   width?: string;
   minWidth?: string;
   fixed?: string;
+  sortable?: boolean;
 }
