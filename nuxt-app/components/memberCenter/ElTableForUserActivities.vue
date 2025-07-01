@@ -16,7 +16,7 @@
   const cancellationLimitHours = ref(2);
   const displayedColumns = ref<TableColumn[]>([
     { prop: "name", label: "活動名稱", width: "120" },
-    { prop: "date", label: "日期", width: "100" },
+    { prop: "date", label: "日期", width: "100", sortable: true },
     { prop: "startTime", label: "時間(起)", width: "80" },
     { prop: "endTime", label: "時間(訖)", width: "80" },
     { prop: "venueName", label: "場館名稱" },
@@ -72,6 +72,7 @@
         :label="column.label"
         :width="column.width"
         :min-width="column.minWidth"
+        :sortable="column.sortable ?? false"
       >
         <template
           v-if="column.prop === 'level'"
