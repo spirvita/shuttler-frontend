@@ -1,18 +1,23 @@
 <script setup lang="ts">
-  import type { ActivityDetail } from "@/types/activities";
   import { getUserActivities } from "@/apis/activities";
   import ElTableForUserActivities from "@/components/memberCenter/ElTableForUserActivities.vue";
 
   const activeName = ref("registered");
   const { data, refresh: refreshUserActivities } = await getUserActivities();
+  const searchQuery = ref("");
   const userActivities = computed(() => {
-    return data.value?.data || [];
+    const filterData = (data.value?.data ?? []).filter((item) => {
+      return (
+        item.name.includes(searchQuery.value) ||
+        item.venueName.includes(searchQuery.value) ||
+        item.contactName.includes(searchQuery.value)
+      );
+    });
+    return filterData.length > 0 ? filterData : [];
   });
   const getActivitiesByStatus = (status: string) => {
     return computed(() =>
-      (userActivities.value as ActivityDetail[]).filter(
-        (activity: ActivityDetail) => activity.status === status
-      )
+      userActivities.value.filter((activity) => activity.status === status)
     );
   };
   const registeredList = getActivitiesByStatus("registered");
@@ -26,7 +31,16 @@
 </script>
 <template>
   <div>
-    <h2 class="mb-3">我的活動</h2>
+    <div class="flex justify-between items-center mb-3">
+      <h2>我的活動</h2>
+      <el-input
+        v-model="searchQuery"
+        placeholder="搜尋活動/場館/聯絡人"
+        size="large"
+        class="w-1/2 md:w-1/4"
+        clearable
+      />
+    </div>
     <el-tabs v-model="activeName">
       <el-tab-pane
         :label="`已報名 (${registeredList.length})`"

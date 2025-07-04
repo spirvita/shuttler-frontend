@@ -5,12 +5,21 @@
   import { TopRight } from "@element-plus/icons-vue";
 
   const { data, refresh } = await getUserFavorites();
-  const userFavorites = computed(() => data.value?.data || []);
+  const userFavorites = computed(() => {
+    const filterData = (data.value?.data ?? []).filter((item) => {
+      return (
+        item.name.includes(searchQuery.value) ||
+        item.venueName.includes(searchQuery.value) ||
+        item.contactName.includes(searchQuery.value)
+      );
+    });
+    return filterData.length > 0 ? filterData : [];
+  });
   const activityId = ref<string>("");
   const removeFavoriteDialogVisible = ref(false);
   const displayedColumns = ref<TableColumn[]>([
     { prop: "name", label: "活動名稱", width: "100px" },
-    { prop: "date", label: "活動日期", width: "100px" },
+    { prop: "date", label: "活動日期", width: "110px", sortable: true },
     { prop: "startTime", label: "時間(起)", width: "80px" },
     { prop: "endTime", label: "時間(訖)", width: "80px" },
     { prop: "venueName", label: "場館名稱", width: "150px" },
@@ -18,6 +27,7 @@
     { prop: "contactPhone", label: "聯絡人手機" },
     { prop: "contactLine", label: "聯絡人 Line" }
   ]);
+  const searchQuery = ref("");
   const removeFavorite = async (activityId: string) => {
     const { error } = await removeActivityFromFavorites(activityId);
     if (!error.value) ElMessage.success("已取消收藏");
@@ -27,7 +37,16 @@
 </script>
 <template>
   <div>
-    <h2 class="mb-3">活動收藏</h2>
+    <div class="flex justify-between items-center mb-3">
+      <h2>活動收藏</h2>
+      <el-input
+        v-model="searchQuery"
+        placeholder="搜尋活動/場館/聯絡人"
+        size="large"
+        class="w-1/2 md:w-1/4"
+        clearable
+      />
+    </div>
     <el-table
       v-if="userFavorites.length > 0"
       :data="userFavorites"
@@ -43,6 +62,7 @@
         :label="column.label"
         :width="column.width"
         :min-width="column.minWidth"
+        :sortable="column.sortable ?? false"
       >
         <template
           v-if="column.prop === 'level'"

@@ -14,7 +14,7 @@
     receiveAct: "收取報名費"
   };
   const displayedColumns = ref<TableColumn[]>([
-    { prop: "createTime", label: "建立時間", width: "150" }
+    { prop: "createTime", label: "建立時間", width: "150", sortable: true }
   ]);
 </script>
 <template>
@@ -24,7 +24,7 @@
       v-if="recordData.length > 0"
       :data="recordData"
       :style="{ height: '60vh' }"
-      :default-sort="{ prop: 'date', order: 'ascending' }"
+      :default-sort="{ prop: 'createTime', order: 'descending' }"
     >
       <el-table-column
         label="異動類型"
@@ -62,6 +62,7 @@
         :label="column.label"
         :width="column.width"
         :min-width="column.minWidth"
+        :sortable="column.sortable ?? false"
       />
       <el-table-column
         label="點數來源"
