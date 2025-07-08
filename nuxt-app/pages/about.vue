@@ -77,19 +77,21 @@
       image: LogoBall
     },
     {
-      name: "不好說",
+      name: "Limitsea",
       role: "全端工程師",
       image: LogoBall
+    },
+    {
+      name: "不好說",
+      role: "全端工程師",
+      image: LogoBall,
+      class: "grayscale"
     },
     {
       name: "Zoe",
       role: "全端工程師",
-      image: LogoBall
-    },
-    {
-      name: "Limitsea",
-      role: "全端工程師",
-      image: LogoBall
+      image: LogoBall,
+      class: "grayscale"
     }
   ];
 </script>
@@ -151,6 +153,7 @@
         >
           <img
             :src="member.image"
+            :class="member.class || ''"
             :alt="member.name"
             class="mb-6"
           />
