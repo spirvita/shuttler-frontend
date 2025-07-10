@@ -77,21 +77,20 @@
       image: LogoBall
     },
     {
-      name: "不好說",
-      role: "全端工程師",
-      image: LogoBall
-    },
-    {
-      name: "Zoe",
-      role: "全端工程師",
-      image: LogoBall
-    },
-    {
       name: "Limitsea",
       role: "全端工程師",
       image: LogoBall
     }
   ];
+  const screenWidth = ref(window.innerWidth);
+  const getAlternateColorIndex = computed(() => {
+    return screenWidth.value < 768 ? 2 : 3;
+  });
+  onMounted(() => {
+    window.addEventListener("resize", () => {
+      screenWidth.value = window.innerWidth;
+    });
+  });
 </script>
 <template>
   <div>
@@ -142,12 +141,16 @@
         <h2 class="text-5xl mb-2 lg:mb-6">羽神團隊</h2>
         <p class="text-xl text-secondary-300 mb-10">Our members!</p>
       </div>
-      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <li
           v-for="(member, index) in ourMembers"
           :key="member.name"
           class="flex flex-col items-center py-10 rounded-2xl"
-          :class="index % 2 !== 0 ? 'bg-primary-accent-50' : 'bg-secondary-50'"
+          :class="
+            index % getAlternateColorIndex !== 0
+              ? 'bg-primary-accent-50'
+              : 'bg-secondary-50'
+          "
         >
           <img
             :src="member.image"
